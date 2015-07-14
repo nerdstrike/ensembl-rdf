@@ -1,7 +1,36 @@
+=head1 LICENSE
+
+Copyright [1999-2015] Wellcome Trust Sanger Institute and the EMBL-European Bioinformatics Institute
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+=head1 NAME
+
+    EnsemblToTriple - Module to help convert Ensembl data to RDF turtle
+
+=head1 SYNOPSIS
+
+
+=head1 DESCRIPTION
+
+  Module for providing the ability to print Ensembl-themed triples given a number of
+
+=cut
+
 package Bio::EnsEMBL::RDF::RDFlib;
 
 use Modern::Perl;
-use Exporter::Easy ( OK => [ qw/u triple escape replace_whitespace taxonTriple /]);
+use Exporter::Easy ( OK => [ qw/u triple escape replace_whitespace taxonTriple prefix/]);
 use URI::Escape;
 
 # common prefixes used
@@ -50,35 +79,13 @@ sub replace_whitespace {
   return $string;
 }
 
-
 sub taxonTriple {
   my ($subject, $taxon_id) = @_;
   return triple($subject, 'obo:RO_0002162', 'taxon:'.$taxon_id);
 }
 
-# Put this somewhere else.
-# SO terms often required for dumping RDF
-
-sub getSOOntologyId {
-  my $term = shift;
-  if (exists $term2ontologyId{$term}) {
-    return $term2ontologyId{$term};
-  }
-
-  my ($typeterm) = @{ $ontoa->fetch_all_by_name( $term, 'SO' ) };
-    
-  unless ($typeterm) {
-    warn "Can't find SO term for $term\n";
-    $term2ontologyId{$term} = undef; 
-    return;
-  }
-    
-  my $id = $typeterm->accession;
-  $id=~s/SO:/obo:SO_/;
-  $term2ontologyId{$term} = $id;
-  return $id;    
+sub prefix {
+  return $prefix{shift};
 }
-
-
 
 1;
