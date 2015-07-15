@@ -35,23 +35,40 @@ use URI::Escape;
 
 # common prefixes used
 my %prefix = (
-  ensembl => 'http://rdf.ebi.ac.uk/resource/ensembl/',
+  ensembl     => 'http://rdf.ebi.ac.uk/resource/ensembl/',
   ensemblvariation => 'http://rdf.ebi.ac.uk/terms/ensemblvariation/',
   transcript => 'http://rdf.ebi.ac.uk/resource/ensembl.transcript/',
   ensembl_variant => 'http://rdf.ebi.ac.uk/resource/ensembl.variant/',
-  protein => 'http://rdf.ebi.ac.uk/resource/ensembl.protein/',
-  exon => 'http://rdf.ebi.ac.uk/resource/ensembl.exon/',
-  term => 'http://rdf.ebi.ac.uk/terms/ensembl/',
-  rdfs => 'http://www.w3.org/2000/01/rdf-schema#',
-  sio => 'http://semanticscience.org/resource/',
-  dc => 'http://purl.org/dc/terms/',
-  rdf => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-  faldo => 'http://biohackathon.org/resource/faldo#',
-  obo => 'http://purl.obolibrary.org/obo/',
-  skos => 'http://www.w3.org/2004/02/skos/core#',
+  protein     => 'http://rdf.ebi.ac.uk/resource/ensembl.protein/',
+  exon        => 'http://rdf.ebi.ac.uk/resource/ensembl.exon/',
+  term        => 'http://rdf.ebi.ac.uk/terms/ensembl/',
+  rdfs        => 'http://www.w3.org/2000/01/rdf-schema#',
+  sio         => 'http://semanticscience.org/resource/',
+  dc          => 'http://purl.org/dc/terms/',
+  rdf         => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+  faldo       => 'http://biohackathon.org/resource/faldo#',
+  obo         => 'http://purl.obolibrary.org/obo/',
+  skos        => 'http://www.w3.org/2004/02/skos/core#',
   identifiers => 'http://identifiers.org/',
-  taxon => 'http://identifiers.org/taxonomy/',
-  oban => 'http://purl.org/oban/'
+  taxon       => 'http://identifiers.org/taxonomy/',
+  oban        => 'http://purl.org/oban/',
+  interpro    => "http://purl.uniprot.org/interpro/",
+  scanprosite => "http://purl.uniprot.org/prosite/",
+  prosite_patterns => "http://purl.uniprot.org/prosite/",
+  prosite_profiles => "http://purl.uniprot.org/prosite/",
+  pirsf       => "http://purl.uniprot.org/pirsf/",
+  hamap       => "http://purl.uniprot.org/hamap/",
+  prints      => "http://purl.uniprot.org/prints/",
+  pfscan      => "http://purl.uniprot.org/profile/",
+  gene3d      => "http://purl.uniprot.org/gene3d/",
+  tigrfam     => "http://purl.uniprot.org/tigrfams/",
+  smart       => "http://purl.uniprot.org/smart/",
+  hmmpanther  => "http://purl.uniprot.org/panther/",
+  panther     => "http://purl.uniprot.org/panther/",
+  superfamily => "http://purl.uniprot.org/supfam/",
+  pfam        => "http://purl.uniprot.org/pfam/",
+  blastprodom => "http://purl.uniprot.org/prodom/",
+  prodom      => "http://purl.uniprot.org/prodom/",
 );
 
 # Set of RDF-writing utility functions
@@ -84,8 +101,13 @@ sub taxonTriple {
   return triple($subject, 'obo:RO_0002162', 'taxon:'.$taxon_id);
 }
 
+# prefix('faldo') etc.
 sub prefix {
   return $prefix{shift};
+}
+
+sub name_spaces {
+  return join '',map { sprint '@prefix',$_.':',u($prefix{$_}) } keys %prefix;  
 }
 
 1;
