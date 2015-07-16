@@ -16,14 +16,20 @@ limitations under the License.
 
 =head1 NAME
 
-    EnsemblToTriple - Module to help convert Ensembl data to RDF turtle
+  RDFlib - library of functions for turning Ensembl data into RDF turtle
 
 =head1 SYNOPSIS
 
+  use Bio::EnsEMBL::RDF::RDFlib qw/u triple prefix/;
+  print triple( u(prefix('ensembl').':'.$id) , 'rdf:label', 'insignificant text' );
+  
+  # More commonly you can use the shorthand to define namespaces
+  print name_spaces;
+  print triple('ensembl:ENSG001', 'rdf:label', 'inconsequential text');
 
 =head1 DESCRIPTION
 
-  Module for providing the ability to print Ensembl-themed triples given a number of
+  A bunch of common shortcuts for formatting RDF for printing and supplying things like unique bnode IDs.
 
 =cut
 
