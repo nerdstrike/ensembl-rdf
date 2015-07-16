@@ -30,7 +30,7 @@ limitations under the License.
 package Bio::EnsEMBL::RDF::RDFlib;
 
 use Modern::Perl;
-use Exporter::Easy ( OK => [ qw/u triple escape replace_whitespace taxonTriple prefix/]);
+use Exporter::Auto;
 use URI::Escape;
 
 # common prefixes used
@@ -92,7 +92,7 @@ sub escape {
 
 sub replace_whitespace {
   my $string = shift;
-  $string =~ s/\s+/_/;
+  $string =~ s/\s+/_/g;
   return $string;
 }
 
@@ -103,11 +103,20 @@ sub taxonTriple {
 
 # prefix('faldo') etc.
 sub prefix {
-  return $prefix{shift};
+  my $key = shift;
+  return $prefix{$key};
 }
 
 sub name_spaces {
-  return join '',map { sprint '@prefix',$_.':',u($prefix{$_}) } keys %prefix;  
+  return join "\n",map { sprintf '@prefix %s:%s',$_,u($prefix{$_}) } keys %prefix;  
+}
+
+# bnodes must only be unique within a single document, hence a single run of this module is sufficient for the state.
+my $b_node_count = 0;
+sub new_bnode {
+  my $self = shift;
+  $b_node_count++;
+  return '_'.$b_node_count;
 }
 
 1;
