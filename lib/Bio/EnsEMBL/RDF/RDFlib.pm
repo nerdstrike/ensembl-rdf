@@ -108,7 +108,7 @@ sub prefix {
 }
 
 sub name_spaces {
-  return join "\n",map { sprintf '@prefix %s:%s',$_,u($prefix{$_}) } keys %prefix;  
+  return join "\n",map { sprintf '@prefix %s: %s .',$_,u($prefix{$_}) } keys %prefix;  
 }
 
 # bnodes must only be unique within a single document, hence a single run of this module is sufficient for the state.
