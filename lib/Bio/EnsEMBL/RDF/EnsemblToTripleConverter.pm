@@ -29,7 +29,9 @@ limitations under the License.
 =head1 DESCRIPTION
 
     Module to provide an API for turning Ensembl features and such into triples
-    It relies on the RDFlib Bio::EnsEMB::RDF::RDFlib to provide common functions
+    It relies on the RDFlib Bio::EnsEMB::RDF::RDFlib to provide common functions.
+
+    IMPORTANT - always dump triples using the correct API version for that release
 
 =cut
 
@@ -37,6 +39,7 @@ package Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 
 use Modern::Perl;
 use Bio::EnsEMBL::Registry;
+use Bio::EnsEMBL::ApiVersion;
 use Bio::EnsEMBL::RDF::RDFLib qw(:all);
 use IO::File;
 
@@ -122,6 +125,19 @@ sub getSOOntologyId {
   return $id;
 }
 
+sub create_virtuoso_file {
+  my $self = shift;
+  my $fh = shift; # a .graph file, named after the rdf file.
+  my $version = Bio::EnsEMBL::ApiVersion->software_version;
+  my $meta = Bio::EnsEMBL::Registry->get_adaptor($self->species,'Core','MetaContainer');
+  my $taxon_id = $meta->get_taxonomy_id;
 
+  my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
+  my $graphUri = $versionGraphUri."/".$taxon_id;
+  print $fh $graphUri;
+  # make the species graph a subgraph of the version graph, by adding the assertion to the main RDF file.
+  my $rdf_fh = $self->filehandle;
+  print $rdf_fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
+}
 
 1;
