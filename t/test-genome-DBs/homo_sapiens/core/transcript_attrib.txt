@@ -1,0 +1,1259 @@
+11147631	4	RP5-856G1.1-001
+11147631	52	Havana
+11147631	53	vega@sanger.ac.uk
+11147631	417	GENCODE basic
+11147631	428	tslNA
+11147632	4	RP5-856G1.2-001
+11147632	52	Havana
+11147632	53	vega@sanger.ac.uk
+11147632	123	Ensembl made this a protein coding model (ENST00000314040), however, there is not a CpG island or a polyA site to confirm this (al1, 17/09/2013)
+11147632	417	GENCODE basic
+11147632	428	tsl2
+11147633	3	RP11-13J16.1-001
+11147633	4	RP11-13J16.1-001
+11147633	52	Havana
+11147633	53	vega@sanger.ac.uk
+11147633	54	winged helix/forkhead transcription factor (HFH1)
+11147633	123	The mRNA gene object was made using mRNA AF153341, which was not present in the database at the time of analysis. The coordinates were obtained using dotter
+11147633	417	GENCODE basic
+11147633	428	tslNA
+11147633	427	principal1
+11147634	3	RP11-13J16.2-001
+11147634	4	RP11-13J16.2-001
+11147634	52	Havana
+11147634	53	vega@sanger.ac.uk
+11147634	417	GENCODE basic
+11147634	428	tsl3
+11147635	4	RP4-668J24.2-001
+11147635	52	Havana
+11147635	53	vega@sanger.ac.uk
+11147635	417	GENCODE basic
+11147635	428	tslNA
+11147636	3	RP4-668J24.1-001
+11147636	4	RP4-668J24.1-001
+11147636	52	Havana
+11147636	53	vega@sanger.ac.uk
+11147636	54	forkhead box F2
+11147636	417	GENCODE basic
+11147636	428	tsl1
+11147636	427	principal1
+11147637	15	31-53
+11147637	15	67-88
+11147637	62	1:98\	.(.(7.5(3.4)3.3(3.(4.(4.(7.(2.13)13.2)4.)10.).
+11147637	417	GENCODE basic
+11147637	428	tslNA
+11147638	4	LL0YNC03-29C1.1-001
+11147638	52	Havana
+11147638	53	vega@sanger.ac.uk
+11147638	417	GENCODE basic
+11147638	428	tslNA (assigned to previous version 5)
+11147639	3	LL0XNC01-136G2.1-001
+11147639	4	LL0XNC01-136G2.1-001
+11147639	52	Havana
+11147639	53	vega@sanger.ac.uk
+11147639	54	FLJ11323
+11147639	123	Have merged last two exons as they are split due to repeats. Structure corresponds with mouse Plxcd1
+11147639	123	QC splicing correct
+11147639	417	GENCODE basic
+11147639	428	tsl5 (assigned to previous version 4)
+11147639	427	principal1
+11147640	3	LL0XNC01-136G2.1-009
+11147640	4	LL0XNC01-136G2.1-009
+11147640	52	Havana
+11147640	53	vega@sanger.ac.uk
+11147640	123	likely NMD if continued
+11147640	428	tsl4 (assigned to previous version 5)
+11147641	3	LL0XNC01-136G2.1-010
+11147641	4	LL0XNC01-136G2.1-010
+11147641	52	Havana
+11147641	53	vega@sanger.ac.uk
+11147641	54	alternative 5' UTR
+11147641	125	1
+11147641	127	1
+11147641	428	tsl2 (assigned to previous version 5)
+11147642	3	LL0XNC01-136G2.1-005
+11147642	4	LL0XNC01-136G2.1-005
+11147642	52	Havana
+11147642	53	vega@sanger.ac.uk
+11147642	54	alternative 5' UTR
+11147642	123	QC splicing correct
+11147642	123	this is the best match on the repeat which splices
+11147642	125	1
+11147642	127	1
+11147642	428	tsl4 (assigned to previous version 4)
+11147643	3	LL0XNC01-136G2.1-002
+11147643	4	LL0XNC01-136G2.1-002
+11147643	52	Havana
+11147643	53	vega@sanger.ac.uk
+11147643	54	alternative 5' UTR
+11147643	123	Have merged last two exons as they are split due to repeats. Structure corresponds with mouse Plxcd1
+11147643	417	GENCODE basic
+11147643	428	tsl5 (assigned to previous version 5)
+11147643	427	principal1
+11147644	3	LL0XNC01-136G2.1-006
+11147644	4	LL0XNC01-136G2.1-006
+11147644	52	Havana
+11147644	53	vega@sanger.ac.uk
+11147644	54	alternative 5' UTR
+11147644	125	1
+11147644	127	1
+11147644	428	tsl4 (assigned to previous version 4)
+11147645	3	LL0XNC01-136G2.1-003
+11147645	4	LL0XNC01-136G2.1-003
+11147645	52	Havana
+11147645	53	vega@sanger.ac.uk
+11147645	54	alternative 5' UTR
+11147645	123	joint BIG (with Y)
+11147645	123	QC splicing correct
+11147645	125	1
+11147645	127	1
+11147645	428	tsl5 (assigned to previous version 4)
+11147646	3	LL0XNC01-136G2.1-007
+11147646	4	LL0XNC01-136G2.1-007
+11147646	52	Havana
+11147646	53	vega@sanger.ac.uk
+11147646	54	alternative 5' UTR
+11147646	123	joint BIG (with Y)
+11147646	123	QC splicing correct
+11147646	125	1
+11147646	127	1
+11147646	428	tsl5 (assigned to previous version 4)
+11147647	3	LL0XNC01-136G2.1-008
+11147647	4	LL0XNC01-136G2.1-008
+11147647	52	Havana
+11147647	53	vega@sanger.ac.uk
+11147647	54	alternative 5' UTR
+11147647	125	1
+11147647	127	1
+11147647	428	tsl4 (assigned to previous version 4)
+11147648	3	LL0XNC01-136G2.1-004
+11147648	4	LL0XNC01-136G2.1-004
+11147648	52	Havana
+11147648	53	vega@sanger.ac.uk
+11147648	54	alternative 5' UTR
+11147648	125	1
+11147648	127	1
+11147648	428	tsl2 (assigned to previous version 4)
+11147649	417	GENCODE basic
+11147649	428	tsl5 (assigned to previous version 6)
+11147649	427	principal1
+11147650	3	LL0XNC01-136G2.2-003
+11147650	4	LL0XNC01-136G2.2-003
+11147650	52	Havana
+11147650	53	vega@sanger.ac.uk
+11147650	123	artifactual exon cut back
+11147650	428	tsl2 (assigned to previous version 5)
+11147651	3	LL0XNC01-136G2.2-001
+11147651	4	LL0XNC01-136G2.2-001
+11147651	52	Havana
+11147651	53	vega@sanger.ac.uk
+11147651	417	GENCODE basic
+11147651	428	tsl1 (assigned to previous version 7)
+11147651	427	principal1
+11147652	3	LL0YNC03-56G10.2-001
+11147652	4	LL0YNC03-56G10.2-001
+11147652	52	Havana
+11147652	53	vega@sanger.ac.uk
+11147652	417	GENCODE basic
+11147652	428	tsl5 (assigned to previous version 5)
+11147653	3	LL0YNC03-56G10.1-001
+11147653	4	LL0YNC03-56G10.1-001
+11147653	52	Havana
+11147653	53	vega@sanger.ac.uk
+11147653	417	GENCODE basic
+11147653	427	principal1
+11147653	428	tsl1 (assigned to previous version 6)
+11147654	3	LL0YNC03-56G10.1-008
+11147654	4	LL0YNC03-56G10.1-008
+11147654	52	Havana
+11147654	53	vega@sanger.ac.uk
+11147654	428	tsl2 (assigned to previous version 4)
+11147655	3	LL0YNC03-56G10.1-003
+11147655	4	LL0YNC03-56G10.1-003
+11147655	52	Havana
+11147655	53	vega@sanger.ac.uk
+11147655	428	tsl1 (assigned to previous version 4)
+11147656	3	LL0YNC03-56G10.1-006
+11147656	4	LL0YNC03-56G10.1-006
+11147656	52	Havana
+11147656	53	vega@sanger.ac.uk
+11147656	428	tsl3 (assigned to previous version 4)
+11147657	3	LL0YNC03-56G10.1-004
+11147657	4	LL0YNC03-56G10.1-004
+11147657	52	Havana
+11147657	53	vega@sanger.ac.uk
+11147657	428	tsl2 (assigned to previous version 4)
+11147658	3	LL0YNC03-56G10.1-005
+11147658	4	LL0YNC03-56G10.1-005
+11147658	52	Havana
+11147658	53	vega@sanger.ac.uk
+11147658	428	tsl5 (assigned to previous version 4)
+11147659	3	LL0YNC03-56G10.1-007
+11147659	4	LL0YNC03-56G10.1-007
+11147659	52	Havana
+11147659	53	vega@sanger.ac.uk
+11147659	428	tsl2 (assigned to previous version 5)
+11147660	3	LL0YNC03-56G10.1-010
+11147660	4	LL0YNC03-56G10.1-010
+11147660	52	Havana
+11147660	53	vega@sanger.ac.uk
+11147660	428	tsl2 (assigned to previous version 4)
+11147661	3	LL0YNC03-56G10.1-009
+11147661	4	LL0YNC03-56G10.1-009
+11147661	52	Havana
+11147661	53	vega@sanger.ac.uk
+11147661	428	tsl2 (assigned to previous version 4)
+11147662	3	LL0YNC03-56G10.1-002
+11147662	4	LL0YNC03-56G10.1-002
+11147662	52	Havana
+11147662	53	vega@sanger.ac.uk
+11147662	125	1
+11147662	127	1
+11147662	428	tsl5 (assigned to previous version 7)
+11147663	4	RP13-465B17.4-001
+11147663	52	Havana
+11147663	53	vega@sanger.ac.uk
+11147663	417	GENCODE basic
+11147663	428	tsl4 (assigned to previous version 1)
+11147664	62	1:290\	(3.(5.8)5.5(4.8)7.3(3.(7.2(15.(7.(12.6(23.6(3.7)3.(9.3(4.8)4.3)9.22)18.3)4.).2)12.)7.)15.2)7.)3.3
+11147664	417	GENCODE basic
+11147664	428	tslNA (assigned to previous version 3)
+11147665	4	RP13-465B17.5-001
+11147665	52	Havana
+11147665	53	vega@sanger.ac.uk
+11147665	417	GENCODE basic
+11147665	428	tsl4 (assigned to previous version 1)
+11147666	4	RP13-465B17.2-001
+11147666	52	Havana
+11147666	53	vega@sanger.ac.uk
+11147666	54	fatty acid binding protein 5 (psoriasis-associated) (FABP5) pseudogene
+11147666	417	GENCODE basic
+11147666	428	tslNA (assigned to previous version 4)
+11147667	4	RP13-465B17.3-001
+11147667	52	Havana
+11147667	53	vega@sanger.ac.uk
+11147667	54	pseudogene similar to part of keratin 18 (KRT18)
+11147667	123	TR:Q15899 not added as evidence as this does not represent the major form of keratin 18 protein - and it's on the opposite strand to the other keratin evidence!
+11147667	417	GENCODE basic
+11147667	428	tslNA (assigned to previous version 4)
+11147668	3	RP13-391G2.1-003
+11147668	4	RP13-391G2.1-003
+11147668	52	Havana
+11147668	53	vega@sanger.ac.uk
+11147668	123	CCDS14107.1
+11147668	417	GENCODE basic
+11147668	427	principal1
+11147668	428	tsl1 (assigned to previous version 4)
+11147669	3	RP13-391G2.1-001
+11147669	4	RP13-391G2.1-001
+11147669	52	Havana
+11147669	53	vega@sanger.ac.uk
+11147669	123	CCDS14106.1
+11147669	417	GENCODE basic
+11147669	428	tsl1 (assigned to previous version 4)
+11147670	417	GENCODE basic
+11147670	427	principal1
+11147670	428	tsl5 (assigned to previous version 4)
+11147671	417	GENCODE basic
+11147671	428	tsl5 (assigned to previous version 6)
+11147672	4	RP11-309M23.1-001
+11147672	52	Havana
+11147672	53	vega@sanger.ac.uk
+11147672	417	GENCODE basic
+11147672	428	tsl2 (assigned to previous version 4)
+11147673	4	RP11-309M23.2-001
+11147673	52	Havana
+11147673	53	vega@sanger.ac.uk
+11147673	54	ribosomal protein L14 (RPL14) pseudogene
+11147673	417	GENCODE basic
+11147673	428	tslNA (assigned to previous version 4)
+11147674	3	WI2-87105E3.1-001
+11147674	4	WI2-87105E3.1-001
+11147674	52	Havana
+11147674	53	vega@sanger.ac.uk
+11147674	417	GENCODE basic
+11147674	427	principal1
+11147674	428	tsl1 (assigned to previous version 5)
+11147675	3	WI2-87105E3.1-002
+11147675	4	WI2-87105E3.1-002
+11147675	52	Havana
+11147675	53	vega@sanger.ac.uk
+11147675	428	tsl5 (assigned to previous version 4)
+11147676	417	GENCODE basic
+11147676	427	principal1
+11147676	428	tsl5 (assigned to previous version 4)
+11147677	417	GENCODE basic
+11147677	428	tsl1 (assigned to previous version 6)
+11147678	3	RP4-674K6.1-006
+11147678	4	RP4-674K6.1-006
+11147678	52	Havana
+11147678	53	vega@sanger.ac.uk
+11147678	54	colony stimulating factor 2 receptor alpha chain isoform a precursor
+11147678	417	GENCODE basic
+11147678	428	tsl1 (assigned to previous version 6)
+11147678	427	alternative2
+11147679	3	RP4-674K6.1-001
+11147679	4	RP4-674K6.1-001
+11147679	52	Havana
+11147679	53	vega@sanger.ac.uk
+11147679	54	colony stimulating factor 2 receptor alpha chain isoform a precursor
+11147679	417	GENCODE basic
+11147679	428	tsl1 (assigned to previous version 6)
+11147679	427	alternative2
+11147680	3	RP4-674K6.1-008
+11147680	4	RP4-674K6.1-008
+11147680	52	Havana
+11147680	53	vega@sanger.ac.uk
+11147680	428	tsl5 (assigned to previous version 4)
+11147681	3	RP4-674K6.1-009
+11147681	4	RP4-674K6.1-009
+11147681	52	Havana
+11147681	53	vega@sanger.ac.uk
+11147681	125	1
+11147681	127	1
+11147681	428	tsl5 (assigned to previous version 4)
+11147682	3	RP4-674K6.1-010
+11147682	4	RP4-674K6.1-010
+11147682	52	Havana
+11147682	53	vega@sanger.ac.uk
+11147682	125	1
+11147682	127	1
+11147682	428	tsl5 (assigned to previous version 4)
+11147683	3	RP4-674K6.1-005
+11147683	4	RP4-674K6.1-005
+11147683	52	Havana
+11147683	53	vega@sanger.ac.uk
+11147683	417	GENCODE basic
+11147683	427	alternative2
+11147683	428	tsl1 (assigned to previous version 6)
+11147684	3	RP4-674K6.1-012
+11147684	4	RP4-674K6.1-012
+11147684	52	Havana
+11147684	53	vega@sanger.ac.uk
+11147684	123	QC splicing correct
+11147684	123	There is a 1 bp 'wobble' in the alignment v's the splicing coords between exon 5 and 6
+11147684	380	dotter confirmed
+11147684	417	GENCODE basic
+11147684	428	tsl5 (assigned to previous version 5)
+11147685	3	RP4-674K6.1-011
+11147685	4	RP4-674K6.1-011
+11147685	52	Havana
+11147685	53	vega@sanger.ac.uk
+11147685	428	tsl2 (assigned to previous version 4)
+11147686	3	RP4-674K6.1-002
+11147686	4	RP4-674K6.1-002
+11147686	52	Havana
+11147686	53	vega@sanger.ac.uk
+11147686	54	colony stimulating factor 2 receptor alpha chain isoform e precursor
+11147686	417	GENCODE basic
+11147686	428	tsl1 (assigned to previous version 5)
+11147687	3	RP4-674K6.1-003
+11147687	4	RP4-674K6.1-003
+11147687	52	Havana
+11147687	53	vega@sanger.ac.uk
+11147687	54	colony stimulating factor 2 receptor alpha chain isoform d precursor
+11147687	123	Although this variant is listed in Swissprot as a variant and LocusLink as a known isoform, its translation is hypothetical (Hu,X., Emanuel,P.D. and Zuckerman,K.S (1994) Biochim. Biophys. Acta 1223 (2), 306-308).  As the termination codon lies within the third exon from the end this transcript may be subject to nonsense mediated decay ( Nagy E. and Maquat L.E. (1998) Trends Biochem Sci 23:198-199)
+11147687	123	Translation removed and type set to NMD
+11147687	428	tsl1 (assigned to previous version 4)
+11147688	3	RP4-674K6.1-004
+11147688	4	RP4-674K6.1-004
+11147688	52	Havana
+11147688	53	vega@sanger.ac.uk
+11147688	54	colony stimulating factor 2 receptor alpha chain isoform b precursor
+11147688	417	GENCODE basic
+11147688	427	alternative2
+11147688	428	tsl1 (assigned to previous version 6)
+11147689	3	RP4-674K6.1-007
+11147689	4	RP4-674K6.1-007
+11147689	52	Havana
+11147689	53	vega@sanger.ac.uk
+11147689	54	colony stimulating factor 2 receptor alpha chain isoform c precursor
+11147689	417	GENCODE basic
+11147689	428	tsl1 (assigned to previous version 4)
+11147689	427	alternative2
+11147690	3	RP4-674K6.1-013
+11147690	4	RP4-674K6.1-013
+11147690	52	Havana
+11147690	53	vega@sanger.ac.uk
+11147690	428	tsl2 (assigned to previous version 4)
+11147691	3	RP4-674K6.1-014
+11147691	4	RP4-674K6.1-014
+11147691	52	Havana
+11147691	53	vega@sanger.ac.uk
+11147691	428	tsl2 (assigned to previous version 4)
+11147692	3	RP4-674K6.1-016
+11147692	4	RP4-674K6.1-016
+11147692	52	Havana
+11147692	53	vega@sanger.ac.uk
+11147692	428	tsl2 (assigned to previous version 4)
+11147693	3	RP4-674K6.1-015
+11147693	4	RP4-674K6.1-015
+11147693	52	Havana
+11147693	53	vega@sanger.ac.uk
+11147693	428	tsl5 (assigned to previous version 4)
+11147694	3	RP4-674K6.1-017
+11147694	4	RP4-674K6.1-017
+11147694	52	Havana
+11147694	53	vega@sanger.ac.uk
+11147694	428	tsl5 (assigned to previous version 4)
+11147695	417	GENCODE basic
+11147695	428	tsl2 (assigned to previous version 5)
+11147696	417	GENCODE basic
+11147696	428	tsl5 (assigned to previous version 5)
+11147696	427	principal4
+11147697	417	GENCODE basic
+11147697	427	alternative2
+11147697	428	tsl1 (assigned to previous version 5)
+11147698	15	9-31
+11147698	62	1:74\	.3(4.(7.(4.(2.(3.3(3.9)3.3)3.)6.)5.)2.)2.2)2
+11147698	417	GENCODE basic
+11147698	428	tslNA (assigned to previous version 4)
+11147699	15	9-31
+11147699	62	1:74\	.3(4.(6.2(4.(2.(3.3(3.9)3.3)3.)6.2)4.)2.)2.2)2
+11147699	417	GENCODE basic
+11147699	428	tslNA (assigned to previous version 4)
+11147700	15	10-32
+11147700	62	1:75\	(4.(2.(3.(3.2(4.(5.4(3.9)3.4)9.2)6.)2.)4
+11147700	417	GENCODE basic
+11147700	428	tslNA (assigned to previous version 4)
+11147701	15	10-32
+11147701	62	1:75\	(7.(3.(3.2(4.(5.4(3.9)3.4)9.2)6.)7
+11147701	417	GENCODE basic
+11147701	428	tslNA (assigned to previous version 4)
+11147702	15	10-32
+11147702	62	1:75\	(2.2(3.(3.(3.2(4.(2.(.5(6.9)13.2)6.)3.2)2
+11147702	417	GENCODE basic
+11147702	428	tslNA (assigned to previous version 4)
+11147703	62	1:120\	.15(6.3(2.4(.2(2.4)2.2).6)2.4)6.4(2.2(3.4(.2(4.(.4).2)4.2).)3.2)2.12
+11147703	417	GENCODE basic
+11147703	428	tslNA (assigned to previous version 4)
+11147704	3	RP11-261P4.2-001
+11147704	4	RP11-261P4.2-001
+11147704	52	Havana
+11147704	53	vega@sanger.ac.uk
+11147704	54	interleukin 3 receptor, alpha (low affinity) (IL3R, CD123, IL3RX, IL3RY, IL3RAY, hIL-3Ra, MGC34174)
+11147704	417	GENCODE basic
+11147704	428	tsl1 (assigned to previous version 7)
+11147704	427	principal3
+11147705	3	RP11-261P4.2-002
+11147705	4	RP11-261P4.2-002
+11147705	52	Havana
+11147705	53	vega@sanger.ac.uk
+11147705	54	interleukin 3 receptor, alpha (low affinity) (IL3R, CD123, IL3RX, IL3RY, IL3RAY, hIL-3Ra, MGC34174)
+11147705	125	1
+11147705	127	1
+11147705	428	tsl2 (assigned to previous version 4)
+11147706	417	GENCODE basic
+11147706	427	alternative2
+11147706	428	tsl5 (assigned to previous version 5)
+11147707	3	RP11-261P4.6-001
+11147707	4	RP11-261P4.6-001
+11147707	52	Havana
+11147707	53	vega@sanger.ac.uk
+11147707	54	solute carrier family 25 (mitochondrial carrier; adenine nucleotide translocator), member 6 (ANT3, ANT3Y, MGC17525)
+11147707	417	GENCODE basic
+11147707	428	tsl1 (assigned to previous version 8)
+11147707	427	principal1
+11147708	3	RP11-261P4.6-002
+11147708	4	RP11-261P4.6-002
+11147708	52	Havana
+11147708	53	vega@sanger.ac.uk
+11147708	54	solute carrier family 25 (mitochondrial carrier; adenine nucleotide translocator), member 6 (ANT3, ANT3Y, MGC17525)
+11147708	428	tsl2 (assigned to previous version 4)
+11147709	3	RP11-261P4.6-003
+11147709	4	RP11-261P4.6-003
+11147709	52	Havana
+11147709	53	vega@sanger.ac.uk
+11147709	54	solute carrier family 25 (mitochondrial carrier; adenine nucleotide translocator), member 6 (ANT3, ANT3Y, MGC17525)
+11147709	428	tsl5 (assigned to previous version 4)
+11147710	3	RP11-261P4.5-002
+11147710	4	RP11-261P4.5-002
+11147710	52	Havana
+11147710	53	vega@sanger.ac.uk
+11147710	417	GENCODE basic
+11147710	428	tsl5 (assigned to previous version 5)
+11147711	3	RP11-261P4.5-001
+11147711	4	RP11-261P4.5-001
+11147711	52	Havana
+11147711	53	vega@sanger.ac.uk
+11147711	54	putative novel transcript
+11147711	417	GENCODE basic
+11147711	428	tsl2 (assigned to previous version 5)
+11147712	3	RP11-261P4.7-003
+11147712	4	RP11-261P4.7-003
+11147712	52	Havana
+11147712	53	vega@sanger.ac.uk
+11147712	428	tsl2 (assigned to previous version 4)
+11147713	3	RP11-261P4.7-004
+11147713	4	RP11-261P4.7-004
+11147713	52	Havana
+11147713	53	vega@sanger.ac.uk
+11147713	417	GENCODE basic
+11147713	428	tsl2 (assigned to previous version 5)
+11147714	3	RP11-261P4.7-002
+11147714	4	RP11-261P4.7-002
+11147714	52	Havana
+11147714	53	vega@sanger.ac.uk
+11147714	123	cut back last exon as did not splice correctly
+11147714	428	tsl1 (assigned to previous version 5)
+11147715	3	RP11-261P4.7-006
+11147715	4	RP11-261P4.7-006
+11147715	52	Havana
+11147715	53	vega@sanger.ac.uk
+11147715	428	tsl2 (assigned to previous version 5)
+11147716	3	RP11-261P4.7-005
+11147716	4	RP11-261P4.7-005
+11147716	52	Havana
+11147716	53	vega@sanger.ac.uk
+11147716	417	GENCODE basic
+11147716	428	tsl2 (assigned to previous version 4)
+11147717	3	RP11-261P4.3-005
+11147717	4	RP11-261P4.3-005
+11147717	52	Havana
+11147717	53	vega@sanger.ac.uk
+11147717	54	acetylserotonin O-methyltransferase-like (ASTML, ASMTLX)
+11147717	417	GENCODE basic
+11147717	427	principal1
+11147717	428	tsl1 (assigned to previous version 6)
+11147718	3	RP11-261P4.3-001
+11147718	4	RP11-261P4.3-001
+11147718	52	Havana
+11147718	53	vega@sanger.ac.uk
+11147718	54	acetylserotonin O-methyltransferase-like (ASTML, ASMTLX)
+11147718	417	GENCODE basic
+11147718	428	tsl2 (assigned to previous version 7)
+11147719	3	RP11-261P4.3-003
+11147719	4	RP11-261P4.3-003
+11147719	52	Havana
+11147719	53	vega@sanger.ac.uk
+11147719	54	acetylserotonin O-methyltransferase-like (ASTML, ASMTLX)
+11147719	428	tsl2 (assigned to previous version 4)
+11147720	3	RP11-261P4.3-004
+11147720	4	RP11-261P4.3-004
+11147720	52	Havana
+11147720	53	vega@sanger.ac.uk
+11147720	54	acetylserotonin O-methyltransferase-like (ASTML, ASMTLX)
+11147720	428	tsl2 (assigned to previous version 4)
+11147721	3	RP11-261P4.3-002
+11147721	4	RP11-261P4.3-002
+11147721	52	Havana
+11147721	53	vega@sanger.ac.uk
+11147721	54	acetylserotonin O-methyltransferase-like (ASTML, ASMTLX)
+11147721	428	tsl2 (assigned to previous version 4)
+11147722	417	GENCODE basic
+11147722	428	tsl2 (assigned to previous version 4)
+11147723	3	RP11-261P4.4-001
+11147723	4	RP11-261P4.4-001
+11147723	52	Havana
+11147723	53	vega@sanger.ac.uk
+11147723	54	novel protein (LOC286530)
+11147723	417	GENCODE basic
+11147723	428	tsl1 (assigned to previous version 7)
+11147723	427	principal1
+11147724	3	RP11-261P4.4-002
+11147724	4	RP11-261P4.4-002
+11147724	52	Havana
+11147724	53	vega@sanger.ac.uk
+11147724	54	novel transcript
+11147724	428	tsl2 (assigned to previous version 4)
+11147725	3	RP13-297E16.1-003
+11147725	4	RP13-297E16.1-003
+11147725	52	Havana
+11147725	53	vega@sanger.ac.uk
+11147725	417	GENCODE basic
+11147725	428	tsl1 (assigned to previous version 6)
+11147725	427	principal2
+11147726	3	RP13-297E16.1-001
+11147726	4	RP13-297E16.1-001
+11147726	52	Havana
+11147726	53	vega@sanger.ac.uk
+11147726	123	Translation removed and type set to NMD
+11147726	428	tsl1 (assigned to previous version 4)
+11147726	427	alternative2
+11147727	3	RP13-297E16.1-002
+11147727	4	RP13-297E16.1-002
+11147727	52	Havana
+11147727	53	vega@sanger.ac.uk
+11147727	417	GENCODE basic
+11147727	428	tsl1 (assigned to previous version 6)
+11147727	427	alternative2
+11147728	3	RP13-297E16.2-001
+11147728	4	RP13-297E16.2-001
+11147728	52	Havana
+11147728	53	vega@sanger.ac.uk
+11147728	54	acetylserotonin O-methyltransferase (ASMTY, HIOMT, HIOMTY)
+11147728	417	GENCODE basic
+11147728	428	tsl1 (assigned to previous version 6)
+11147729	3	RP13-297E16.2-002
+11147729	4	RP13-297E16.2-002
+11147729	52	Havana
+11147729	53	vega@sanger.ac.uk
+11147729	54	acetylserotonin O-methyltransferase (ASMTY, HIOMT, HIOMTY)
+11147729	417	GENCODE basic
+11147729	427	principal1
+11147729	428	tsl1 (assigned to previous version 7)
+11147730	3	RP13-297E16.2-003
+11147730	4	RP13-297E16.2-003
+11147730	52	Havana
+11147730	53	vega@sanger.ac.uk
+11147730	54	acetylserotonin O-methyltransferase (ASMTY, HIOMT, HIOMTY)
+11147730	417	GENCODE basic
+11147730	428	tsl1 (assigned to previous version 6)
+11147731	3	RP13-297E16.2-005
+11147731	4	RP13-297E16.2-005
+11147731	52	Havana
+11147731	53	vega@sanger.ac.uk
+11147731	428	tsl1 (assigned to previous version 4)
+11147732	3	RP13-297E16.2-004
+11147732	4	RP13-297E16.2-004
+11147732	52	Havana
+11147732	53	vega@sanger.ac.uk
+11147732	54	acetylserotonin O-methyltransferase (ASMTY, HIOMT, HIOMTY)
+11147732	124	1
+11147732	126	1
+11147732	174	-9
+11147732	428	tsl2 (assigned to previous version 4)
+11147733	4	RP13-297E16.4-001
+11147733	52	Havana
+11147733	53	vega@sanger.ac.uk
+11147733	54	putative novel transcript
+11147733	417	GENCODE basic
+11147733	428	tsl2 (assigned to previous version 4)
+11147734	4	RP13-297E16.4-002
+11147734	52	Havana
+11147734	53	vega@sanger.ac.uk
+11147734	54	putative novel transcript
+11147734	417	GENCODE basic
+11147734	428	tsl2 (assigned to previous version 4)
+11147735	4	RP13-297E16.5-001
+11147735	52	Havana
+11147735	53	vega@sanger.ac.uk
+11147735	54	putative novel transcript
+11147735	417	GENCODE basic
+11147735	428	tsl2 (assigned to previous version 4)
+11147736	3	RP11-325D5.2-001
+11147736	4	RP11-325D5.2-001
+11147736	52	Havana
+11147736	53	vega@sanger.ac.uk
+11147736	417	GENCODE basic
+11147736	427	principal1
+11147736	428	tsl1 (assigned to previous version 8)
+11147737	3	RP11-325D5.2-004
+11147737	4	RP11-325D5.2-004
+11147737	52	Havana
+11147737	53	vega@sanger.ac.uk
+11147737	125	1
+11147737	127	1
+11147737	428	tsl2 (assigned to previous version 5)
+11147738	3	RP11-325D5.2-003
+11147738	4	RP11-325D5.2-003
+11147738	52	Havana
+11147738	53	vega@sanger.ac.uk
+11147738	125	1
+11147738	428	tsl2 (assigned to previous version 4)
+11147739	3	RP11-325D5.2-002
+11147739	4	RP11-325D5.2-002
+11147739	52	Havana
+11147739	53	vega@sanger.ac.uk
+11147739	125	1
+11147739	127	1
+11147739	428	tsl2 (assigned to previous version 4)
+11147740	3	RP11-325D5.2-005
+11147740	4	RP11-325D5.2-005
+11147740	52	Havana
+11147740	53	vega@sanger.ac.uk
+11147740	428	tsl2 (assigned to previous version 5)
+11147741	3	RP11-325D5.2-006
+11147741	4	RP11-325D5.2-006
+11147741	52	Havana
+11147741	53	vega@sanger.ac.uk
+11147741	124	1
+11147741	126	1
+11147741	428	tsl2 (assigned to previous version 4)
+11147742	3	RP11-325D5.2-007
+11147742	4	RP11-325D5.2-007
+11147742	52	Havana
+11147742	53	vega@sanger.ac.uk
+11147742	428	tsl2 (assigned to previous version 5)
+11147743	4	RP13-858C7.1-001
+11147743	52	Havana
+11147743	53	vega@sanger.ac.uk
+11147743	125	1
+11147743	417	GENCODE basic
+11147743	428	tsl5 (assigned to previous version 4)
+11147744	3	RP11-325D5.1-001
+11147744	4	RP11-325D5.1-001
+11147744	52	Havana
+11147744	53	vega@sanger.ac.uk
+11147744	54	Ac-like transposable element
+11147744	123	nagnag between exons 1 and 2
+11147744	417	GENCODE basic
+11147744	427	principal1
+11147744	428	tsl1 (assigned to previous version 5)
+11147745	3	RP11-325D5.1-004
+11147745	4	RP11-325D5.1-004
+11147745	52	Havana
+11147745	53	vega@sanger.ac.uk
+11147745	428	tsl2 (assigned to previous version 4)
+11147746	3	RP11-325D5.1-002
+11147746	4	RP11-325D5.1-002
+11147746	52	Havana
+11147746	53	vega@sanger.ac.uk
+11147746	54	alternative 5' UTR
+11147746	123	nagnag between exons 1 and 2
+11147746	417	GENCODE basic
+11147746	427	principal1
+11147746	428	tsl1 (assigned to previous version 6)
+11147747	3	RP11-325D5.1-003
+11147747	4	RP11-325D5.1-003
+11147747	52	Havana
+11147747	53	vega@sanger.ac.uk
+11147747	54	alternative 5' UTR
+11147747	123	nagnag between exons 1 and 2
+11147747	125	1
+11147747	127	1
+11147747	428	tsl2 (assigned to previous version 4)
+11147748	417	GENCODE basic
+11147748	427	principal1
+11147748	428	tsl2 (assigned to previous version 7)
+11147749	15	39-62
+11147749	62	1:64\	(4.2(4.(2.3(3.(4.2(2.(3.4)3.2)2.2)4.)5.)8
+11147749	417	GENCODE basic
+11147749	428	tslNA (assigned to previous version 3)
+11147750	3	RP11-155F12.2-004
+11147750	4	RP11-155F12.2-004
+11147750	52	Havana
+11147750	53	vega@sanger.ac.uk
+11147750	417	GENCODE basic
+11147750	428	tsl4 (assigned to previous version 4)
+11147751	3	RP11-155F12.2-003
+11147751	4	RP11-155F12.2-003
+11147751	52	Havana
+11147751	53	vega@sanger.ac.uk
+11147751	417	GENCODE basic
+11147751	428	tsl2 (assigned to previous version 5)
+11147752	3	RP11-155F12.2-001
+11147752	4	RP11-155F12.2-001
+11147752	52	Havana
+11147752	53	vega@sanger.ac.uk
+11147752	54	novel transcript
+11147752	428	tsl1 (assigned to previous version 4)
+11147753	3	RP11-155F12.2-005
+11147753	4	RP11-155F12.2-005
+11147753	52	Havana
+11147753	53	vega@sanger.ac.uk
+11147753	123	based on homology to CD99 protein P14209. (lw2)
+11147753	417	GENCODE basic
+11147753	428	tslNA (assigned to previous version 4)
+11147754	3	RP11-155F12.2-002
+11147754	4	RP11-155F12.2-002
+11147754	52	Havana
+11147754	53	vega@sanger.ac.uk
+11147754	54	novel transcript
+11147754	428	tsl2 (assigned to previous version 5)
+11147755	3	RP11-155F12.3-001
+11147755	4	RP11-155F12.3-001
+11147755	52	Havana
+11147755	53	vega@sanger.ac.uk
+11147755	54	novel transcript
+11147755	417	GENCODE basic
+11147755	428	tsl1 (assigned to previous version 4)
+11147756	3	GS1-546D14.1-001
+11147756	4	GS1-546D14.1-001
+11147756	52	Havana
+11147756	53	vega@sanger.ac.uk
+11147756	54	CD99 antigen
+11147756	417	GENCODE basic
+11147756	427	principal3
+11147756	428	tsl1 (assigned to previous version 6)
+11147757	3	GS1-546D14.1-003
+11147757	4	GS1-546D14.1-003
+11147757	52	Havana
+11147757	53	vega@sanger.ac.uk
+11147757	54	CD99 antigen
+11147757	417	GENCODE basic
+11147757	427	alternative2
+11147757	428	tsl2 (assigned to previous version 6)
+11147758	3	GS1-546D14.1-004
+11147758	4	GS1-546D14.1-004
+11147758	52	Havana
+11147758	53	vega@sanger.ac.uk
+11147758	54	non canonical TEC
+11147758	123	Flanked by Alu. Interesting GGAAA insertion in primates relative to horse, dog and mouse
+11147758	123	QC splicing correct
+11147758	380	dotter confirmed
+11147758	417	GENCODE basic
+11147758	428	tsl5 (assigned to previous version 4)
+11147758	427	alternative2
+11147759	3	GS1-546D14.1-009
+11147759	4	GS1-546D14.1-009
+11147759	52	Havana
+11147759	53	vega@sanger.ac.uk
+11147759	428	tsl2 (assigned to previous version 5)
+11147760	3	GS1-546D14.1-010
+11147760	4	GS1-546D14.1-010
+11147760	52	Havana
+11147760	53	vega@sanger.ac.uk
+11147760	54	NAGNAG splice site
+11147760	417	GENCODE basic
+11147760	427	alternative2
+11147760	428	tsl2 (assigned to previous version 2)
+11147761	3	GS1-546D14.1-002
+11147761	4	GS1-546D14.1-002
+11147761	52	Havana
+11147761	53	vega@sanger.ac.uk
+11147761	54	CD99 antigen
+11147761	417	GENCODE basic
+11147761	427	alternative2
+11147761	428	tsl2 (assigned to previous version 6)
+11147762	3	GS1-546D14.1-011
+11147762	4	GS1-546D14.1-011
+11147762	52	Havana
+11147762	53	vega@sanger.ac.uk
+11147762	54	NAGNAG splice site
+11147762	427	alternative2
+11147762	428	tsl1 (assigned to previous version 2)
+11147763	3	GS1-546D14.1-005
+11147763	4	GS1-546D14.1-005
+11147763	52	Havana
+11147763	53	vega@sanger.ac.uk
+11147763	54	CD99 antigen
+11147763	124	1
+11147763	125	1
+11147763	126	1
+11147763	127	1
+11147763	174	-3
+11147763	427	alternative2
+11147763	428	tsl5 (assigned to previous version 4)
+11147764	3	GS1-546D14.1-006
+11147764	4	GS1-546D14.1-006
+11147764	52	Havana
+11147764	53	vega@sanger.ac.uk
+11147764	54	CD99 antigen
+11147764	428	tsl2 (assigned to previous version 4)
+11147765	3	GS1-546D14.1-007
+11147765	4	GS1-546D14.1-007
+11147765	52	Havana
+11147765	53	vega@sanger.ac.uk
+11147765	54	CD99 antigen
+11147765	428	tsl2 (assigned to previous version 4)
+11147766	3	GS1-546D14.1-008
+11147766	4	GS1-546D14.1-008
+11147766	52	Havana
+11147766	53	vega@sanger.ac.uk
+11147766	54	CD99 antigen
+11147766	124	1
+11147766	126	1
+11147766	427	alternative2
+11147766	428	tsl2 (assigned to previous version 4)
+11147767	318	split_tscript
+11147767	417	GENCODE basic
+11147767	427	alternative2
+11147767	428	tsl1 (assigned to previous version 3)
+11147768	3	RP11-146D5.1-001
+11147768	4	RP11-146D5.1-001
+11147768	52	Havana
+11147768	53	vega@sanger.ac.uk
+11147768	123	CDS14120.1
+11147768	417	GENCODE basic
+11147768	427	principal3
+11147768	428	tsl1 (assigned to previous version 8)
+11147769	3	RP11-146D5.1-002
+11147769	4	RP11-146D5.1-002
+11147769	52	Havana
+11147769	53	vega@sanger.ac.uk
+11147769	54	NP_001135391
+11147769	417	GENCODE basic
+11147769	427	alternative2
+11147769	428	tsl1 (assigned to previous version 5)
+11147770	3	RP11-146D5.1-007
+11147770	4	RP11-146D5.1-007
+11147770	52	Havana
+11147770	53	vega@sanger.ac.uk
+11147770	125	1
+11147770	127	1
+11147770	427	alternative2
+11147770	428	tsl3
+11147771	3	RP11-146D5.1-004
+11147771	4	RP11-146D5.1-004
+11147771	52	Havana
+11147771	53	vega@sanger.ac.uk
+11147771	428	tsl1
+11147772	3	RP11-146D5.1-006
+11147772	4	RP11-146D5.1-006
+11147772	52	Havana
+11147772	53	vega@sanger.ac.uk
+11147772	428	tsl3
+11147773	3	RP4-617A9.2-007
+11147773	4	RP4-617A9.2-007
+11147773	52	Havana
+11147773	53	vega@sanger.ac.uk
+11147773	417	GENCODE basic
+11147773	428	tsl1 (assigned to previous version 6)
+11147773	427	alternative2
+11147774	3	RP4-617A9.2-001
+11147774	4	RP4-617A9.2-001
+11147774	52	Havana
+11147774	53	vega@sanger.ac.uk
+11147774	417	GENCODE basic
+11147774	428	tsl1 (assigned to previous version 6)
+11147774	427	principal3
+11147775	3	RP4-617A9.2-002
+11147775	4	RP4-617A9.2-002
+11147775	52	Havana
+11147775	53	vega@sanger.ac.uk
+11147775	428	tsl2 (assigned to previous version 4)
+11147776	3	RP4-617A9.2-008
+11147776	4	RP4-617A9.2-008
+11147776	52	Havana
+11147776	53	vega@sanger.ac.uk
+11147776	54	alternative 5' UTR
+11147776	125	1
+11147776	127	1
+11147776	428	tsl3 (assigned to previous version 2)
+11147777	3	RP4-617A9.2-009
+11147777	4	RP4-617A9.2-009
+11147777	52	Havana
+11147777	53	vega@sanger.ac.uk
+11147777	123	NMD likely if extended
+11147777	428	tsl3 (assigned to previous version 5)
+11147778	3	RP4-617A9.2-005
+11147778	4	RP4-617A9.2-005
+11147778	52	Havana
+11147778	53	vega@sanger.ac.uk
+11147778	123	CCDS55365.1
+11147778	417	GENCODE basic
+11147778	428	tsl5 (assigned to previous version 9)
+11147778	427	alternative2
+11147779	3	RP4-617A9.2-006
+11147779	4	RP4-617A9.2-006
+11147779	52	Havana
+11147779	53	vega@sanger.ac.uk
+11147779	428	tsl2
+11147780	3	RP4-617A9.2-010
+11147780	4	RP4-617A9.2-010
+11147780	52	Havana
+11147780	53	vega@sanger.ac.uk
+11147780	124	1
+11147780	125	1
+11147780	126	1
+11147780	127	1
+11147780	428	tsl1
+11147781	4	RP11-146D5.3-001
+11147781	52	Havana
+11147781	53	vega@sanger.ac.uk
+11147781	54	not best-in-genome evidence
+11147781	417	GENCODE basic
+11147781	428	tsl5
+11147782	3	RP4-617A9.1-001
+11147782	4	RP4-617A9.1-001
+11147782	52	Havana
+11147782	53	vega@sanger.ac.uk
+11147782	54	arylsulfatase D
+11147782	123	CCDS35196.1
+11147782	123	gomi
+11147782	417	GENCODE basic
+11147782	428	tsl1 (assigned to previous version 4)
+11147782	427	principal1
+11147783	3	RP4-617A9.1-004
+11147783	4	RP4-617A9.1-004
+11147783	52	Havana
+11147783	53	vega@sanger.ac.uk
+11147783	54	arylsulfatase D
+11147783	123	gomi
+11147783	124	1
+11147783	126	1
+11147783	174	-48
+11147783	428	tsl3
+11147784	3	RP4-617A9.1-005
+11147784	4	RP4-617A9.1-005
+11147784	52	Havana
+11147784	53	vega@sanger.ac.uk
+11147784	54	arylsulfatase D, variant
+11147784	123	gomi
+11147784	428	tsl2
+11147785	3	RP4-617A9.1-002
+11147785	4	RP4-617A9.1-002
+11147785	52	Havana
+11147785	53	vega@sanger.ac.uk
+11147785	54	arylsulfatase D
+11147785	123	gomi
+11147785	428	tsl1 (assigned to previous version 9)
+11147786	3	RP4-617A9.1-006
+11147786	4	RP4-617A9.1-006
+11147786	52	Havana
+11147786	53	vega@sanger.ac.uk
+11147786	54	arylsulfatase D
+11147786	123	gomi
+11147786	428	tsl3
+11147787	3	RP4-617A9.1-003
+11147787	4	RP4-617A9.1-003
+11147787	52	Havana
+11147787	53	vega@sanger.ac.uk
+11147787	54	arylsulfatase D
+11147787	123	gomi
+11147787	428	tsl2 (assigned to previous version 4)
+11147788	3	RP4-617A9.1-007
+11147788	4	RP4-617A9.1-007
+11147788	52	Havana
+11147788	53	vega@sanger.ac.uk
+11147788	428	tsl4
+11147789	4	RP4-617A9.4-001
+11147789	52	Havana
+11147789	53	vega@sanger.ac.uk
+11147789	54	novel transcript
+11147789	417	GENCODE basic
+11147789	428	tsl2
+11147790	3	RP4-617A9.3-001
+11147790	4	RP4-617A9.3-001
+11147790	52	Havana
+11147790	53	vega@sanger.ac.uk
+11147790	54	arylsulfatase E (chondrodysplasia punctata 1)
+11147790	123	gomi
+11147790	417	GENCODE basic
+11147790	427	principal1
+11147790	428	tsl1 (assigned to previous version 6)
+11147791	3	RP4-617A9.3-002
+11147791	4	RP4-617A9.3-002
+11147791	52	Havana
+11147791	53	vega@sanger.ac.uk
+11147791	54	alternative 5' UTR
+11147791	54	arylsulfatase E (chondrodysplasia punctata 1)
+11147791	123	gomi
+11147791	125	1
+11147791	127	1
+11147791	428	tsl2 (assigned to previous version 4)
+11147792	3	RP4-617A9.3-003
+11147792	4	RP4-617A9.3-003
+11147792	52	Havana
+11147792	53	vega@sanger.ac.uk
+11147792	54	arylsulfatase E (chondrodysplasia punctata 1)
+11147792	123	gomi
+11147792	123	QC splicing correct
+11147792	428	tsl5
+11147793	3	RP4-617A9.3-004
+11147793	4	RP4-617A9.3-004
+11147793	52	Havana
+11147793	53	vega@sanger.ac.uk
+11147793	54	arylsulfatase E (chondrodysplasia punctata 1)
+11147793	123	gomi
+11147793	428	tsl5
+11147794	417	GENCODE basic
+11147794	428	tsl2 (assigned to previous version 4)
+11147795	417	GENCODE basic
+11147795	428	tsl2 (assigned to previous version 4)
+11147796	3	GS1-546D14.1-001
+11147796	4	GS1-546D14.1-001
+11147796	52	Havana
+11147796	53	vega@sanger.ac.uk
+11147796	54	CD99 antigen
+11147796	417	GENCODE basic
+11147796	427	principal3
+11147796	428	tsl1 (assigned to previous version 6)
+11147797	3	GS1-546D14.1-003
+11147797	4	GS1-546D14.1-003
+11147797	52	Havana
+11147797	53	vega@sanger.ac.uk
+11147797	54	CD99 antigen
+11147797	417	GENCODE basic
+11147797	427	alternative2
+11147797	428	tsl2 (assigned to previous version 6)
+11147798	3	GS1-546D14.1-004
+11147798	4	GS1-546D14.1-004
+11147798	52	Havana
+11147798	53	vega@sanger.ac.uk
+11147798	54	non canonical TEC
+11147798	123	Flanked by Alu. Interesting GGAAA insertion in primates relative to horse, dog and mouse
+11147798	123	QC splicing correct
+11147798	380	dotter confirmed
+11147798	417	GENCODE basic
+11147798	428	tsl5 (assigned to previous version 4)
+11147798	427	alternative2
+11147799	3	GS1-546D14.1-009
+11147799	4	GS1-546D14.1-009
+11147799	52	Havana
+11147799	53	vega@sanger.ac.uk
+11147799	428	tsl2 (assigned to previous version 5)
+11147800	3	GS1-546D14.1-010
+11147800	4	GS1-546D14.1-010
+11147800	52	Havana
+11147800	53	vega@sanger.ac.uk
+11147800	54	NAGNAG splice site
+11147800	417	GENCODE basic
+11147800	427	alternative2
+11147800	428	tsl2 (assigned to previous version 2)
+11147801	3	GS1-546D14.1-002
+11147801	4	GS1-546D14.1-002
+11147801	52	Havana
+11147801	53	vega@sanger.ac.uk
+11147801	54	CD99 antigen
+11147801	417	GENCODE basic
+11147801	427	alternative2
+11147801	428	tsl2 (assigned to previous version 6)
+11147802	3	GS1-546D14.1-011
+11147802	4	GS1-546D14.1-011
+11147802	52	Havana
+11147802	53	vega@sanger.ac.uk
+11147802	54	NAGNAG splice site
+11147802	427	alternative2
+11147802	428	tsl1 (assigned to previous version 2)
+11147803	3	GS1-546D14.1-005
+11147803	4	GS1-546D14.1-005
+11147803	52	Havana
+11147803	53	vega@sanger.ac.uk
+11147803	54	CD99 antigen
+11147803	124	1
+11147803	125	1
+11147803	126	1
+11147803	127	1
+11147803	174	-3
+11147803	427	alternative2
+11147803	428	tsl5 (assigned to previous version 4)
+11147804	3	GS1-546D14.1-006
+11147804	4	GS1-546D14.1-006
+11147804	52	Havana
+11147804	53	vega@sanger.ac.uk
+11147804	54	CD99 antigen
+11147804	428	tsl2 (assigned to previous version 4)
+11147805	3	GS1-546D14.1-007
+11147805	4	GS1-546D14.1-007
+11147805	52	Havana
+11147805	53	vega@sanger.ac.uk
+11147805	54	CD99 antigen
+11147805	428	tsl2 (assigned to previous version 4)
+11147806	3	GS1-546D14.1-008
+11147806	4	GS1-546D14.1-008
+11147806	52	Havana
+11147806	53	vega@sanger.ac.uk
+11147806	54	CD99 antigen
+11147806	124	1
+11147806	126	1
+11147806	427	alternative2
+11147806	428	tsl2 (assigned to previous version 4)
+11147807	318	split_tscript
+11147807	417	GENCODE basic
+11147807	427	alternative2
+11147807	428	tsl1 (assigned to previous version 3)
+11147808	62	1:105\	.36(4.2(2.(4.7)2.)4.3)4.(5.2(4.4)4.2)5.8
+11147808	417	GENCODE basic
+11147808	428	tslNA
+11147809	427	principal1
+11147809	3	AC006040.3-001
+11147809	4	AC006040.3-001
+11147809	52	Havana
+11147809	53	vega@sanger.ac.uk
+11147809	123	CCDS14772.1
+11147809	417	GENCODE basic
+11147809	428	tslNA
+11147810	4	AC006040.4-001
+11147810	52	Havana
+11147810	53	vega@sanger.ac.uk
+11147810	417	GENCODE basic
+11147810	428	tslNA
+11147811	4	AC006040.5-001
+11147811	52	Havana
+11147811	53	vega@sanger.ac.uk
+11147811	417	GENCODE basic
+11147811	428	tslNA
+11147811	315	Q5JZD3.1
+11147812	3	AC006040.6-001
+11147812	4	AC006040.6-001
+11147812	52	Havana
+11147812	53	vega@sanger.ac.uk
+11147812	123	CCDS14773.1
+11147812	417	GENCODE basic
+11147812	427	principal1
+11147812	428	tsl1 (assigned to previous version 11)
+11147813	3	AC006040.6-002
+11147813	4	AC006040.6-002
+11147813	52	Havana
+11147813	53	vega@sanger.ac.uk
+11147813	125	1
+11147813	127	1
+11147813	428	tsl3
+11147814	3	AC006040.6-003
+11147814	4	AC006040.6-003
+11147814	52	Havana
+11147814	53	vega@sanger.ac.uk
+11147814	428	tsl2
+11147815	3	AC006040.6-004
+11147815	4	AC006040.6-004
+11147815	52	Havana
+11147815	53	vega@sanger.ac.uk
+11147815	123	Could not find sufficient evidence for an independent  TSS and so made a variant of the coding locus
+11147815	123	exon 1 found using dotter and shares splice donor site with the RPS4Y gene
+11147815	428	tsl3
+11147816	4	AC006040.7-001
+11147816	52	Havana
+11147816	53	vega@sanger.ac.uk
+11147816	417	GENCODE basic
+11147816	428	tslNA
+11147817	4	AC006157.1-001
+11147817	52	Havana
+11147817	53	vega@sanger.ac.uk
+11147817	417	GENCODE basic
+11147817	428	tslNA
+11147818	4	RP11-414C23.1-001
+11147818	52	Havana
+11147818	53	vega@sanger.ac.uk
+11147818	417	GENCODE basic
+11147818	428	tslNA
+11147819	427	principal1
+11147819	3	AC006157.3-001
+11147819	4	AC006157.3-001
+11147819	52	Havana
+11147819	53	vega@sanger.ac.uk
+11147819	123	CCDS14774.1
+11147819	417	GENCODE basic
+11147819	428	tsl5 (assigned to previous version 4)
+11147820	3	AC006157.3-006
+11147820	4	AC006157.3-006
+11147820	52	Havana
+11147820	53	vega@sanger.ac.uk
+11147820	123	CCDS48200.1
+11147820	417	GENCODE basic
+11147820	428	tsl2 (assigned to previous version 2)
+11147821	3	AC006157.3-003
+11147821	4	AC006157.3-003
+11147821	52	Havana
+11147821	53	vega@sanger.ac.uk
+11147821	428	tsl3
+11147822	3	AC006157.3-002
+11147822	4	AC006157.3-002
+11147822	52	Havana
+11147822	53	vega@sanger.ac.uk
+11147822	54	alternative 5' UTR
+11147822	125	1
+11147822	127	1
+11147822	428	tsl3
+11147823	3	AC006157.3-005
+11147823	4	AC006157.3-005
+11147823	52	Havana
+11147823	53	vega@sanger.ac.uk
+11147823	123	CCDS48201.1
+11147823	417	GENCODE basic
+11147823	428	tsl1
+11147824	3	AC006157.3-004
+11147824	4	AC006157.3-004
+11147824	52	Havana
+11147824	53	vega@sanger.ac.uk
+11147824	428	tsl3
+11147825	427	principal1
+11147825	417	GENCODE basic
+11147825	428	tsl1 (assigned to previous version 6)
+11147826	4	AC006157.4-001
+11147826	52	Havana
+11147826	53	vega@sanger.ac.uk
+11147826	123	exon 3 found using dotter
+11147826	417	GENCODE basic
+11147826	428	tsl2
+11147827	4	AC006157.4-002
+11147827	52	Havana
+11147827	53	vega@sanger.ac.uk
+11147827	417	GENCODE basic
+11147827	428	tsl3
+11147828	4	AC006157.5-001
+11147828	52	Havana
+11147828	53	vega@sanger.ac.uk
+11147828	417	GENCODE basic
+11147828	428	tslNA

@@ -1,0 +1,33 @@
+8510	2014-05-23 13:41:28	havana	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8511	2009-06-01 09:01:22	xrefexoneratedna	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8512	2014-05-23 10:14:31	est2genome_human_havana	\N	118	\N	\N	\N	\N	\N	ClusterDepthFilter	\N	\N	\N
+8513	2014-06-18 08:25:03	xrefchecksum	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8514	2014-05-23 10:14:31	vertrna_havana	\N	10-Feb-14 (118)	\N	\N	\N	\N	\N	BlastGenscanDNA	\N	\N	\N
+8515	2014-05-23 13:41:28	ensembl_havana_gene	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8516	2014-05-23 13:41:30	ensembl_havana_transcript	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8517	2014-02-13 13:12:49	human_cdna2genome	\N	refseq_59	\N	\N	\N	/nfs/users/nfs_j/jhv/bin/exonerate.hacked.cdna2genome	\N	Exonerate2Genes	\N	\N	\N
+8518	2014-02-07 12:47:35	human_cdna	\N	refseq_59	\N	exonerate	0.9.0	/software/ensembl/genebuild/usrlocalensemblbin/exonerate-0.9.0	\N	Exonerate2Genes	\N	\N	\N
+8519	2014-05-23 10:14:31	uniprot_sw_havana	\N	2014_02	\N	\N	\N	\N	\N	DepthFilter	\N	\N	\N
+8520	2014-05-23 10:14:31	uniprot_tr_havana	\N	2014_02	\N	\N	\N	\N	\N	DepthFilter	\N	\N	\N
+8521	2014-02-13 13:12:49	human_protein	\N	refseq_59,uniprot_2014_01	\N	\N	\N	\N	\N	BestTargetted	\N	\N	\N
+8522	2014-06-18 07:44:58	xrefexonerateprotein	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8523	2015-06-02 16:12:49	hmmpanther	PANTHER	9.0	\N	hmmpanther	\N	\N	\N	\N	\N	\N	\N
+8524	2015-06-02 16:12:49	gene3d	Gene3D	3.5.0	\N	gene3d	\N	\N	\N	\N	\N	\N	\N
+8525	2015-06-02 16:12:49	pfam	Pfam	27.0	\N	pfam	\N	\N	\N	\N	\N	\N	\N
+8526	2015-06-02 16:12:49	superfamily	Superfamily	1.75	\N	superfamily	\N	\N	\N	\N	\N	\N	\N
+8527	2015-06-02 16:12:49	seg	Seg	\N	\N	seg	\N	\N	\N	\N	\N	\N	\N
+8528	2015-06-02 16:12:49	smart	Smart	6.2	\N	smart	\N	\N	\N	\N	\N	\N	\N
+8529	2015-06-02 16:12:49	prints	PRINTS	42.0	\N	prints	\N	\N	\N	\N	\N	\N	\N
+8530	2015-06-02 16:12:49	pfscan	Prosite_profiles	20.105	\N	pfscan	\N	\N	\N	\N	\N	\N	\N
+8531	2015-06-02 16:12:49	scanprosite	Prosite_patterns	20.105	\N	scanprosite	\N	\N	\N	\N	\N	\N	\N
+8532	2014-08-11 10:23:56	ccds	\N	15052015	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8533	2014-04-16 13:56:36	ncrna	Rfam	11.0	/lustre/scratch110/ensembl/th3/GRCh38/ncRNA_wc	cmsearch	\N	/software/ensembl/bin/cmsearch_1.0	\N	Bio::EnsEMBL::Analysis::RunnableDB::Infernal	\N	ensembl	gene
+8534	2014-04-16 13:56:36	blastmirna	all_mirnas.fa	20.0	/lustre/scratch110/ensembl/th3/GRCh38/ncRNA_wc/all_mirnas.fa	wublastn	\N	wublastn	\N	Bio::EnsEMBL::Analysis::RunnableDB::BlastmiRNA	\N	ensembl	gene
+8535	2015-05-07 14:53:19	ensembl	\N	\N	\N	\N	\N	\N	\N	GeneBuilder	\N	\N	\N
+8536	2015-06-02 16:12:49	pirsf	PIRSF	2.84	\N	pirsf	\N	\N	\N	\N	\N	\N	\N
+8537	2015-06-02 16:12:49	ncoils	ncoils	\N	\N	ncoils	\N	\N	\N	\N	\N	\N	\N
+8538	2015-06-02 16:12:49	tigrfam	TIGRfam	13.0	\N	tigrfam	\N	\N	\N	\N	\N	\N	\N
+8539	2014-04-16 13:56:36	rfamblast	Rfam	11.0	/lustre/scratch110/ensembl/th3/GRCh38/ncRNA_wc/filtered.fasta	wublastn	\N	wublastn	W=12 B=10000 V=10000 -hspmax 0 -gspmax 0 -kap -cpus=1	Bio::EnsEMBL::Analysis::RunnableDB::BlastRfam	\N	ensembl	gene
+8540	2015-06-02 16:12:49	tmhmm	Tmhmm	\N	\N	tmhmm	\N	\N	\N	\N	\N	\N	\N
+8541	2015-06-02 16:12:49	signalp	SignalP	\N	\N	signalp	\N	\N	\N	\N	\N	\N	\N
+8542	2015-06-02 16:12:49	hamap	HAMAP	201311.27	\N	hamap	\N	\N	\N	\N	\N	\N	\N

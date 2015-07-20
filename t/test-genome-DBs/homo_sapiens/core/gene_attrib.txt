@@ -1,0 +1,317 @@
+10356774	4	RP5-856G1.1
+10356774	52	Havana
+10356774	53	vega@sanger.ac.uk
+10356774	142	51.09
+10356774	407	Overlapping RefSeq annotation not matched
+10356775	4	RP5-856G1.2
+10356775	52	Havana
+10356775	53	vega@sanger.ac.uk
+10356775	142	44.14
+10356775	407	Overlapping RefSeq annotation not matched
+10356776	3	bA13J16.1
+10356776	4	FOXQ1
+10356776	52	Havana
+10356776	53	vega@sanger.ac.uk
+10356776	142	70.32
+10356776	407	Overlapping RefSeq Gene ID 94234 matches and has similar biotype of protein_coding
+10356777	4	LINC01394
+10356777	52	Havana
+10356777	53	vega@sanger.ac.uk
+10356777	142	43.05
+10356777	407	No overlapping RefSeq annotation found
+10356778	4	RP4-668J24.2
+10356778	52	Havana
+10356778	53	vega@sanger.ac.uk
+10356778	142	64.92
+10356778	407	No overlapping RefSeq annotation found
+10356779	4	FOXF2
+10356779	52	Havana
+10356779	53	vega@sanger.ac.uk
+10356779	142	59.87
+10356779	407	Overlapping RefSeq Gene ID 2295 matches and has similar biotype of protein_coding
+10356780	142	62.24
+10356780	407	Overlapping RefSeq Gene ID 102466720 matches but different biotype of misc_RNA
+10356781	3	CXYorf11
+10356781	3	NCRNA00108
+10356781	4	LL0YNC03-29C1.1
+10356781	52	Havana
+10356781	53	vega@sanger.ac.uk
+10356781	142	59.60
+10356781	407	No overlapping RefSeq annotation found
+10356782	3	cU136G2.1
+10356782	3	LL0XNC01-136G2.1
+10356782	4	PLCXD1
+10356782	52	Havana
+10356782	53	vega@sanger.ac.uk
+10356782	142	53.82
+10356782	407	Overlapping RefSeq Gene ID 55344 matches and has similar biotype of protein_coding
+10356783	3	cU136G2.2
+10356783	4	GTPBP6
+10356783	52	Havana
+10356783	53	vega@sanger.ac.uk
+10356783	142	57.63
+10356783	407	Overlapping RefSeq Gene ID 8225 matches and has similar biotype of protein_coding
+10356784	3	cM56G10.2
+10356784	3	CXYorf10
+10356784	3	LL0YNC03-56G10.2
+10356784	4	NCRNA00107
+10356784	52	Havana
+10356784	53	vega@sanger.ac.uk
+10356784	142	51.97
+10356784	407	Overlapping RefSeq Gene ID 283981 matches but different biotype of misc_RNA
+10356785	4	PPP2R3B
+10356785	52	Havana
+10356785	53	vega@sanger.ac.uk
+10356785	142	58.29
+10356785	407	Overlapping RefSeq Gene ID 28227 matches and has similar biotype of protein_coding
+10356786	4	RP13-465B17.4
+10356786	52	Havana
+10356786	53	vega@sanger.ac.uk
+10356786	142	50.68
+10356786	407	No overlapping RefSeq annotation found
+10356787	142	53.10
+10356787	407	No overlapping RefSeq annotation found
+10356788	4	RP13-465B17.5
+10356788	52	Havana
+10356788	53	vega@sanger.ac.uk
+10356788	142	56.62
+10356788	407	No overlapping RefSeq annotation found
+10356789	3	bB465B17.2
+10356789	4	RP13-465B17.2
+10356789	52	Havana
+10356789	53	vega@sanger.ac.uk
+10356789	142	46.04
+10356789	407	No overlapping RefSeq annotation found
+10356790	3	bB465B17.3
+10356790	4	RP13-465B17.3
+10356790	52	Havana
+10356790	53	vega@sanger.ac.uk
+10356790	142	54.70
+10356790	407	No overlapping RefSeq annotation found
+10356791	4	SHOX
+10356791	52	Havana
+10356791	53	vega@sanger.ac.uk
+10356791	142	51.23
+10356791	407	Overlapping RefSeq Gene ID 6473 matches and has similar biotype of protein_coding
+10356792	3	CXYorf9
+10356792	4	RP11-309M23.1
+10356792	52	Havana
+10356792	53	vega@sanger.ac.uk
+10356792	142	48.11
+10356792	407	No overlapping RefSeq annotation found
+10356793	3	bA309M23.2
+10356793	4	RP11-309M23.2
+10356793	52	Havana
+10356793	53	vega@sanger.ac.uk
+10356793	142	51.72
+10356793	407	No overlapping RefSeq annotation found
+10356794	4	CRLF2
+10356794	52	Havana
+10356794	53	vega@sanger.ac.uk
+10356794	142	46.94
+10356794	407	Overlapping RefSeq Gene ID 64109 matches and has similar biotype of protein_coding
+10356795	4	CSF2RA
+10356795	52	Havana
+10356795	53	vega@sanger.ac.uk
+10356795	142	50.88
+10356795	407	Overlapping RefSeq Gene ID 1438 matches and has similar biotype of protein_coding
+10356796	142	58.11
+10356796	407	Overlapping RefSeq annotation not matched
+10356797	142	59.46
+10356797	407	Overlapping RefSeq annotation not matched
+10356798	142	54.67
+10356798	407	Overlapping RefSeq annotation not matched
+10356799	142	53.33
+10356799	407	Overlapping RefSeq Gene ID 100500894 matches but different biotype of misc_RNA
+10356800	142	58.67
+10356800	407	Overlapping RefSeq annotation not matched
+10356801	142	44.17
+10356801	407	Overlapping RefSeq annotation not matched
+10356802	4	IL3RA
+10356802	52	Havana
+10356802	53	vega@sanger.ac.uk
+10356802	142	54.54
+10356802	407	Overlapping RefSeq Gene ID 3563 matches and has similar biotype of protein_coding
+10356803	4	SLC25A6
+10356803	52	Havana
+10356803	53	vega@sanger.ac.uk
+10356803	142	58.91
+10356803	407	Overlapping RefSeq Gene ID 293 matches and has similar biotype of protein_coding
+10356804	3	bA261P4.5
+10356804	3	CXYorf8
+10356804	3	RP11-261P4.5
+10356804	4	NCRNA00106
+10356804	52	Havana
+10356804	53	vega@sanger.ac.uk
+10356804	142	58.50
+10356804	407	Overlapping RefSeq Gene ID 751580 matches but different biotype of misc_RNA
+10356805	3	bA261P4.6
+10356805	3	CXYorf2
+10356805	4	NCRNA00105
+10356805	52	Havana
+10356805	53	vega@sanger.ac.uk
+10356805	142	52.30
+10356805	407	Overlapping RefSeq Gene ID 80161 matches but different biotype of misc_RNA
+10356806	4	ASMTL
+10356806	52	Havana
+10356806	53	vega@sanger.ac.uk
+10356806	142	52.23
+10356806	407	Overlapping RefSeq Gene ID 8623 matches and has similar biotype of protein_coding
+10356807	3	bA261P4.4
+10356807	4	P2RY8
+10356807	52	Havana
+10356807	53	vega@sanger.ac.uk
+10356807	142	48.22
+10356807	407	Overlapping RefSeq Gene ID 286530 matches and has similar biotype of protein_coding
+10356808	3	DXYS155E
+10356808	4	AKAP17A
+10356808	52	Havana
+10356808	53	vega@sanger.ac.uk
+10356808	142	60.92
+10356808	407	Overlapping RefSeq Gene ID 8227 matches and has similar biotype of protein_coding
+10356809	4	ASMT
+10356809	52	Havana
+10356809	53	vega@sanger.ac.uk
+10356809	142	52.06
+10356809	407	Overlapping RefSeq Gene ID 438 matches and has similar biotype of protein_coding
+10356810	3	bB297E16.4
+10356810	3	CXYorf7
+10356810	3	RP13-297E16.4
+10356810	4	RP13-297E16.4
+10356810	52	Havana
+10356810	53	vega@sanger.ac.uk
+10356810	123	GeneID: 727685, NCRNA00091; DISCONTINUED: This record was withdrawn by the HUGO Gene Nomenclature Committee (HGNC)
+10356810	142	47.37
+10356810	407	No overlapping RefSeq annotation found
+10356811	3	bB297E16.5
+10356811	3	CXYorf6
+10356811	3	RP13-297E16.5
+10356811	4	RP13-297E16.5
+10356811	52	Havana
+10356811	53	vega@sanger.ac.uk
+10356811	142	48.67
+10356811	407	No overlapping RefSeq annotation found
+10356812	4	DHRSX
+10356812	52	Havana
+10356812	53	vega@sanger.ac.uk
+10356812	380	overlapping locus
+10356812	142	47.11
+10356812	407	Overlapping RefSeq Gene ID 207063 matches and has similar biotype of protein_coding
+10356813	4	RP13-858C7.1
+10356813	52	Havana
+10356813	53	vega@sanger.ac.uk
+10356813	380	overlapping locus
+10356813	142	48.35
+10356813	407	Overlapping RefSeq annotation not matched
+10356814	4	ZBED1
+10356814	52	Havana
+10356814	53	vega@sanger.ac.uk
+10356814	380	overlapping locus
+10356814	142	49.61
+10356814	407	Overlapping RefSeq Gene ID 9189 matches and has similar biotype of protein_coding
+10356815	142	84.38
+10356815	407	Overlapping RefSeq Gene ID 102464837 matches but different biotype of misc_RNA
+10356816	3	Em:AC097314.2
+10356816	3	RP11-155F12.2
+10356816	4	CD99L1
+10356816	52	Havana
+10356816	53	vega@sanger.ac.uk
+10356816	142	43.25
+10356816	407	Overlapping RefSeq Gene ID 401577 matches and has similar biotype of pseudogene
+10356817	3	Em:AC097314.3
+10356817	3	RP11-155F12.3
+10356817	4	NCRNA00102
+10356817	52	Havana
+10356817	53	vega@sanger.ac.uk
+10356817	142	39.58
+10356817	407	Overlapping RefSeq Gene ID 100359394 matches but different biotype of misc_RNA
+10356818	4	CD99
+10356818	52	Havana
+10356818	53	vega@sanger.ac.uk
+10356818	142	47.39
+10356818	407	Overlapping RefSeq Gene ID 4267 matches and has similar biotype of protein_coding
+10356819	4	XG
+10356819	52	Havana
+10356819	53	vega@sanger.ac.uk
+10356819	142	46.05
+10356819	407	Overlapping RefSeq Gene ID 7499 matches and has similar biotype of protein_coding
+10356820	4	GYG2
+10356820	52	Havana
+10356820	53	vega@sanger.ac.uk
+10356820	142	43.67
+10356820	407	Overlapping RefSeq Gene ID 8908 matches and has similar biotype of protein_coding
+10356821	3	Em:AC138085.3
+10356821	4	RP11-146D5.3
+10356821	52	Havana
+10356821	53	vega@sanger.ac.uk
+10356821	142	41.53
+10356821	407	Overlapping RefSeq annotation not matched
+10356822	4	ARSD
+10356822	52	Havana
+10356822	53	vega@sanger.ac.uk
+10356822	142	48.88
+10356822	407	Overlapping RefSeq Gene ID 414 matches and has similar biotype of protein_coding
+10356823	3	Em:AC005295.4
+10356823	4	RP4-617A9.4
+10356823	52	Havana
+10356823	53	vega@sanger.ac.uk
+10356823	142	47.71
+10356823	407	Overlapping RefSeq annotation not matched
+10356824	4	ARSE
+10356824	52	Havana
+10356824	53	vega@sanger.ac.uk
+10356824	142	45.83
+10356824	407	Overlapping RefSeq Gene ID 415 matches and has similar biotype of protein_coding
+10356825	4	CD99
+10356825	52	Havana
+10356825	53	vega@sanger.ac.uk
+10356825	142	47.39
+10356825	407	Overlapping RefSeq Gene ID 4267 matches and has similar biotype of protein_coding
+10356826	142	37.14
+10356827	4	SRY
+10356827	52	Havana
+10356827	53	vega@sanger.ac.uk
+10356827	142	46.39
+10356828	4	AC006040.4
+10356828	52	Havana
+10356828	53	vega@sanger.ac.uk
+10356828	142	64.94
+10356828	380	overlapping locus
+10356829	4	AC006040.5
+10356829	52	Havana
+10356829	53	vega@sanger.ac.uk
+10356829	142	43.88
+10356829	380	overlapping locus
+10356830	3	RPS4Y
+10356830	4	RPS4Y1
+10356830	52	Havana
+10356830	53	vega@sanger.ac.uk
+10356830	123	Name updated from RPS4Y to RPS4Y1
+10356830	142	40.56
+10356830	380	overlapping locus
+10356831	4	AC006040.7
+10356831	52	Havana
+10356831	53	vega@sanger.ac.uk
+10356831	142	39.29
+10356832	4	AC006157.1
+10356832	52	Havana
+10356832	53	vega@sanger.ac.uk
+10356832	142	41.70
+10356833	4	RP11-414C23.1
+10356833	52	Havana
+10356833	53	vega@sanger.ac.uk
+10356833	142	32.79
+10356834	4	ZFY
+10356834	52	Havana
+10356834	53	vega@sanger.ac.uk
+10356834	142	37.27
+10356835	4	AC006157.4
+10356835	52	Havana
+10356835	53	vega@sanger.ac.uk
+10356835	142	37.66
+10356835	380	overlapping locus
+10356836	4	AC006157.5
+10356836	52	Havana
+10356836	53	vega@sanger.ac.uk
+10356836	142	45.89
+10356836	380	overlapping locus
