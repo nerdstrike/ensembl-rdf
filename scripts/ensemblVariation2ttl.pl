@@ -161,11 +161,9 @@ Bio::EnsEMBL::Registry->load_registry_from_db(
 my $va = Bio::EnsEMBL::Registry->get_adaptor($species,'Variation','Variation');
 my $pfa = Bio::EnsEMBL::Registry->get_adaptor($species,'Variation','PhenotypeFeature');
 
-my $ontoa =
-    Bio::EnsEMBL::Registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
+my $ontoa = Bio::EnsEMBL::Registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' );
 
-my $db_entry_adaptor =
-    Bio::EnsEMBL::Registry->get_adaptor( $species, 'Core', 'DBEntry' );
+my $db_entry_adaptor = Bio::EnsEMBL::Registry->get_adaptor( $species, 'Core', 'DBEntry' );
 
 my $meta = Bio::EnsEMBL::Registry->get_adaptor($species,'Core','MetaContainer');
 
@@ -326,7 +324,7 @@ while($from_id <= $max_id) {
       
           my $tva_subj = $nspace.':'.$tv->transcript->stable_id.'_'.$vname.'#'.$allele;
           
-          $DB::single = 1;
+          # $DB::single = 1;
       
           # link the allele to the tva
           triple($allele_subj, "$vpo:has_variant_effect", $tva_subj);

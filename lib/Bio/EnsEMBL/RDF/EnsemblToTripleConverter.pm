@@ -50,10 +50,10 @@ sub new {
   my $fh = shift @args;
   # Requires Registry to be already connected up
   return bless ( {
-    ontoa => Bio::EnsEMBL::Registry->get_adaptor( 'Multi', 'Ontology', 'OntologyTerm' ),
+    ontoa => Bio::EnsEMBL::Registry->get_adaptor( 'multi', 'Ontology', 'OntologyTerm' ),
     species => $species,
     fh => $fh,
-  }, $class);
+  }, $caller);
 }
 
 # getter/setter
@@ -65,6 +65,7 @@ sub species {
   return $self->{species};
 }
 
+#Set a filehandle directly
 sub filehandle {
   my ($self,$fh) = @_;
   if ($fh) {
@@ -74,6 +75,7 @@ sub filehandle {
   return $self->{fh};
 }
 
+# Specify path to write to.
 sub write_to_file {
   my ($self,$path) = @_;
   my $fh = IO::File->new($path, 'w');
@@ -88,6 +90,7 @@ sub print_namespaces {
 }
 
 sub print_species_info {
+  my $self = shift;
   # create a map of taxon id to species name, we will create some triples for these at the end
   my $fh = $self->filehandle;
   my $meta = Bio::EnsEMBL::Registry->get_adaptor($self->species,'Core','MetaContainer');
@@ -105,25 +108,25 @@ sub print_species_info {
 
 # SO terms often required for dumping RDF
 
-sub getSOOntologyId {
-  my ($self,$term) = @_;
-  if (exists $self->{ontology_cache{$term}}) {
-    return $self->{ontology_cache{$term}};
-  }
+# sub getSOOntologyId {
+#   my ($self,$term) = @_;
+#   if (exists $self->{ontology_cache{$term}}) {
+#     return $self->{ontology_cache{$term}};
+#   }
 
-  my ($typeterm) = @{ $self->{ontoa}->fetch_all_by_name( $term, 'SO' ) };
+#   my ($typeterm) = @{ $self->{ontoa}->fetch_all_by_name( $term, 'SO' ) };
     
-  unless ($typeterm) {
-    warn "Can't find SO term for $term\n";
-    $self->{$ontology_cache{$term}} = undef; 
-    return;
-  }
+#   unless ($typeterm) {
+#     warn "Can't find SO term for $term\n";
+#     $self->{$ontology_cache{$term}} = undef; 
+#     return;
+#   }
     
-  my $id = $typeterm->accession;
-  $id =~ s/SO:/obo:SO_/;
-  $self->{$ontology_cache{$term}} = $id;
-  return $id;
-}
+#   my $id = $typeterm->accession;
+#   $id =~ s/SO:/obo:SO_/;
+#   $self->{$ontology_cache{$term}} = $id;
+#   return $id;
+# }
 
 sub create_virtuoso_file {
   my $self = shift;
