@@ -32,6 +32,8 @@ package Bio::EnsEMBL::BulkFetcher;
 
 use strict;
 use warnings;
+use Bio::EnsEMBL::Utils::Argument qw(rearrange);
+use Bio::EnsEMBL::Utils::Exception qw(throw warn);
 
 sub new {
   my ( $class, @args ) = @_;
@@ -528,6 +530,41 @@ sub get_seq_region_synonyms {
   return $synonyms;
 } 
 
+sub add_compara {
+  my ( $self, $species, $genes, $compara_dba ) = @_;
+  my $homologues = {};
+  $compara_dba->dbc()->sql_helper()->execute_no_return(
+  -SQL => q/
+    SELECT hg.stable_id, gm.stable_id, g.name, h.description 
+    FROM (SELECT homology_id,stable_id FROM homology_member 
+          JOIN member USING (member_id) 
+          JOIN genome_db USING (genome_db_id) WHERE name=? AND source_name='ENSEMBLGENE') hg 
+    JOIN homology h ON (h.homology_id=hg.homology_id) 
+    JOIN homology_member hm ON (hm.homology_id=h.homology_id) 
+    JOIN member gm USING (member_id) 
+    JOIN genome_db g USING (genome_db_id) 
+    WHERE gm.stable_id<>hg.stable_id AND source_name='ENSEMBLGENE'/,
+  -CALLBACK => sub {
+    my ($row) = @_;
+    push @{ $homologues->{ $row->[0] } },
+    { stable_id   => $row->[1],
+      genome      => $row->[2],
+      description => $row->[3] };
+    return;
+  },
+  -PARAMS => [$species] );
+
+  for my $gene ( @{$genes} ) {
+    if(!defined $gene->{id}) {
+      throw("No stable ID for gene");
+    }
+    my $homo = $homologues->{ $gene->{id} };
+    if ( defined $homo ) {
+      $gene->{homologues} = $homo;
+    }
+  }
+  return;
+}
 
 
 
