@@ -75,6 +75,14 @@ sub filehandle {
   return $self->{fh};
 }
 
+sub taxon {
+  my ($self,$taxon) = @_;
+  if ($taxon) {
+    $self->{taxon} = $taxon;
+  }
+  return $self->{taxon};
+}
+
 # Specify path to write to.
 sub write_to_file {
   my ($self,$path) = @_;
@@ -96,6 +104,7 @@ sub print_species_info {
   my $meta = Bio::EnsEMBL::Registry->get_adaptor($self->species,'Core','MetaContainer');
   # get the taxon id for this species 
   my $taxon_id = $meta->get_taxonomy_id;
+  $self->taxon($taxon_id);
   my $scientific_name = $meta->get_scientific_name;
   my $common_name = $meta->get_common_name;
 
