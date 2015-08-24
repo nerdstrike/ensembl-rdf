@@ -57,6 +57,7 @@ my %prefix = (
   skos        => 'http://www.w3.org/2004/02/skos/core#',
   identifiers => 'http://identifiers.org/',
   taxon       => 'http://identifiers.org/taxonomy/',
+  ident_type  => 'http://idtype.identifiers.org/',
   oban        => 'http://purl.org/oban/',
   interpro    => "http://purl.uniprot.org/interpro/",
   scanprosite => "http://purl.uniprot.org/prosite/",
@@ -102,7 +103,7 @@ sub replace_whitespace {
   return $string;
 }
 
-sub taxonTriple {
+sub taxon_triple {
   my ($subject, $taxon_id) = @_;
   return triple($subject, 'obo:RO_0002162', 'taxon:'.$taxon_id);
 }
