@@ -76,10 +76,10 @@ sub get_genes {
   f.seq_region_start as start, f.seq_region_end as end, f.seq_region_strand as strand,
   s.name as seq_region_name
   from gene f
-  left join xref x on (f.display_xref_id=x.xref_id)
+  left join xref x on (f.display_xref_id = x.xref_id)
   join seq_region s using (seq_region_id)
   join coord_system c using (coord_system_id)
-  where c.species_id=? 
+  where c.species_id = ? 
   /;
   $sql = $self->_append_biotype_sql($sql,$biotypes);
 
@@ -143,10 +143,10 @@ sub get_transcripts {
     FROM 
     gene g
     join transcript t using (gene_id)
-    left join xref x on (t.display_xref_id=x.xref_id)
-    join seq_region s on (s.seq_region_id=g.seq_region_id)
+    left join xref x on (t.display_xref_id = x.xref_id)
+    join seq_region s on (s.seq_region_id = g.seq_region_id)
     join coord_system c using (coord_system_id)
-    where c.species_id=? 
+    where c.species_id = ? 
     /;
   $sql = $self->_append_biotype_sql($sql,$biotypes,'t');
   my $xrefs = {};
@@ -197,7 +197,7 @@ sub get_translations {
     join translation tl using (transcript_id)
     join seq_region s using (seq_region_id)
     join coord_system c using (coord_system_id)
-    where c.species_id=? 
+    where c.species_id = ? 
   /;
   $sql = $self->_append_biotype_sql($sql,$biotypes,'t');
   my $xrefs = {};
@@ -247,11 +247,11 @@ sub get_protein_features {
     from transcript t
     join translation tl using (transcript_id)
     join protein_feature pf using (translation_id)
-    join analysis a on (a.analysis_id=pf.analysis_id)
-    left join interpro i on (pf.hit_name=i.id)
+    join analysis a on (a.analysis_id = pf.analysis_id)
+    left join interpro i on (pf.hit_name = i.id)
     join seq_region s using (seq_region_id)
     join coord_system c using (coord_system_id)
-    where c.species_id=? 
+    where c.species_id = ? 
   /;
   $self->_append_biotype_sql($sql,$biotypes,'t');
 
@@ -283,7 +283,7 @@ sub _generate_xref_sql {
       SELECT ${table_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description
       FROM ${table_name} f
       ${translation_join}
-      JOIN object_xref ox         ON (${table_alias}.${table_name}_id=ox.ensembl_id AND ox.ensembl_object_type='${Table_name}')
+      JOIN object_xref ox         ON (${table_alias}.${table_name}_id = ox.ensembl_id AND ox.ensembl_object_type = '${Table_name}')
       JOIN xref x                 USING (xref_id)
       JOIN external_db e          USING (external_db_id)
       JOIN seq_region s           USING (seq_region_id)
@@ -315,7 +315,7 @@ sub _generate_object_xref_sql {
       JOIN seq_region s        USING (seq_region_id)
       JOIN coord_system c      USING (coord_system_id)
       JOIN ontology_xref oox   USING (object_xref_id)
-      LEFT JOIN xref sx        ON (oox.source_xref_id=sx.xref_id)
+      LEFT JOIN xref sx        ON (oox.source_xref_id = sx.xref_id)
       LEFT JOIN external_db se ON (se.external_db_id = sx.external_db_id)
       WHERE c.species_id = ? 
   /;
@@ -339,12 +339,12 @@ sub _generate_associated_xref_sql {
            sx.dbprimary_acc, sx.display_label, se.db_name, sx.description, ax.associated_group_id 
       FROM ${root_table_name} f
       ${translation_join}
-      JOIN object_xref ox     ON (${table_alias}.${table_name}_id=ox.ensembl_id AND ox.ensembl_object_type='${Table_name}')
+      JOIN object_xref ox     ON (${table_alias}.${table_name}_id = ox.ensembl_id AND ox.ensembl_object_type = '${Table_name}')
       JOIN associated_xref ax USING (object_xref_id) 
-      JOIN xref x             ON (x.xref_id=ax.xref_id) 
-      JOIN external_db xe     ON (x.external_db_id=xe.external_db_id) 
-      JOIN xref sx            ON (sx.xref_id=ax.source_xref_id) 
-      JOIN external_db se     ON (se.external_db_id=sx.external_db_id) 
+      JOIN xref x             ON (x.xref_id = ax.xref_id) 
+      JOIN external_db xe     ON (x.external_db_id = xe.external_db_id) 
+      JOIN xref sx            ON (sx.xref_id = ax.source_xref_id) 
+      JOIN external_db se     ON (se.external_db_id = sx.external_db_id) 
       JOIN seq_region s       USING (seq_region_id)
       JOIN coord_system c     USING (coord_system_id)
       WHERE c.species_id=? 
@@ -466,7 +466,7 @@ sub get_coord_systems {
     from $type g
     join seq_region s using (seq_region_id)
     join coord_system c using (coord_system_id)
-    where c.species_id=? 
+    where c.species_id = ? 
   /;
   $sql = $self->_append_biotype_sql($sql,$biotypes);
 
@@ -488,10 +488,10 @@ sub get_synonyms {
   my $sql = q/
     select g.stable_id as id, e.synonym
     from gene g
-    join external_synonym e on (g.display_xref_id=e.xref_id)
+    join external_synonym e on (g.display_xref_id = e.xref_id)
     join seq_region s using (seq_region_id)
     join coord_system c using (coord_system_id)
-    where c.species_id=? 
+    where c.species_id = ? 
   /;
   $sql = $self->_append_biotype_sql($sql,$biotypes);
   my $synonyms = {};
@@ -515,7 +515,7 @@ sub get_seq_region_synonyms {
     join seq_region s using (seq_region_id)
     join coord_system c using (coord_system_id)
     left join external_db e using (external_db_id)
-    where c.species_id=? 
+    where c.species_id = ? 
   /;
   $sql = $self->_append_biotype_sql($sql,$biotypes);
   my $synonyms = {};
@@ -539,11 +539,11 @@ sub add_compara {
     FROM (SELECT homology_id,stable_id FROM homology_member 
           JOIN member USING (member_id) 
           JOIN genome_db USING (genome_db_id) WHERE name=? AND source_name='ENSEMBLGENE') hg 
-    JOIN homology h ON (h.homology_id=hg.homology_id) 
-    JOIN homology_member hm ON (hm.homology_id=h.homology_id) 
+    JOIN homology h ON (h.homology_id = hg.homology_id) 
+    JOIN homology_member hm ON (hm.homology_id = h.homology_id) 
     JOIN member gm USING (member_id) 
     JOIN genome_db g USING (genome_db_id) 
-    WHERE gm.stable_id<>hg.stable_id AND source_name='ENSEMBLGENE'/,
+    WHERE gm.stable_id <> hg.stable_id AND source_name = 'ENSEMBLGENE'/,
   -CALLBACK => sub {
     my ($row) = @_;
     push @{ $homologues->{ $row->[0] } },
