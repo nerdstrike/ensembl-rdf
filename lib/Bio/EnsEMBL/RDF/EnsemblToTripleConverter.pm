@@ -43,16 +43,20 @@ use Bio::EnsEMBL::ApiVersion;
 use Bio::EnsEMBL::RDF::RDFLib qw(:all);
 use IO::File;
 
-# species, filehandle
+# Required args: species, filehandle
 sub new {
-  my($caller,@args) = @_;
-  my $species = shift @args;
-  my $fh = shift @args;
+  my ($caller,@args) = @_;
+  my ($species, $fh, $release, $taxon) = @args;
+  unless ($release) {
+    $release = Bio::EnsEMBL::ApiVersion->software_version;
+  }
   # Requires Registry to be already connected up
   return bless ( {
-    ontoa => Bio::EnsEMBL::Registry->get_adaptor( 'multi', 'Ontology', 'OntologyTerm' ),
+    ontoa => Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm'),
     species => $species,
     fh => $fh,
+    release => $release,
+    taxon => $taxon,
   }, $caller);
 }
 
@@ -81,6 +85,15 @@ sub taxon {
     $self->{taxon} = $taxon;
   }
   return $self->{taxon};
+}
+
+# Ensembl release version
+sub release {
+  my ($self,$release) = @_;
+  if ($release) {
+    $self->{release} = $release;
+  }
+  return $self->{release};
 }
 
 # Specify path to write to.
