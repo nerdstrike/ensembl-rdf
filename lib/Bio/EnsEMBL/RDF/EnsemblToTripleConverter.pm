@@ -129,27 +129,26 @@ sub print_species_info {
 }
 
 # SO terms often required for dumping RDF
+sub getSOOntologyId {
+  my ($self,$term) = @_;
+  if (exists $self->{ontology_cache{$term}}) {
+    return $self->{ontology_cache{$term}};
+  }
 
-# sub getSOOntologyId {
-#   my ($self,$term) = @_;
-#   if (exists $self->{ontology_cache{$term}}) {
-#     return $self->{ontology_cache{$term}};
-#   }
-
-#   my ($typeterm) = @{ $self->{ontoa}->fetch_all_by_name( $term, 'SO' ) };
+  my ($typeterm) = @{ $self->{ontoa}->fetch_all_by_name( $term, 'SO' ) };
     
-#   unless ($typeterm) {
-#     warn "Can't find SO term for $term\n";
-#     $self->{$ontology_cache{$term}} = undef; 
-#     return;
-#   }
+  unless ($typeterm) {
+    warn "Can't find SO term for $term\n";
+    $self->{$ontology_cache{$term}} = undef; 
+    return;
+  }
     
-#   my $id = $typeterm->accession;
-#   $id =~ s/SO:/obo:SO_/;
-#   $self->{$ontology_cache{$term}} = $id;
-#   return $id;
-# }
-
+  my $id = $typeterm->accession;
+  $id =~ s/SO:/obo:SO_/;
+  $self->{$ontology_cache{$term}} = $id;
+  return $id;
+}
+# Requires a filehandle for the virtuoso file
 sub create_virtuoso_file {
   my $self = shift;
   my $fh = shift; # a .graph file, named after the rdf file.
