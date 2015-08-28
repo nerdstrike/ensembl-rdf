@@ -1,7 +1,7 @@
 use Modern::Perl;
 use Test::More;
 use Test::Exports;
-use Bio::EnsEMBL::RDF::RDFlib qw/triple prefix u triple escape name_spaces new_bnode/;
+use Bio::EnsEMBL::RDF::RDFlib;
 
 import_ok('Bio::EnsEMBL::RDF::RDFlib', [qw/prefix name_spaces u triple escape/],'RDFlib imports correctly');
 
