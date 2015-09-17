@@ -10,6 +10,7 @@ use Bio::EnsEMBL::RDF::RDFlib;
 use Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
 use Time::HiRes qw/gettimeofday tv_interval/;
 
+my $debug;
 my $uri = 'http://wwwdev.ebi.ac.uk/rdf/services/textmining/sparql';
 # my $content_type = 'x-www-form-urlencoded';
 # my $accept = 'application/sparql-results+json';
@@ -71,10 +72,14 @@ while ( my $gene = shift @$genes) {
     if ($debug) {print "DEBUG: $sparql"}
     my $query = RDF::Query::Client->new($sparql, {UserAgent => $lwp});
     my @results = $query->execute($uri);
-    while (my $row = shift @results) {
-      $hits++;
-      print $row->{source}->as_string."\n";
-      push @lits,$row->{source}->as_string;
+    if (!$query->error) {
+      while (my $row = shift @results) {
+        $hits++;
+        print $row->{source}->as_string."\n";
+        push @lits,$row->{source}->as_string;
+      }
+    } else {
+      die "Error from Pubmed SPARQL server: ".$query->error."\n Data: $sparql, ".$gene->stable_id;
     }
   }
   
