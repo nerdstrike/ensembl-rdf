@@ -72,13 +72,13 @@ while ( my $gene = shift @$genes) {
     my $query = RDF::Query::Client->new($sparql, {UserAgent => $lwp});
     my @results = $query->execute($uri);
     while (my $row = shift @results) {
+      $hits++;
       print $row->{source}->as_string."\n";
       push @lits,$row->{source}->as_string;
     }
-    $hits++;
   }
   
-  last if $hits == 50;
+  
 }
 my $elapsed = tv_interval ( $start_time, [gettimeofday()]);
 print join "\n",@lits;
