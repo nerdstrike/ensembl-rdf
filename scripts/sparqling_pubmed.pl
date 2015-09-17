@@ -66,8 +66,9 @@ while ( my $gene = shift @$genes) {
     }
   }
   if (@xref_names > 0) {
-    my $sparql_values = sprintf 'VALUES ?xref {%s}'.join ' ', map { qq{$_}} @xref_names;
+    my $sparql_values = sprintf 'VALUES ?xref {%s}',join(' ', map { qq{<$_>}} @xref_names);
     $sparql = $sparql_prefix . $sparql_start . $sparql_values . $sparql_end;
+    if ($debug) {print "DEBUG: $sparql"}
     my $query = RDF::Query::Client->new($sparql, {UserAgent => $lwp});
     my @results = $query->execute($uri);
     while (my $row = shift @results) {
