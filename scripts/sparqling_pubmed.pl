@@ -9,14 +9,17 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::RDF::RDFlib;
 use Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
 use Time::HiRes qw/gettimeofday tv_interval/;
-
+use IO::File;
 my $debug;
 my $uri = 'http://wwwdev.ebi.ac.uk/rdf/services/textmining/sparql';
 # my $content_type = 'x-www-form-urlencoded';
 # my $accept = 'application/sparql-results+json';
 
+my $filename = shift;
+$filename ||= 'hits_uris.txt';
+
 my $lwp = LWP::UserAgent->new();
-$lwp->agent('ensembl-xref  (Linux, perl/5.14.2)');
+$lwp->agent('ensembl-xref (Linux, perl/5.14.2)');
 
 Bio::EnsEMBL::Registry->load_registry_from_db(
   # -host => 'mysql-ensembl-mirror.ebi.ac.uk',
@@ -28,7 +31,7 @@ Bio::EnsEMBL::Registry->load_registry_from_db(
   -db_version => 81,
   );
 print "Connected to Ensembl";
-
+my $fh = IO::File->new('hits_uris.txt','w');
 my $converter = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new('../xref_LOD_mapping.json');
 
 my $sparql_prefix = compatible_name_spaces();
@@ -48,11 +51,11 @@ my $sparql_end = '}';
 my $gene_adaptor = Bio::EnsEMBL::Registry->get_adaptor('Human','core','Gene');
 my $genes =  $gene_adaptor->fetch_all();
 my $sparql;
-
 my $hits = 0;
 my @lits;
 print "Querying Pubmed beta\n"; 
-  use Data::Dumper;
+my $e_progress = 0;
+my $pub_progress = 0;
 
 my $start_time = [gettimeofday()];
 while ( my $gene = shift @$genes) {
@@ -62,9 +65,7 @@ while ( my $gene = shift @$genes) {
     my $mapping = $converter->get_mapping($xref->dbname);
     if (exists $mapping->{canonical_LOD} && ! exists $mapping->{ignore}) {
       push @xref_names,$mapping->{canonical_LOD}.$xref->display_id;
-    } else {
-      print "No mapping found for ".$xref->dbname."\n";
-    }
+    } # Some external DB names don't map to LOD URIs.
   }
   if (@xref_names > 0) {
     my $sparql_values = sprintf 'VALUES ?xref {%s}',join(' ', map { qq{<$_>}} @xref_names);
@@ -77,16 +78,32 @@ while ( my $gene = shift @$genes) {
         $hits++;
         print $row->{source}->as_string."\n";
         push @lits,$row->{source}->as_string;
+        $pub_progress++;
+        if ($pub_progress % 100 == 0) {
+          print "Found $pub_progress PubMed entries\n";
+          while (my $string = shift @lits) {
+            print $fh $string."\n";
+          }
+        }
       }
     } else {
       die "Error from Pubmed SPARQL server: ".$query->error."\n Data: $sparql, ".$gene->stable_id;
+    }
+    $e_progress++;
+    if ($e_progress % 100 == 0) {
+      print "Processed $e_progress Ensembl IDs\n";
     }
   }
   
   
 }
 my $elapsed = tv_interval ( $start_time, [gettimeofday()]);
-print join "\n",@lits;
+# print join "\n",@lits;
+while (my $string = shift @lits) {
+  print $fh $string."\n";
+}
+$fh->close;
+
 printf "\nTotal of %s Ensembl genes found in Pubmed beta\n",$hits;
 printf "Total time is %.2f seconds\n",$elapsed;
 printf "Matched %d PubMed articles\n",@lits;
