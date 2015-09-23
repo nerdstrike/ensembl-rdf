@@ -562,28 +562,28 @@
       "id_namespace": "unipathway"
     },
     {
-      "db_name": "Uniprot SPTREMBL",
+      "db_name": "Uniprot/SPTREMBL",
       "example_id": "A4D9Z1",
       "id_namespace": "uniprot",
       "canonical_LOD": "http://purl.uniprot.org/uniprot/",
       "URI_type": "http://purl.uniprot.org/core/Protein"
     },
     {
-      "db_name": "Uniprot SPTREMBL_predicted",
+      "db_name": "Uniprot/SPTREMBL_predicted",
       "example_id": "Q4T6H2",
       "id_namespace": "uniprot",
       "canonical_LOD": "http://purl.uniprot.org/uniprot/",
       "URI_type": "http://purl.uniprot.org/core/Protein"
     },
     {
-      "db_name": "Uniprot SWISSPROT",
+      "db_name": "Uniprot/SWISSPROT",
       "example_id": "A0MH06",
       "id_namespace": "uniprot",
       "canonical_LOD": "http://purl.uniprot.org/uniprot/",
       "URI_type": "http://purl.uniprot.org/core/Reviewed_Protein"
     },
     {
-      "db_name": "Uniprot SWISSPROT_predicted",
+      "db_name": "Uniprot/SWISSPROT_predicted",
       "id_namespace": "uniprot",
       "canonical_LOD": "http://purl.uniprot.org/uniprot/",
       "URI_type": "http://purl.uniprot.org/core/Reviewed_Protein"

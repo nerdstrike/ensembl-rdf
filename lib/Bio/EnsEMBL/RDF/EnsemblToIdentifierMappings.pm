@@ -31,6 +31,7 @@ package Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
 use strict;
 use JSON qw/decode_json/;
 use IO::File;
+
 sub new {
   my ($class,$xref_mapping_file) = @_;
   local $/;
@@ -38,7 +39,7 @@ sub new {
   my $json = <$fh>;
   my $doc = decode_json($json);
   my %xref_mapping;
-  map { $xref_mapping{$_->{db_name}} = $_ } @{ $doc->{mappings} };
+  map { $xref_mapping{ $_->{db_name} } = $_ } @{ $doc->{mappings} };
   bless({ xref_mapping => \%xref_mapping },$class);
 }
 # For a given Ensembl ExternalDB name, gives a hash containing any of:
@@ -59,6 +60,18 @@ sub get_mapping {
     return $mappings->{$short_name};
   } else {
     return;
+  }
+}
+
+sub identifier_org_translation {
+  my $self = shift;
+  my $short_name = shift;
+  my $mappings = $self->{xref_mapping};
+  if (exists $mappings->{$short_name}) {
+    my $id_url = $mappings->{$short_name}->{id_namespace};
+    return "http://identifiers.org/".$id_url."/";
+  } else { 
+    return; 
   }
 }
 
