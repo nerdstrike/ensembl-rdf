@@ -45,7 +45,8 @@ sub new {
 # For a given Ensembl ExternalDB name, gives a hash containing any of:
 # db_name - Ensembl internal name for an external DB
 # example_id
-# "standard abbreviation" id_namespace
+# "standard abbreviation" id_namespace, combines with "http://identifiers.org/" to give a
+# suitable URI for SPARQL queries.
 # canoncal_LOD - or base URI LOD = Linked Open Data
 # URI_type - the class of things a URI belongs to for this source
 # ignore (boolean)
@@ -54,10 +55,10 @@ sub new {
 # regex - used to transform a textual ID into a URI
 sub get_mapping {
   my $self = shift;
-  my $short_name = shift;
+  my $e_name = shift;
   my $mappings = $self->{xref_mapping};
-  if (exists $mappings->{$short_name}) {
-    return $mappings->{$short_name};
+  if (exists $mappings->{$e_name}) {
+    return $mappings->{$e_name};
   } else {
     return;
   }
@@ -65,15 +66,38 @@ sub get_mapping {
 
 sub identifier_org_translation {
   my $self = shift;
-  my $short_name = shift;
+  my $e_name = shift;
   my $mappings = $self->{xref_mapping};
-  if (exists $mappings->{$short_name}) {
-    my $id_url = $mappings->{$short_name}->{id_namespace};
+  if (exists $mappings->{$e_name}) {
+    my $id_url = $mappings->{$e_name}->{id_namespace};
     return "http://identifiers.org/".$id_url."/";
   } else { 
     return; 
   }
 }
 
+sub identifier_org_short {
+  my $self = shift;
+  my $e_name = shift;
+  my $mappings = $self->{xref_mapping};
+  if (exists $mappings->{$e_name}) {
+    my $id = $mappings->{$e_name}->{id_namespace};
+    return $id;
+  } else {
+    return;
+  }
+}
+
+sub LOD_uri {
+  my $self = shift;
+  my $e_name = shift;
+  my $mappings = $self->{xref_mapping};
+  my $lod;
+  if (exists $mappings->{canoncal_LOD}) {
+    $lod = $mappings->{canoncal_LOD};
+  } else {
+    $lod = 'terms'.$e_name;
+  }
+}
 
 1;
