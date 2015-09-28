@@ -13,5 +13,7 @@ requires 'Digest::MD5';
 
 
 requires 'Test::Exports';
-
+# For testing
+requires 'RDF::Trine';
+requires 'RDF::Query';
 # Also requires a working Ensembl installation for most operations.
