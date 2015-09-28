@@ -93,11 +93,12 @@ sub LOD_uri {
   my $e_name = shift;
   my $mappings = $self->{xref_mapping};
   my $lod;
-  if (exists $mappings->{canoncal_LOD}) {
-    $lod = $mappings->{canoncal_LOD};
+  if (exists $mappings->{$e_name}->{canonical_LOD}) {
+    $lod = $mappings->{$e_name}->{canonical_LOD};
   } else {
-    $lod = 'terms'.$e_name;
+    $lod = 'terms:'.$e_name.'/';
   }
+  return $lod;
 }
 
 1;
