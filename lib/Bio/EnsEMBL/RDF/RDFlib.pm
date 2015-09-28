@@ -51,6 +51,7 @@ my %prefix = (
   rdfs        => 'http://www.w3.org/2000/01/rdf-schema#',
   sio         => 'http://semanticscience.org/resource/',
   dcterms     => 'http://purl.org/dc/terms/',
+  dc          => 'http://purl.org/dc/elements/1.1/',
   rdf         => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
   faldo       => 'http://biohackathon.org/resource/faldo#',
   obo         => 'http://purl.obolibrary.org/obo/',
