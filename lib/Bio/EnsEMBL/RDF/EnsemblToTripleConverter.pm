@@ -40,16 +40,20 @@ package Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 use Modern::Perl;
 use Bio::EnsEMBL::ApiVersion;
 use Bio::EnsEMBL::RDF::RDFlib;
+use Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
 use IO::File;
 
-# Required args: species, filehandle
+
+# Required args: species, filehandle, , , xref_mapping_file.json
 # override release value from API
 sub new {
   my ($caller,@args) = @_;
-  my ($ontology_adaptor, $meta_adaptor, $species, $fh, $release) = @args;
+  my ($ontology_adaptor, $meta_adaptor, $species, $fh, $release,$xref_mapping_file) = @args;
   unless ($release) {
     $release = Bio::EnsEMBL::ApiVersion->software_version;
   }
+  my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($xref_mapping_file);
+  # This connects Ensembl to Identifiers.org amongst other things
   return bless ( {
     ontoa => $ontology_adaptor,
     meta => $meta_adaptor,
@@ -58,6 +62,7 @@ sub new {
     release => $release,
     taxon => undef,
     ontology_cache => {},
+    mapping => $xref_mapping,
   }, $caller);
 }
 
@@ -102,6 +107,11 @@ sub ontology_adaptor {
 sub meta_adaptor {
   my $self = shift;
   return $self->{meta};
+}
+
+sub ensembl_mapper {
+  my $self = shift;
+  return $self->{mapping};
 }
 
 
@@ -163,7 +173,7 @@ sub create_virtuoso_file {
   my $self = shift;
   my $fh = shift; # a .graph file, named after the rdf file.
   my $version = Bio::EnsEMBL::ApiVersion->software_version;
-  my $taxon_id = $self->meta->get_taxonomy_id;
+  my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
 
   my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
   my $graphUri = $versionGraphUri."/".$taxon_id;
@@ -180,8 +190,8 @@ sub print_seq_regions {
   my $fh = $self->filehandle;
   
   my $version = $self->release;
-  my $taxon_id = $self->meta->get_taxonomy_id;
-  my $scientific_name = $self->meta->get_scientific_name;
+  my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
+  my $scientific_name = $self->meta_adaptor->get_scientific_name;
   foreach my $slice ( @$slice_list ) {
     my $region_name = $slice->name();
     my $coord_system = $slice->coord_system();
@@ -219,6 +229,7 @@ sub print_feature {
   my $self = shift;
   my $feature = shift;
   my $feature_uri = shift;
+  my $feature_type = shift; # aka table name
 
   my $fh = $self->filehandle;
   my $so_term = $self->getSOOntologyId($feature->{biotype});
@@ -229,15 +240,11 @@ sub print_feature {
   print $fh triple($feature_uri, 'dc:description', escape($feature->{description})) if defined $feature->{description};
   print $fh taxon_triple($feature_uri,$self->taxon);
 
-  # Identifiers.org mappings
-  my $id_org_uri = "identifiers:ensembl/$feature_uri";
-  print $fh triple($feature_uri,'a',$id_org_uri);
-  print $fh triple($id_org_uri,'a','identifiers:ensembl');
-  my $bnode = new_bnode();
-  print $fh triple($id_org_uri, 'sio:SIO_000671', $bnode);
-  print $fh triple($bnode, 'a', 'ident_type:ensembl');
-  print $fh triple($bnode, 'sio:SIO_000300', $feature->{id});
+  print $fh triple($feature_uri, 'dc:identifier', '"'.$feature->{id}.'"' );
 
+  # Identifiers.org mappings
+  $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
+  
   # Describe location in Faldo
   my $schema_version = $self->release();
 
@@ -273,24 +280,39 @@ sub print_feature {
   print $fh triple($endUri, 'faldo:position', $stop);
   print $fh triple($endUri, 'faldo:reference', u($version_uri));
 
-  print $fh triple($feature_uri, 'dc:identifier', '"'.$feature->{id}.'"' );
 
   # Print out synonyms
   for my $synonym ( @{$feature->{synonyms}} ) {
     print $fh triple($feature_uri,'skos:altlabel', '"'.escape($synonym).'"' );
   }
+  my $provenance;
+  $provenance = 'ANNOTATED' if $feature_type eq 'gene';
+  $provenance = 'INFERRED_FROM_TRANSCRIPT' if $feature_type eq 'transcript';
+  $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
 
+  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance);
 }
 
 # Should be unnecessary once Xref RDF is produced separately from the release database
+# Also put associated xrefs through this:
+#     my $axN = 0;
+# for my $axref (@{$xref->{associated_xrefs}}) {
+#   # create a holding triple for each set of annotations
+#   my $ax_uri = $idorguri.'_ax_'.(++$axN);
+#   print $fh triple(u($idorguri), 'term:annotated', u($ax_uri)); 
+#   while(my ($k,$v) = each %$axref) {
+#       $k =~ tr/\t /_/;
+#       # use the condition directly here
+#       # u($ax_uri);
+#   }
+# }
 sub print_xrefs {
   my $self = shift;
   my $xref_list = shift;
-  my $feature = shift;
+  my $feature_uri = shift;
   my $relation = shift;
-  my $fh = $self->filehandle;
-  $relation ||= "ANNOTATED";
   $relation = 'term:'.$relation;
+  my $fh = $self->filehandle;
 
   foreach my $xref (@$xref_list) {
     my $label = $xref->{display_id};
@@ -299,9 +321,10 @@ sub print_xrefs {
     my $desc = $xref->{description};
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
-    # ... PUT CODE HERE
-my $idorguri = 'PLACEHOLDER';
-    print $fh triple($feature, $relation, u($xref));
+    # See also xref_config.txt/xref_LOD_mapping.json
+    $self->identifiers_org_mapping($id,$feature_uri,$db_name);
+
+    print $fh triple($feature_uri, $relation, u($xref));
     print $fh triples(u($xref), 'dc:identifier', qq("$id"));
     if(defined $label && $label ne $id) {
       print $fh triple(u($xref), 'rdfs:label', qq("$label"));
@@ -310,18 +333,29 @@ my $idorguri = 'PLACEHOLDER';
       print $fh triple(u($xref), 'dc:description', '"'.escape($desc).'"');
     }
 
-    my $axN = 0;
-    for my $axref (@{$xref->{associated_xrefs}}) {
-      # create a holding triple for each set of annotations
-      my $ax_uri = $idorguri.'_ax_'.(++$axN);
-      print $fh triple(u($idorguri), 'term:annotated', u($ax_uri)); 
-      while(my ($k,$v) = each %$axref) {
-          $k =~ tr/\t /_/;
-          # use the condition directly here
-          $self->print_xref($fh, u($ax_uri), $k, $v);
-      }
-    }
+
   }
+}
+# For features and xrefs, the identifiers.org way of describing the resource
+
+# (feature/xref)--rdfs:seeAlso->(identifiers.org/db/URI)--a->(identifiers.org/db)
+#                                                       \-sio:SIO_000671->()--a->type.identifiers.org/db
+#                                                                           \-sio:SIO_000300->"feature_id"
+# SIO_000300 = has-value
+# SIO_000671 = has-identifier
+sub identifiers_org_mapping {
+  my ($self,$feature_id,$feature_uri,$db) = @_;
+  my $fh = $self->filehandle;
+  my $id_mapper = $self->mappings;
+  my $id_org_abbrev = $id_mapper->identifier_org_short($db);
+
+  my $id_org_uri = 'identifiers:'.$id_org_abbrev.'/'.$feature_id;
+  print $fh triple($feature_uri, 'rdfs:seeAlso', $id_org_uri);
+  if ($id_org_abbrev) {
+    print $fh triple($id_org_uri, 'a', 'identifiers:'.$id_org_abbrev);
+    print $fh triple($id_org_uri,'sio:SIO_000671',"[a ident_type:$id_org_abbrev; sio:SIO_000300 \"$feature_id\"]");
+  }
+
 }
 
 my $warned = {};
@@ -340,7 +374,5 @@ sub print_protein_features {
   }
   return;
 }
-
-
 
 1;
