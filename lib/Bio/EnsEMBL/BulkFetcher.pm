@@ -33,7 +33,7 @@ package Bio::EnsEMBL::BulkFetcher;
 use strict;
 use warnings;
 use Bio::EnsEMBL::Utils::Argument qw(rearrange);
-use Bio::EnsEMBL::Utils::Exception qw(throw warn);
+use Bio::EnsEMBL::Utils::Exception qw(throw);
 
 sub new {
   my ( $class, @args ) = @_;
@@ -461,7 +461,7 @@ sub get_xrefs {
 
 sub get_coord_systems {
   my ( $self, $dba, $type, $biotypes ) = @_;
-  my $sql = q/
+  my $sql = qq/
     select g.stable_id as id, c.name, c.version
     from $type g
     join seq_region s using (seq_region_id)
@@ -508,7 +508,7 @@ sub get_synonyms {
 
 sub get_seq_region_synonyms {
   my ( $self, $dba, $type, $biotypes ) = @_;
-  my $sql = q/
+  my $sql = qq/
     select g.stable_id as id, sr.synonym as synonym, e.db_name as db 
     from $type g
     join seq_region_synonym sr using (seq_region_id)
