@@ -41,8 +41,9 @@ use Modern::Perl;
 use Bio::EnsEMBL::ApiVersion;
 use Bio::EnsEMBL::RDF::RDFlib;
 use Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
+use Bio::EnsEMBL::Utils::SequenceOntologyMapper;
 use IO::File;
-
+use Try::Tiny;
 
 # Required args: species, filehandle, , , xref_mapping_file.json
 # override release value from API
@@ -53,6 +54,7 @@ sub new {
     $release = Bio::EnsEMBL::ApiVersion->software_version;
   }
   my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($xref_mapping_file);
+  my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($ontology_adaptor);
   # This connects Ensembl to Identifiers.org amongst other things
   return bless ( {
     ontoa => $ontology_adaptor,
@@ -63,6 +65,7 @@ sub new {
     taxon => undef,
     ontology_cache => {},
     mapping => $xref_mapping,
+    biotype_mapper => $biotype_mapper,
   }, $caller);
 }
 
@@ -114,6 +117,11 @@ sub ensembl_mapper {
   return $self->{mapping};
 }
 
+sub biotype_mapper {
+  my $self = shift;
+  return $self->{biotype_mapper};
+}
+
 
 # Specify path to write to.
 sub write_to_file {
@@ -158,7 +166,7 @@ sub getSOOntologyId {
   my ($typeterm) = @{ $self->ontology_adaptor->fetch_all_by_name( $term, 'SO' ) };
     
   unless ($typeterm) {
-    warn "Can't find SO term for $term\n";
+    warn "Can't find SO term for biotype $term\n";
     $self->{$ontology_cache->{$term}} = undef; 
     return;
   }
@@ -232,13 +240,23 @@ sub print_feature {
   my $feature_type = shift; # aka table name
 
   my $fh = $self->filehandle;
-  my $so_term = $self->getSOOntologyId($feature->{biotype});
-   
-  print $fh triple($feature_uri, 'a', $so_term);
-  print $fh triple($feature_uri, 'a', 'term:'.$feature->{biotype});
+  my $biotype = $feature->{biotype};
+
+  try { 
+    my $so_term;
+    if ($feature_type eq 'gene') {$so_term = $self->biotype_mapper->gene_biotype_to_name($biotype) }
+    elsif ($feature_type eq 'transcript') {$so_term = $self->biotype_mapper->transcript_biotype_to_name($biotype) }
+    else {
+      $so_term = $self->getSOOntologyId($biotype);
+    }
+    print $fh triple($feature_uri, 'a', $so_term) if $so_term;
+  } catch { 
+    if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
+  };
+  print $fh triple($feature_uri, 'a', 'term:'.$biotype);
   print $fh triple($feature_uri, 'rdfs:label', qq('$feature->name')) if defined $feature->{name};
   print $fh triple($feature_uri, 'dc:description', escape($feature->{description})) if defined $feature->{description};
-  print $fh taxon_triple($feature_uri,$self->taxon);
+  print $fh taxon_triple($feature_uri,'taxon:'.$self->meta_adaptor->get_taxonomy_id);
 
   print $fh triple($feature_uri, 'dc:identifier', '"'.$feature->{id}.'"' );
 
@@ -250,8 +268,8 @@ sub print_feature {
 
   my $region_name = $feature->{seq_region_name};
   my $coord_system = $feature->{coord_system};
-  my $cs_name = $coord_system->name;
-  my $cs_version = $coord_system->version;
+  my $cs_name = $coord_system->{name};
+  my $cs_version = $coord_system->{version};
 
   my $version_uri = qq(ensembl:$schema_version/$cs_name:$cs_version:$region_name);
   my $start = $feature->{start};
@@ -346,14 +364,16 @@ sub print_xrefs {
 sub identifiers_org_mapping {
   my ($self,$feature_id,$feature_uri,$db) = @_;
   my $fh = $self->filehandle;
-  my $id_mapper = $self->mappings;
+  my $id_mapper = $self->ensembl_mapper;
   my $id_org_abbrev = $id_mapper->identifier_org_short($db);
 
-  my $id_org_uri = 'identifiers:'.$id_org_abbrev.'/'.$feature_id;
-  print $fh triple($feature_uri, 'rdfs:seeAlso', $id_org_uri);
   if ($id_org_abbrev) {
+    my $id_org_uri = 'identifiers:'.$id_org_abbrev.'/'.$feature_id;
+    print $fh triple($feature_uri, 'rdfs:seeAlso', $id_org_uri);
     print $fh triple($id_org_uri, 'a', 'identifiers:'.$id_org_abbrev);
     print $fh triple($id_org_uri,'sio:SIO_000671',"[a ident_type:$id_org_abbrev; sio:SIO_000300 \"$feature_id\"]");
+  } else {
+    warn "Failed to resolve $db in identifier.org mappings";
   }
 
 }
