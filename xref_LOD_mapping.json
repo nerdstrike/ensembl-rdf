@@ -55,6 +55,11 @@
       "ignore": true
     },
     {
+      "db_name": "ensembl",
+      "exampled_id": "ENSG00000265094",
+      "id_namespace": "ensembl"
+    },
+    {
       "db_name": "EC_NUMBER",
       "example_id": "2.7.11.23",
       "id_namespace": "ec-code",
