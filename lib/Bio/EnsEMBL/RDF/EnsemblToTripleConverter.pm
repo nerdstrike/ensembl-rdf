@@ -134,7 +134,7 @@ sub write_to_file {
 sub print_namespaces {
   my $self = shift;
   my $fh = $self->filehandle;
-  print $fh name_spaces();
+  print $fh name_spaces()."\n";
 }
 
 sub print_species_info {
@@ -172,7 +172,6 @@ sub getSOOntologyId {
   }
     
   my $id = $typeterm->accession;
-  $id =~ s/SO:/obo:SO_/;
   $self->{$ontology_cache->{$term}} = $id;
   return $id;
 }
@@ -208,14 +207,14 @@ sub print_seq_regions {
 
     # Generate a version specific portion of a URL that includes the database version, species, assembly version and region name
     # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/75/GRCh37/1
-    my $version_uri = qq(ensembl:$version/$cs_name:$cs_version:$region_name); 
+    my $version_uri = u( sprintf "%s%s/%s:%s:%s", prefix('ensembl'),$version,$cs_name,$cs_version,$region_name); 
     
     # we also create a non versioned URI that is a superclass e.g. 
     # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/1
-    my $non_version_uri = qq(ensembl:$taxon_id/$cs_name:$region_name); 
+    my $non_version_uri = u( sprintf "%s%s/%s:%s", prefix('ensembl'),$taxon_id,$cs_name,$region_name); 
     
-    my $reference = u($version_uri);
-    my $generic = u($non_version_uri);
+    my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
+    my $generic = $non_version_uri;
     print $fh triple($reference, 'rdfs:subClassOf', $generic);
     if ($cs_name eq 'chromosome') { 
       print $fh triple($generic, 'rdfs:subClassOf', 'obo:SO_0000340');
@@ -249,16 +248,16 @@ sub print_feature {
     else {
       $so_term = $self->getSOOntologyId($biotype);
     }
-    print $fh triple($feature_uri, 'a', $so_term) if $so_term;
+    print $fh triple(u($feature_uri), 'a', 'obo:'.clean_for_uri($so_term)) if $so_term;
   } catch { 
     if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
   };
-  print $fh triple($feature_uri, 'a', 'term:'.$biotype);
-  print $fh triple($feature_uri, 'rdfs:label', qq('$feature->name')) if defined $feature->{name};
-  print $fh triple($feature_uri, 'dc:description', escape($feature->{description})) if defined $feature->{description};
-  print $fh taxon_triple($feature_uri,'taxon:'.$self->meta_adaptor->get_taxonomy_id);
+  print $fh triple(u($feature_uri), 'a', 'term:'.clean_for_uri($biotype));
+  print $fh triple(u($feature_uri), 'rdfs:label', '"'.$feature->{name}.'"') if defined $feature->{name};
+  print $fh triple(u($feature_uri), 'dc:description', '"'.escape($feature->{description}).'"') if defined $feature->{description};
+  print $fh taxon_triple(u($feature_uri),'taxon:'.$self->meta_adaptor->get_taxonomy_id);
 
-  print $fh triple($feature_uri, 'dc:identifier', '"'.$feature->{id}.'"' );
+  print $fh triple(u($feature_uri), 'dc:identifier', '"'.$feature->{id}.'"' );
 
   # Identifiers.org mappings
   $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
@@ -277,31 +276,31 @@ sub print_feature {
   my $strand = $feature->{strand};
   my $begin = ($strand >= 0) ? $start : $end;
   my $stop = ($strand >= 0) ? $end : $start;
-  my $location = u(sprintf "%s:%s-%s:%s",$version_uri,$start,$end,$strand);
-  my $beginUri = u(sprintf "%s:%s:%s",$version_uri,$begin,$strand);
-  my $endUri = u("$version_uri:$stop:$strand");
-  print $fh triple($feature_uri, 'faldo:location', $location);
-  print $fh triple($location, 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
-  print $fh triple($location, 'rdf:type', 'faldo:Region');
-  print $fh triple($location, 'faldo:begin', $beginUri);
-  print $fh triple($location, 'faldo:end', $endUri);
-  print $fh triple($location, 'faldo:reference', u($version_uri));
-  print $fh triple($beginUri, 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple($beginUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  my $location = sprintf "%s:%s-%s:%s",$version_uri,$start,$end,$strand;
+  my $beginUri = sprintf "%s:%s:%s",$version_uri,$begin,$strand;
+  my $endUri = "$version_uri:$stop:$strand";
+  print $fh triple(u($feature_uri), 'faldo:location', u($location));
+  print $fh triple(u($location), 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
+  print $fh triple(u($location), 'rdf:type', 'faldo:Region');
+  print $fh triple(u($location), 'faldo:begin', u($beginUri));
+  print $fh triple(u($location), 'faldo:end', u($endUri));
+  print $fh triple(u($location), 'faldo:reference', u($version_uri));
+  print $fh triple(u($beginUri), 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple(u($beginUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple($beginUri, 'faldo:position', $begin);
-  print $fh triple($beginUri, 'faldo:reference', u($version_uri));
+  print $fh triple(u($beginUri), 'faldo:position', $begin);
+  print $fh triple(u($beginUri), 'faldo:reference', u($version_uri));
 
-  print $fh triple($endUri, 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple($endUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  print $fh triple(u($endUri), 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple(u($endUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple($endUri, 'faldo:position', $stop);
-  print $fh triple($endUri, 'faldo:reference', u($version_uri));
+  print $fh triple(u($endUri), 'faldo:position', $stop);
+  print $fh triple(u($endUri), 'faldo:reference', u($version_uri));
 
 
   # Print out synonyms
   for my $synonym ( @{$feature->{synonyms}} ) {
-    print $fh triple($feature_uri,'skos:altlabel', '"'.escape($synonym).'"' );
+    print $fh triple(u($feature_uri),'skos:altlabel', '"'.escape($synonym).'"' );
   }
   my $provenance;
   $provenance = 'ANNOTATED' if $feature_type eq 'gene';
@@ -336,19 +335,21 @@ sub print_xrefs {
     my $label = $xref->{display_id};
     my $db_name = $xref->{dbname};
     my $id = $xref->{primary_id};
+    $id = clean_for_uri($id);
     my $desc = $xref->{description};
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
     # See also xref_config.txt/xref_LOD_mapping.json
     $self->identifiers_org_mapping($id,$feature_uri,$db_name);
-
-    print $fh triple($feature_uri, $relation, u($xref));
-    print $fh triples(u($xref), 'dc:identifier', qq("$id"));
+    # Next make an "ensembl" style xref. It's a bit of duplication. This might need improving
+    my $xref_uri = 'ensembl:'.$db_name.'/'.$id;
+    print $fh triple(u($feature_uri), $relation, u($xref_uri));
+    print $fh triple(u($xref_uri), 'dc:identifier', qq("$id"));
     if(defined $label && $label ne $id) {
-      print $fh triple(u($xref), 'rdfs:label', qq("$label"));
+      print $fh triple(u($xref_uri), 'rdfs:label', qq("$label"));
     }
     if ($desc) {
-      print $fh triple(u($xref), 'dc:description', '"'.escape($desc).'"');
+      print $fh triple(u($xref_uri), 'dc:description', '"'.escape($desc).'"');
     }
 
 
@@ -366,12 +367,13 @@ sub identifiers_org_mapping {
   my $fh = $self->filehandle;
   my $id_mapper = $self->ensembl_mapper;
   my $id_org_abbrev = $id_mapper->identifier_org_short($db);
-
+  my $id_org_uri;
   if ($id_org_abbrev) {
-    my $id_org_uri = 'identifiers:'.$id_org_abbrev.'/'.$feature_id;
-    print $fh triple($feature_uri, 'rdfs:seeAlso', $id_org_uri);
-    print $fh triple($id_org_uri, 'a', 'identifiers:'.$id_org_abbrev);
-    print $fh triple($id_org_uri,'sio:SIO_000671',"[a ident_type:$id_org_abbrev; sio:SIO_000300 \"$feature_id\"]");
+    $id_org_uri = prefix('identifiers').$id_org_abbrev.'/'.$feature_id;
+    print $fh triple(u($feature_uri), 'rdfs:seeAlso', u( $id_org_uri ));
+    print $fh triple(u($id_org_uri), 'a', 'identifiers:'.$id_org_abbrev);
+    print $fh triple(u($id_org_uri),'sio:SIO_000671',"[a ident_type:$id_org_abbrev; sio:SIO_000300 \"$feature_id\"]");
+    return $id_org_uri;
   } else {
     warn "Failed to resolve $db in identifier.org mappings";
   }

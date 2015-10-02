@@ -100,9 +100,9 @@ sub escape {
   return $string;
 }
 
-sub replace_whitespace {
+sub clean_for_uri {
   my $string = shift;
-  $string =~ s/\s+/_/g;
+  $string =~ s/[\s:]/_/g;
   return $string;
 }
 
