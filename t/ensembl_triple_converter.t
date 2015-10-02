@@ -32,7 +32,7 @@ $converter->print_seq_regions($slices);
 
 my $fetcher = Bio::EnsEMBL::BulkFetcher->new();
 # These are NOT proper Gene objects, they are hash summaries.
-my $genes = $fetcher->export_genes($dbb,undef,'transcript');
+my $genes = $fetcher->export_genes($dbb,undef,'translation');
 my ($gene) = grep { $_->{id} eq 'ENSG00000214717'} @$genes;
 
 $converter->print_feature($gene, 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}, 'gene');
@@ -95,7 +95,17 @@ SELECT ?transcript WHERE {
 is_deeply( [map {$_->{transcript}->value} @result], [qw/ENST00000381222 ENST00000381218 ENST00000461691 ENST00000381223  ENST00000515319/], "Transcript stable IDs returned for given gene");
 
 
+$sparql = qq[
+$prefixes
+SELECT ?translation WHERE {
+  ?feature dc:identifier "ENST00000461691" .
+  ?feature obo:SO_translates_to ?translation_uri .
+  ?translation_uri dc:identifier ?translation .
+}
+];
 
+@result = map {$_->{translation}->value} @{ query($sparql) };
+is_deeply( \@result, [qw//],"Translations connected to transcript");
 
 sub query {
   my $sparql = shift;

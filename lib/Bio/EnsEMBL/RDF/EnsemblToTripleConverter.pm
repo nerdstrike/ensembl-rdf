@@ -292,7 +292,7 @@ sub print_feature {
     foreach my $translation (@{$feature->{translation}}) {
       my $translation_uri = prefix('protein').$translation->{id};
       $self->print_feature($translation,$translation_uri,'translation');
-      print $fh triple(u($feature_uri),'obo_SO_translates_to',u($translation_uri));
+      print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
     }
   }
 }
