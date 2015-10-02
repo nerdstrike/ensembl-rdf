@@ -265,6 +265,42 @@ sub print_feature {
   $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
   
   # Describe location in Faldo
+  $self->print_faldo_location($feature,$feature_uri);
+
+  # Print out synonyms
+  for my $synonym ( @{$feature->{synonyms}} ) {
+    print $fh triple(u($feature_uri),'skos:altlabel', '"'.escape($synonym).'"' );
+  }
+  my $provenance;
+  $provenance = 'ANNOTATED' if $feature_type eq 'gene';
+  $provenance = 'INFERRED_FROM_TRANSCRIPT' if $feature_type eq 'transcript';
+  $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
+
+  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance);
+
+  # connect genes to transcripts. Note recursion
+  if ($feature_type eq 'gene' && exists $feature->{transcripts}) {
+    foreach my $transcript (@{$feature->{transcripts}}) {
+      my $transcript_uri = prefix('transcript').$transcript->{id};
+      $self->print_feature($transcript,$transcript_uri,'transcript');
+      print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
+    }
+  }
+
+  # connect transcripts to translations
+  if ($feature_type eq 'transcript' && exists $feature->{translation}) {
+    foreach my $translation (@{$feature->{translation}}) {
+      my $translation_uri = prefix('protein').$translation->{id};
+      $self->print_feature($translation,$translation_uri,'translation');
+      print $fh triple(u($feature_uri),'obo_SO_translates_to',u($translation_uri));
+    }
+  }
+}
+
+sub print_faldo_location {
+  my ($self,$feature,$feature_uri) = @_;
+  my $fh = $self->filehandle;
+
   my $schema_version = $self->release();
 
   my $region_name = $feature->{seq_region_name};
@@ -299,37 +335,10 @@ sub print_feature {
 
   print $fh triple(u($endUri), 'faldo:position', $stop);
   print $fh triple(u($endUri), 'faldo:reference', u($version_uri));
-
-
-  # Print out synonyms
-  for my $synonym ( @{$feature->{synonyms}} ) {
-    print $fh triple(u($feature_uri),'skos:altlabel', '"'.escape($synonym).'"' );
-  }
-  my $provenance;
-  $provenance = 'ANNOTATED' if $feature_type eq 'gene';
-  $provenance = 'INFERRED_FROM_TRANSCRIPT' if $feature_type eq 'transcript';
-  $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
-
-  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance);
-
-  # connect genes to transcripts. Note recursion
-  if ($feature_type eq 'gene' && exists $feature->{transcripts}) {
-    foreach my $transcript (@{$feature->{transcripts}}) {
-      my $transcript_uri = prefix('transcript').$transcript->{id};
-      $self->print_feature($transcript,$transcript_uri,'transcript');
-      print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
-    }
-  }
-
-  # connect transcripts to translations
-  if ($feature_type eq 'transcript' && exists $feature->{translation}) {
-    foreach my $translation (@{$feature->{translation}}) {
-      my $translation_uri = prefix('protein').$translation->{id};
-      $self->print_feature($translation,$translation_uri,'translation');
-      print $fh triple(u($feature_uri),'obo_SO_translates_to',u($translation_uri));
-    }
-  }
+  
+  return $location;
 }
+
 
 # Should be unnecessary once Xref RDF is produced separately from the release database
 # Also put associated xrefs through this:
