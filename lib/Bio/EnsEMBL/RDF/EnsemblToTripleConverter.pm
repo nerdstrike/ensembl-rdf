@@ -231,7 +231,9 @@ sub print_seq_regions {
   
 }
 
-
+# This method calls recursively down the gene->transcript->translation chain and prints them all
+# It can also be used safely with other kinds of features, at least superficially.
+# Any specific vocabulary must be added to describe anything other than the entity and its location
 sub print_feature {
   my $self = shift;
   my $feature = shift;
@@ -269,8 +271,9 @@ sub print_feature {
   my $coord_system = $feature->{coord_system};
   my $cs_name = $coord_system->{name};
   my $cs_version = $coord_system->{version};
+  my $prefix = prefix('ensembl');
 
-  my $version_uri = qq(ensembl:$schema_version/$cs_name:$cs_version:$region_name);
+  my $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
@@ -308,6 +311,24 @@ sub print_feature {
   $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
 
   $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance);
+
+  # connect genes to transcripts. Note recursion
+  if ($feature_type eq 'gene' && exists $feature->{transcripts}) {
+    foreach my $transcript (@{$feature->{transcripts}}) {
+      my $transcript_uri = prefix('transcript').$transcript->{id};
+      $self->print_feature($transcript,$transcript_uri,'transcript');
+      print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
+    }
+  }
+
+  # connect transcripts to translations
+  if ($feature_type eq 'transcript' && exists $feature->{translation}) {
+    foreach my $translation (@{$feature->{translation}}) {
+      my $translation_uri = prefix('protein').$translation->{id};
+      $self->print_feature($translation,$translation_uri,'translation');
+      print $fh triple(u($feature_uri),'obo_SO_translates_to',u($translation_uri));
+    }
+  }
 }
 
 # Should be unnecessary once Xref RDF is produced separately from the release database

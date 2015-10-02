@@ -32,11 +32,10 @@ $converter->print_seq_regions($slices);
 
 my $fetcher = Bio::EnsEMBL::BulkFetcher->new();
 # These are NOT proper Gene objects, they are hash summaries.
-my $genes = $fetcher->export_genes($dbb);
+my $genes = $fetcher->export_genes($dbb,undef,'transcript');
 my ($gene) = grep { $_->{id} eq 'ENSG00000214717'} @$genes;
 
 $converter->print_feature($gene, 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}, 'gene');
-
 
 close $fh;
 print $fake_file."\n\n";
@@ -47,10 +46,15 @@ my $parser = RDF::Trine::Parser->new('turtle');
 
 $parser->parse_into_model('http://rdf.ebi.ac.uk/resource/ensembl/', $fake_file, $model);
 
+my $prefixes = qq[PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+];
+
 # Test seq region labels
 my $sparql = "
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+$prefixes
 SELECT ?label WHERE {
   ?seq_region rdfs:subClassOf obo:SO_0000340 .
   ?seq_region rdfs:label ?label .
@@ -62,10 +66,7 @@ is_deeply(\@strings, ['"Homo sapiens chromosome chromosome:GRCh38:6:1:170805979:
 
 # Test gene
 $sparql = qq[
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+$prefixes
 SELECT ?start ?end WHERE {
   ?feature dc:identifier "ENSG00000214717" .
   ?feature faldo:location ?faldo .
@@ -78,6 +79,23 @@ SELECT ?start ?end WHERE {
 @result = query($sparql);
 cmp_ok( $result[0]->{start}->numeric_value, '==', 2500967 ,'Gene start correct');
 cmp_ok( $result[0]->{end}->numeric_value, '==', 2486414, 'Gene end correct');
+
+# Test gene-transcript relations
+
+$sparql = qq[
+$prefixes
+SELECT ?transcript WHERE {
+  ?feature dc:identifier "ENSG00000214717" .
+  ?transcript_uri obo:SO_transcribed_from ?feature .
+  ?transcript_uri dc:identifier ?transcript .
+}
+];
+
+@result = query($sparql);
+is_deeply( [map {$_->{transcript}->value} @result], [qw/ENST00000381222 ENST00000381218 ENST00000461691 ENST00000381223  ENST00000515319/], "Transcript stable IDs returned for given gene");
+
+
+
 
 sub query {
   my $sparql = shift;
