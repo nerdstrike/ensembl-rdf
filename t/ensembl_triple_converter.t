@@ -1,5 +1,6 @@
 use Modern::Perl;
 use Test::More;
+use Test::Differences;
 
 use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 use Bio::EnsEMBL::Registry;
@@ -92,7 +93,7 @@ SELECT ?transcript WHERE {
 ];
 
 @result = query($sparql);
-is_deeply( [map {$_->{transcript}->value} @result], [qw/ENST00000381222 ENST00000381218 ENST00000461691 ENST00000381223  ENST00000515319/], "Transcript stable IDs returned for given gene");
+eq_or_diff( [map {$_->{transcript}->value} @result], [qw/ENST00000461691 ENST00000381222 ENST00000381223 ENST00000381218 ENST00000515319/], "Transcript stable IDs returned for given gene");
 
 
 $sparql = qq[
@@ -104,8 +105,9 @@ SELECT ?translation WHERE {
 }
 ];
 
-@result = map {$_->{translation}->value} @{ query($sparql) };
-is_deeply( \@result, [qw//],"Translations connected to transcript");
+@result = query($sparql);
+@result = map {$_->{translation}->value} @result;
+is_deeply( \@result, [qw/ENSP00000419148/],"Translations connected to transcript");
 
 sub query {
   my $sparql = shift;

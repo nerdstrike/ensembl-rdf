@@ -265,7 +265,7 @@ sub print_feature {
   $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
   
   # Describe location in Faldo
-  $self->print_faldo_location($feature,$feature_uri);
+  $self->print_faldo_location($feature,$feature_uri) unless $feature_type eq 'translation';
 
   # Print out synonyms
   for my $synonym ( @{$feature->{synonyms}} ) {
@@ -288,8 +288,8 @@ sub print_feature {
   }
 
   # connect transcripts to translations
-  if ($feature_type eq 'transcript' && exists $feature->{translation}) {
-    foreach my $translation (@{$feature->{translation}}) {
+  if ($feature_type eq 'transcript' && exists $feature->{translations}) {
+    foreach my $translation (@{$feature->{translations}}) {
       my $translation_uri = prefix('protein').$translation->{id};
       $self->print_feature($translation,$translation_uri,'translation');
       print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
