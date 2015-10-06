@@ -241,20 +241,23 @@ sub print_feature {
   my $feature_type = shift; # aka table name
 
   my $fh = $self->filehandle;
-  my $biotype = $feature->{biotype};
+  # Translations don't have biotypes. Other features won't either.
+  if (exists $feature->{biotype}) {
+    my $biotype = $feature->{biotype};
 
-  try { 
-    my $so_term;
-    if ($feature_type eq 'gene') {$so_term = $self->biotype_mapper->gene_biotype_to_name($biotype) }
-    elsif ($feature_type eq 'transcript') {$so_term = $self->biotype_mapper->transcript_biotype_to_name($biotype) }
-    else {
-      $so_term = $self->getSOOntologyId($biotype);
-    }
-    print $fh triple(u($feature_uri), 'a', 'obo:'.clean_for_uri($so_term)) if $so_term;
-  } catch { 
-    if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
-  };
-  print $fh triple(u($feature_uri), 'a', 'term:'.clean_for_uri($biotype));
+    try { 
+      my $so_term;
+      if ($feature_type eq 'gene') {$so_term = $self->biotype_mapper->gene_biotype_to_name($biotype) }
+      elsif ($feature_type eq 'transcript') {$so_term = $self->biotype_mapper->transcript_biotype_to_name($biotype) }
+      else {
+        $so_term = $self->getSOOntologyId($biotype);
+      }
+      print $fh triple(u($feature_uri), 'a', 'obo:'.clean_for_uri($so_term)) if $so_term;
+    } catch { 
+      if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
+    };
+    print $fh triple(u($feature_uri), 'a', 'term:'.clean_for_uri($biotype));
+  }
   print $fh triple(u($feature_uri), 'rdfs:label', '"'.$feature->{name}.'"') if defined $feature->{name};
   print $fh triple(u($feature_uri), 'dc:description', '"'.escape($feature->{description}).'"') if defined $feature->{description};
   print $fh taxon_triple(u($feature_uri),'taxon:'.$self->meta_adaptor->get_taxonomy_id);
@@ -285,6 +288,9 @@ sub print_feature {
       $self->print_feature($transcript,$transcript_uri,'transcript');
       print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
     }
+
+    # Also dump exons
+
   }
 
   # connect transcripts to translations
@@ -293,6 +299,10 @@ sub print_feature {
       my $translation_uri = prefix('protein').$translation->{id};
       $self->print_feature($translation,$translation_uri,'translation');
       print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
+      if (exists $translation->{protein_features} && defined $translation->{protein_features}) {
+        print "\n\n".ref $translation->{protein_features}."\n\n";
+        $self->print_protein_features($translation_uri,$translation->{protein_features});
+      }
     }
   }
 }
@@ -370,7 +380,7 @@ sub print_xrefs {
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
     # See also xref_config.txt/xref_LOD_mapping.json
-    $self->identifiers_org_mapping($id,$feature_uri,$db_name);
+    my $id_org_uri = $self->identifiers_org_mapping($id,$feature_uri,$db_name);
     # Next make an "ensembl" style xref. It's a bit of duplication. This might need improving
     my $xref_uri = 'ensembl:'.$db_name.'/'.$id;
     print $fh triple(u($feature_uri), $relation, u($xref_uri));
@@ -381,6 +391,8 @@ sub print_xrefs {
     if ($desc) {
       print $fh triple(u($xref_uri), 'dc:description', '"'.escape($desc).'"');
     }
+    # Add any associated xrefs OPTIONAL. Hardly any in Ensembl main databases, generally from eg.
+    # Pombase uses them extensively to qualify "ontology xrefs".
 
 
   }
@@ -412,19 +424,19 @@ sub identifiers_org_mapping {
 
 my $warned = {};
 sub print_protein_features {
-  my ($self, $featureIdUri, $protein_feature) = @_;
+  my ($self, $featureIdUri, $protein_features) = @_;
   my $fh = $self->filehandle;
-  return unless (defined $protein_feature->{dbname} && defined $protein_feature->{name});
-
-  my $dbname = lc($protein_feature->{dbname});
-  
-  if(defined prefix($dbname)) {
-    print $fh triple($featureIdUri, 'rdfs:seeAlso', $dbname.':'.$protein_feature->{name});    
-  } elsif(!defined $warned->{$dbname}) {
-    # $self->log->warn("No type found for protein feature from $dbname");
-    $warned->{dbname} = 1;
+  return unless (@$protein_features > 0);
+  foreach my $pf (@$protein_features) {
+    next unless (defined $pf->{dbname} && defined $pf->{name});
+    my $dbname = lc($pf->{dbname});
+    if(defined prefix($dbname)) {
+      print $fh triple($featureIdUri, 'rdfs:seeAlso', $dbname.':'.$pf->{name});    
+    } elsif(!defined $warned->{$dbname}) {
+      # $self->log->warn("No type found for protein feature from $dbname");
+      $warned->{dbname} = 1;
+    }   
   }
-  return;
 }
 
 1;
