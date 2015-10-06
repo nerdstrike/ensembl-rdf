@@ -300,7 +300,6 @@ sub print_feature {
       $self->print_feature($translation,$translation_uri,'translation');
       print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
       if (exists $translation->{protein_features} && defined $translation->{protein_features}) {
-        print "\n\n".ref $translation->{protein_features}."\n\n";
         $self->print_protein_features($translation_uri,$translation->{protein_features});
       }
     }
@@ -426,14 +425,13 @@ my $warned = {};
 sub print_protein_features {
   my ($self, $featureIdUri, $protein_features) = @_;
   my $fh = $self->filehandle;
-  return unless (@$protein_features > 0);
   foreach my $pf (@$protein_features) {
     next unless (defined $pf->{dbname} && defined $pf->{name});
     my $dbname = lc($pf->{dbname});
     if(defined prefix($dbname)) {
       print $fh triple($featureIdUri, 'rdfs:seeAlso', $dbname.':'.$pf->{name});    
     } elsif(!defined $warned->{$dbname}) {
-      # $self->log->warn("No type found for protein feature from $dbname");
+      print "No type found for protein feature from $dbname\n";
       $warned->{dbname} = 1;
     }   
   }
