@@ -9,7 +9,7 @@ requires 'URI::Escape';
 requires 'LWP::UserAgent';
 requires 'Digest::MD5';
 
-
+requires 'List::Compare';
 
 
 requires 'Test::Exports';

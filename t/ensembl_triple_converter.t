@@ -1,6 +1,7 @@
 use Modern::Perl;
 use Test::More;
 use Test::Differences;
+use List::Compare;
 
 use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 use Bio::EnsEMBL::Registry;
@@ -93,8 +94,9 @@ SELECT ?transcript WHERE {
 ];
 
 @result = query($sparql);
-eq_or_diff( [map {$_->{transcript}->value} @result], [qw/ENST00000461691 ENST00000381222 ENST00000381223 ENST00000381218 ENST00000515319/], "Transcript stable IDs returned for given gene");
-
+my $comparator = List::Compare->new([ map {$_->{transcript}->value} @result],[qw/ENST00000461691 ENST00000381222 ENST00000381223 ENST00000381218 ENST00000515319/]);
+# eq_or_diff( [map {$_->{transcript}->value} @result], [qw/ENST00000461691 ENST00000381222 ENST00000381223 ENST00000381218 ENST00000515319/], "Transcript stable IDs returned for given gene");
+cmp_ok($comparator->get_symmetric_difference(), '==', 0, "Transcript stable IDs returned for given gene");
 
 $sparql = qq[
 $prefixes
