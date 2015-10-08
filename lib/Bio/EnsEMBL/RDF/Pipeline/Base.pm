@@ -28,7 +28,7 @@ Extension of Hive pipeline base class, includes all the handy stuff from product
 
 =cut
 
-package Bio::EnsEMBL::Versioning::Pipeline::Base;
+package Bio::EnsEMBL::RDF::Pipeline::Base;
 
 use Modern::Perl;
 use parent qw/Bio::EnsEMBL::Production::Pipeline::Base/;

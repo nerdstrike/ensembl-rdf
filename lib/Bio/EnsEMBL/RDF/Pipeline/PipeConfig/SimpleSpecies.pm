@@ -30,23 +30,36 @@ Simple pipeline to work on a single species for trial purposes
 
 package Bio::EnsEMBL::RDF::Pipeline::PipeConfig::SimpleSpecies;
 use strict;
-use parent 'Bio::EnsEMBL::Hive::PipeConfig::HiveGeneric_conf';
-use Bio::EnsEMBL::ApiVersion qw/software_version/;
+use parent 'Bio::EnsEMBL::Hive::PipeConfig::EnsemblGeneric_conf';
 
 sub default_options {
+  my $self = shift;
   return {
+    %{ $self->SUPER::default_options() },
     xref => 1,
     dump_location => '', # base path for all RDF output
-    release => software_version(),
     config_file => 'xref_LOD_mapping.json',
+    pipeline_name => 'rdf_dump',
+    registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
+    base_path => '/tmp/'
+  }
+}
+
+sub pipeline_wide_parameters {
+  my $self = shift;
+  return {
+    %{ $self->SUPER::pipeline_wide_parameters() },
+    species => $self->o('species'),
+    base_path => $self->o('base_path')
   }
 }
 
 sub pipeline_analyses {
+  my $self = shift;
   return [ {
     -logic_name => 'ScheduleSpecies',
     -module     => 'Bio::EnsEMBL::Production::Pipeline::FASTA::ReuseSpeciesFactory',
-    -parameters => {
+    -paremeters => {
 
     },
     -flow_into => {
@@ -54,14 +67,21 @@ sub pipeline_analyses {
     }
   },
   {
-    -logic_name => 'DumpRDF';
+    -logic_name => 'DumpRDF',
     -module => 'Bio::EnsEMBL::RDF::Pipeline::Process::RDFDump',
     -parameters => {
-      dump_location => '#dump_location#',
-      xref => '#xref#',
+      dump_location => $self->o('dump_location'),
+      xref => $self->o('xref'),
+      release => $self->o('ensembl_release'),
+      config_file => $self->o('config_file')
     },
     -analysis_capacity => 6
   }];
+}
+
+sub beekeeper_extra_cmdline_options {
+    my $self = shift;
+    return "-reg_conf ".$self->o("registry");
 }
 
 # Optionally enable auto-variable passing to Hive.
@@ -72,6 +92,5 @@ sub pipeline_analyses {
 #     hive_use_param_stack  => 1,
 #   };
 # }
-
 
 1;

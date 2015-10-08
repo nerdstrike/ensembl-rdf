@@ -22,12 +22,13 @@ limitations under the License.
 
 =cut
 
-package Bio::EnsEMBL::RDF::Process::RDFDump;
+package Bio::EnsEMBL::RDF::Pipeline::Process::RDFDump;
 
 use strict;
 
 use parent ('Bio::EnsEMBL::RDF::Pipeline::Base');
 use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
+use Bio::EnsEMBL::Registry;
 
 sub fetch_input {
     my $self = shift;
@@ -44,7 +45,8 @@ sub run {
     my $path = $self->get_dir("$species.rdf");
     
     my $dba = $self->get_DBAdaptor;
-    my $ontology_adaptor = $dba->get_OntologyAdaptor;
+    
+    my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
     my $meta_adaptor = $dba->get_MetaContainer;
     my $release = $self->param('release');
 
