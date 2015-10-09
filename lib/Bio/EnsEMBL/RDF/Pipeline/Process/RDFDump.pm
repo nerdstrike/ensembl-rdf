@@ -30,6 +30,7 @@ use parent ('Bio::EnsEMBL::RDF::Pipeline::Base');
 use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::IO qw/work_with_file/;
+use Bio::EnsEMBL::BulkFetcher;
 
 sub fetch_input {
     my $self = shift;
@@ -45,8 +46,11 @@ sub run {
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $path = $self->get_dir();
     $path .= '/'.$species.".rdf";
+    my $dba = $self->get_DBAdaptor; 
+    my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'gene');
+    my $gene_array = $bulk->export_genes($dba,undef,undef,$self->param('xref'));
+
     work_with_file( $path, 'w', sub {
-        my $dba = $self->get_DBAdaptor;
         
         my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
         my $meta_adaptor = $dba->get_MetaContainer;
@@ -62,6 +66,13 @@ sub run {
         $is_human = 1 if $species eq 'homo_sapiens';
         my $slices = $self->get_Slices(undef,$is_human); # see Production::Pipeline::Base;
         $triple_converter->print_seq_regions($slices);
+
+        # Fetch all the things!
+        while (my $gene = shift @$gene_array) {
+            my $feature_uri = 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}; # prefix() from RDFLib in triple converter
+            $triple_converter->print_feature($gene,$feature_uri,'gene');           
+        }
+
     });
 }
 
