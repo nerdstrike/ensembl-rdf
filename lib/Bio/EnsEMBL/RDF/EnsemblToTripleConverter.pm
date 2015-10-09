@@ -207,11 +207,11 @@ sub print_seq_regions {
 
     # Generate a version specific portion of a URL that includes the database version, species, assembly version and region name
     # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/75/GRCh37/1
-    my $version_uri = u( sprintf "%s%s/%s:%s:%s", prefix('ensembl'),$version,$cs_name,$cs_version,$region_name); 
+    my $version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$version,$region_name); 
     
     # we also create a non versioned URI that is a superclass e.g. 
     # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/1
-    my $non_version_uri = u( sprintf "%s%s/%s:%s", prefix('ensembl'),$taxon_id,$cs_name,$region_name); 
+    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$taxon_id,$region_name); 
     
     my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
     my $generic = $non_version_uri;
@@ -260,7 +260,7 @@ sub print_feature {
   }
   print $fh triple(u($feature_uri), 'rdfs:label', '"'.$feature->{name}.'"') if defined $feature->{name};
   print $fh triple(u($feature_uri), 'dc:description', '"'.escape($feature->{description}).'"') if defined $feature->{description};
-  print $fh taxon_triple(u($feature_uri),'taxon:'.$self->meta_adaptor->get_taxonomy_id);
+  print $fh taxon_triple(u($feature_uri),$self->meta_adaptor->get_taxonomy_id);
 
   print $fh triple(u($feature_uri), 'dc:identifier', '"'.$feature->{id}.'"' );
 
@@ -381,7 +381,7 @@ sub print_xrefs {
     # See also xref_config.txt/xref_LOD_mapping.json
     my $id_org_uri = $self->identifiers_org_mapping($id,$feature_uri,$db_name);
     # Next make an "ensembl" style xref. It's a bit of duplication. This might need improving
-    my $xref_uri = 'ensembl:'.$db_name.'/'.$id;
+    my $xref_uri = prefix('ensembl').$db_name.'/'.$id;
     print $fh triple(u($feature_uri), $relation, u($xref_uri));
     print $fh triple(u($xref_uri), 'dc:identifier', qq("$id"));
     if(defined $label && $label ne $id) {
