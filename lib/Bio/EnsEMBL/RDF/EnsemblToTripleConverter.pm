@@ -403,6 +403,8 @@ sub print_xrefs {
 #                                                                           \-sio:SIO_000300->"feature_id"
 # SIO_000300 = has-value
 # SIO_000671 = has-identifier
+
+my %missing_id_mappings = ();
 sub identifiers_org_mapping {
   my ($self,$feature_id,$feature_uri,$db) = @_;
   my $fh = $self->filehandle;
@@ -416,7 +418,10 @@ sub identifiers_org_mapping {
     print $fh triple(u($id_org_uri),'sio:SIO_000671',"[a ident_type:$id_org_abbrev; sio:SIO_000300 \"$feature_id\"]");
     return $id_org_uri;
   } else {
-    warn "Failed to resolve $db in identifier.org mappings";
+    unless (exists $missing_id_mappings{$db}) {
+      $missing_id_mappings{$db} = 1;
+      warn "Failed to resolve $db in identifier.org mappings";
+    }
   }
 
 }
