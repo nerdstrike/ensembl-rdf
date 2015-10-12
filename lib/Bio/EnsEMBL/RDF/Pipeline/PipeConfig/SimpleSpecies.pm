@@ -49,7 +49,6 @@ sub pipeline_wide_parameters {
   my $self = shift;
   return {
     %{ $self->SUPER::pipeline_wide_parameters() },
-    species => $self->o('species'),
     base_path => $self->o('base_path')
   }
 }
@@ -58,7 +57,7 @@ sub pipeline_analyses {
   my $self = shift;
   return [ {
     -logic_name => 'ScheduleSpecies',
-    -module     => 'Bio::EnsEMBL::Production::Pipeline::FASTA::ReuseSpeciesFactory',
+    -module     => 'Bio::EnsEMBL::Production::Pipeline::SpeciesFactory',
     -paremeters => {
 
     },
@@ -73,7 +72,8 @@ sub pipeline_analyses {
       dump_location => $self->o('dump_location'),
       xref => $self->o('xref'),
       release => $self->o('ensembl_release'),
-      config_file => $self->o('config_file')
+      config_file => $self->o('config_file'),
+      # species => $self->o('species'),
     },
     -analysis_capacity => 6
   }];
