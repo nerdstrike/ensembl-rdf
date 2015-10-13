@@ -321,9 +321,10 @@ sub print_faldo_location {
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
   # The same is true of toplevel contigs in other species.
+  my $version_uri;
   if ( defined $cs_version) {
-    my $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
-  else {
+    $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
+  }  else {
     $version_uri = qq($prefix$schema_version/$cs_name:$region_name);
   }
   
