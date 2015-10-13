@@ -8,7 +8,7 @@ use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Test::MultiTestDB;
 
 use Bio::EnsEMBL::BulkFetcher;
-
+use Data::Dumper;
 use RDF::Trine;
 use RDF::Query;
 
@@ -52,6 +52,7 @@ my $prefixes = qq[PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX faldo: <http://biohackathon.org/resource/faldo#>
+PREFIX sio: <http://semanticscience.org/resource/>
 ];
 
 # Test seq region labels
@@ -117,6 +118,19 @@ sub query {
   @result = $query->execute($model);
   return @result;
 }
+
+# Testing INSDC accessions. Don't have suitable test data.
+$sparql = qq[$prefixes
+SELECT ?insdc ?feature WHERE {
+  ?feature dc:identifier "ENSG00000214717" .
+  ?feature sio:equivalentTo ?uri .
+  ?uri dc:identifier ?insdc .
+}];
+
+@result = query($sparql);
+
+cmp_ok($result[0]->{insdc}->value, 'eq', 'altX','INSDC synonym for seq_region mapped correctly');
+
 
 
 done_testing;

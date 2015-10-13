@@ -266,7 +266,7 @@ sub print_feature {
 
   # Identifiers.org mappings
   $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
-  
+  $self->print_other_accessions($feature,$feature_uri);
   # Describe location in Faldo
   $self->print_faldo_location($feature,$feature_uri) unless $feature_type eq 'translation';
 
@@ -434,6 +434,31 @@ sub identifiers_org_mapping {
   }
 
 }
+
+# Adds INSDC/RefSeq accession links
+sub print_other_accessions {
+  my ($self,$feature,$feature_uri) = @_;
+  my $fh = $self->filehandle;
+  if(exists $feature->{seq_region_synonyms} && defined $feature->{seq_region_synonyms}) {
+    for my $syn (@{$feature->{seq_region_synonyms}}) {
+      my $exdbname = $syn->{db};
+      my $id = $syn->{id};
+      if(defined $id) {
+        my $external_feature;
+        if ($exdbname && $exdbname =~/EMBL/i) {
+          $external_feature = prefix('identifiers').'insdc/'.$id;
+        } elsif($exdbname && $exdbname =~/RefSeq/i) {
+          $external_feature = prefix('identifiers').'refseq/'.$id;
+        }
+        if(defined $external_feature) {
+          print $fh triple(u($external_feature), 'dc:identifier', '"'.$id.'"');
+          print $fh triple(u($feature_uri), 'sio:equivalentTo', u($external_feature));  
+        }
+      }
+    }
+  }
+}
+
 
 my $warned = {};
 sub print_protein_features {
