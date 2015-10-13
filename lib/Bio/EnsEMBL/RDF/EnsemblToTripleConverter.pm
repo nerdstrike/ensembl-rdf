@@ -318,12 +318,15 @@ sub print_faldo_location {
   my $cs_version = $coord_system->{version};
   my $prefix = prefix('ensembl');
 
-  my $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
-  if ($region_name eq 'lrg') {
-    $version_uri = qq($prefix/$cs_name:$cs_version:$region_name);
+  # The same is true of toplevel contigs in other species.
+  if ( defined $cs_version) {
+    my $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
+  else {
+    $version_uri = qq($prefix$schema_version/$cs_name:$region_name);
   }
+  
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
