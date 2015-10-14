@@ -279,18 +279,21 @@ sub print_feature {
   $provenance = 'INFERRED_FROM_TRANSCRIPT' if $feature_type eq 'transcript';
   $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
 
-  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance);
-
+  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance,$feature_type);
+  
   # connect genes to transcripts. Note recursion
   if ($feature_type eq 'gene' && exists $feature->{transcripts}) {
     foreach my $transcript (@{$feature->{transcripts}}) {
       my $transcript_uri = prefix('transcript').$transcript->{id};
       $self->print_feature($transcript,$transcript_uri,'transcript');
       print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
+      $self->print_exons($transcript,$transcript_uri);
     }
-
-    # Also dump exons
-
+    if (exists $feature->{homologues} ) {
+      foreach my $alt_gene (@{ $feature->{homologues} }) {
+        print $fh triple(u($feature_uri), 'sio:SIO_000558', 'ensembl:'.$alt_gene->{stable_id});
+      }
+    }
   }
 
   # connect transcripts to translations
@@ -317,7 +320,9 @@ sub print_faldo_location {
   my $cs_name = $coord_system->{name};
   my $cs_version = $coord_system->{version};
   my $prefix = prefix('ensembl');
-
+  unless (defined $region_name && defined $coord_system && defined $cs_name && defined $cs_version) {
+    throw('Cannot print location triple without seq_region_name, coord_system name and version, and a release');
+  }
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
   # The same is true of toplevel contigs in other species.
@@ -357,6 +362,27 @@ sub print_faldo_location {
   return $location;
 }
 
+sub print_exons {
+  my ($self,$transcript,$transcript_uri) = @_;
+  my $fh = $self->filehandle;
+
+  return unless exists $transcript->{exons};
+  # Assert Exon bag for a given transcript, exons are ordered by rank of the transcript.
+  foreach my $exon (@{ $transcript->{exons} }) {
+      # exon type of SO exon, both gene and transcript are linked via has part
+      print $fh triple('exon:'.$exon->{id},'a','obo:SO_0000147');
+      #triple('exon:'.$exon->stable_id,'a','term:exon');
+      print $fh triple('exon:'.$exon->{id}, 'rdfs:label', '"'.$exon->{id}.'"');
+      print $fh triple('transcript:'.$transcript->{id}, 'obo:SO_has_part', 'exon:'.$exon->{id});
+      
+      $self->print_feature($exon, prefix('exon').$exon->{id},'exon');
+      my $rank = $exon->{rank};
+      print $fh triple('transcript:'.$transcript->{id}, 'sio:SIO_000974',  u(prefix('transcript').$transcript->{id}.'#Exon_'.$rank));
+      print $fh triple(u(prefix('transcript').$transcript->{id}.'#Exon_'.$rank),  'a', 'sio:SIO_001261');
+      print $fh triple(u(prefix('transcript').$transcript->{id}.'#Exon_'.$rank), 'sio:SIO_000628', 'exon:'.$exon->{id});
+      print $fh triple(u(prefix('transcript').$transcript->{id}.'#Exon_'.$rank), 'sio:SIO_000300', $rank);
+    }
+}
 
 # Should be unnecessary once Xref RDF is produced separately from the release database
 # Also put associated xrefs through this:
@@ -376,6 +402,8 @@ sub print_xrefs {
   my $xref_list = shift;
   my $feature_uri = shift;
   my $relation = shift;
+  my $feature_type = shift;
+  return if $feature_type eq 'exon';
   $relation = 'term:'.$relation;
   my $fh = $self->filehandle;
 

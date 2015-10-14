@@ -53,6 +53,12 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX faldo: <http://biohackathon.org/resource/faldo#>
 PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>
+PREFIX ensemblvariation: <http://rdf.ebi.ac.uk/terms/ensemblvariation/>
+PREFIX transcript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>
+PREFIX ensembl_variant: <http://rdf.ebi.ac.uk/resource/ensembl.variant/>
+PREFIX protein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>
+PREFIX exon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>
 ];
 
 # Test seq region labels
@@ -130,7 +136,29 @@ SELECT ?insdc ?feature WHERE {
 @result = query($sparql);
 
 cmp_ok($result[0]->{insdc}->value, 'eq', 'altX','INSDC synonym for seq_region mapped correctly');
+# Test exons
+$sparql = qq[$prefixes
+SELECT ?exon_id ?rank WHERE {
+  ?transcript dc:identifier "ENST00000381223" .
+  ?transcript sio:SIO_000974 ?exon_collection .
+  ?exon_collection sio:SIO_000628 ?exon .
+  ?exon rdfs:label ?exon_id .
+  ?exon_collection sio:SIO_000300 ?rank .
+} ORDER BY ?rank
+];
+@result = query($sparql);
 
+cmp_ok(@result, '==', 2, 'Two exons attached to a transcript');
+is_deeply([map {$_->{exon_id}->value} @result],['ENSE00001413450','ENSE00002295224'],'Exon IDs correct and in correct order');
 
+$sparql = qq[$prefixes
+SELECT ?exon_id WHERE {
+  ?transcript obo:SO_has_part ?exon .
+  ?exon dc:identifier ?exon_id .
+  ?transcript dc:identifier "ENST00000381223" .
+}
+];
+@result = query($sparql);
+cmp_ok(@result, '==', 2, 'Two exons also attached to a transcript without order');
 
 done_testing;
