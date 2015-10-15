@@ -196,26 +196,24 @@ sub get_transcripts {
   WHERE c.species_id = ?
   ORDER BY `id`
   /;
+  my %exons; # key them off their transcript ID
+ 
+  $dba->dbc->sql_helper->execute(
+    -SQL => $exon_sql,
+    -PARAMS => [ $dba->species_id ],
+    -USE_HASHREFS => 1,
+    -CALLBACK => sub{
+      my ($row) = @_;
+      $row->{coord_system} = $coord_systems->{ $row->{trans_id} }; # borrow coordinate system from relevant transcript
 
-  my @exons = @{ 
-    $dba->dbc->sql_helper->execute(
-      -SQL => $exon_sql,
-      -PARAMS => [ $dba->species_id ],
-      -USE_HASHREFS => 1,
-      -CALLBACK => sub{
-        my ($row) = @_;
-        $row->{coord_system} = $coord_systems->{ $row->{trans_id} };
-        # insert additional keys for utility?
-        return $row;
-      }
-    )
-  };
+      push @{ $exons{ $row->{trans_id} } }, $row;
+    }
+  );
 
 
   my $transcript_hash = {};
   for my $transcript (@transcripts) {
-    my @exon_list = grep { $_->{trans_id} eq $transcript->{id} } @exons;
-    push @{ $transcript->{exons} }, @exon_list;
+    push @{ $transcript->{exons} }, @{ $exons{$transcript->{id}} };
     push @{ $transcript_hash->{ $transcript->{gene_id} } }, $transcript;
     delete $transcript_hash->{gene_id};
   }
@@ -333,14 +331,15 @@ sub _generate_object_xref_sql {
   my ($self,$table_name)= @_;
   my $Table_name = ucfirst($table_name);
   my $table_alias = 'f';
+  my $select_alias = $table_alias;
   my $translation_join = '';
   if ($table_name eq 'translation') {
-    $table_alias = 'tl';
     $table_name = 'transcript';
+    $select_alias = 'tl';
     $translation_join = 'JOIN translation tl USING (transcript_id)';
   }
   my $sql = qq/ 
-    SELECT ox.object_xref_id, ${table_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description, 
+    SELECT ox.object_xref_id, ${select_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description, 
            oox.linkage_type, sx.dbprimary_acc, sx.display_label, sx.description, se.db_name
       FROM ${table_name} ${table_alias}
       ${translation_join}
