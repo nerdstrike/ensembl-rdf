@@ -47,8 +47,10 @@ sub run {
     my $path = $self->get_dir();
     $path .= '/'.$species.".rdf";
     my $dba = $self->get_DBAdaptor; 
-    my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'gene');
-    my $gene_array = $bulk->export_genes($dba,undef,undef,$self->param('xref'));
+    my $compara_dba = Bio::EnsEMBL::Registry->get_DBAdaptor('Multi', 'compara');
+    my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'protein_feature');
+    my $gene_array = $bulk->export_genes($dba,undef,'protein_feature',$self->param('xref'));
+    # $bulk->add_compara($species, $gene_array, $compara_dba); # This bulk query likes to time out
 
     work_with_file( $path, 'w', sub {
         
