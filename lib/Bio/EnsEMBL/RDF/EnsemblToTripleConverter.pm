@@ -42,6 +42,7 @@ use Bio::EnsEMBL::ApiVersion;
 use Bio::EnsEMBL::RDF::RDFlib;
 use Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings;
 use Bio::EnsEMBL::Utils::SequenceOntologyMapper;
+use Carp;
 use IO::File;
 use Try::Tiny;
 
@@ -321,7 +322,7 @@ sub print_faldo_location {
   my $cs_version = $coord_system->{version};
   my $prefix = prefix('ensembl');
   unless (defined $region_name && defined $coord_system && defined $cs_name && defined $cs_version) {
-    throw('Cannot print location triple without seq_region_name, coord_system name and version, and a release');
+    croak ('Cannot print location triple without seq_region_name, coord_system name and version, and a release');
   }
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
