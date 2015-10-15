@@ -24,7 +24,7 @@ limitations under the License.
 =head1 DESCRIPTION
 
   Data-fetching methods for grabbing big chunks of Ensembl for dumping.
-  More time-efficient than the normal API.
+  More time-efficient than the normal API. The output is never Ensembl objects.
 
 =cut
 
@@ -179,8 +179,43 @@ sub get_transcripts {
     ) 
   };
 
+  my $exon_sql = q/
+  SELECT
+  t.stable_id AS trans_id,
+  e.stable_id AS id,
+  s.name as seq_region_name,
+  e.seq_region_start as start, 
+  e.seq_region_end as end,
+  e.seq_region_strand as strand,
+  et.rank as rank
+  FROM transcript t
+  JOIN exon_transcript et ON t.transcript_id = et.`transcript_id`
+  JOIN exon e ON et.exon_id = e.`exon_id`
+  JOIN seq_region s ON e.seq_region_id = s.seq_region_id
+  JOIN coord_system c ON c.coord_system_id = s.coord_system_id
+  WHERE c.species_id = ?
+  ORDER BY `id`
+  /;
+
+  my @exons = @{ 
+    $dba->dbc->sql_helper->execute(
+      -SQL => $exon_sql,
+      -PARAMS => [ $dba->species_id ],
+      -USE_HASHREFS => 1,
+      -CALLBACK => sub{
+        my ($row) = @_;
+        $row->{coord_system} = $coord_systems->{ $row->{trans_id} };
+        # insert additional keys for utility?
+        return $row;
+      }
+    )
+  };
+
+
   my $transcript_hash = {};
   for my $transcript (@transcripts) {
+    my @exon_list = grep { $_->{trans_id} eq $transcript->{id} } @exons;
+    push @{ $transcript->{exons} }, @exon_list;
     push @{ $transcript_hash->{ $transcript->{gene_id} } }, $transcript;
     delete $transcript_hash->{gene_id};
   }
@@ -537,11 +572,11 @@ sub add_compara {
   -SQL => q/
     SELECT hg.stable_id, gm.stable_id, g.name, h.description 
     FROM (SELECT homology_id,stable_id FROM homology_member 
-          JOIN member USING (member_id) 
+          JOIN gene_member USING (gene_member_id) 
           JOIN genome_db USING (genome_db_id) WHERE name=? AND source_name='ENSEMBLGENE') hg 
     JOIN homology h ON (h.homology_id = hg.homology_id) 
     JOIN homology_member hm ON (hm.homology_id = h.homology_id) 
-    JOIN member gm USING (member_id) 
+    JOIN gene_member gm USING (gene_member_id) 
     JOIN genome_db g USING (genome_db_id) 
     WHERE gm.stable_id <> hg.stable_id AND source_name = 'ENSEMBLGENE'/,
   -CALLBACK => sub {
