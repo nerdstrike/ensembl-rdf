@@ -321,8 +321,8 @@ sub print_faldo_location {
   my $cs_name = $coord_system->{name};
   my $cs_version = $coord_system->{version};
   my $prefix = prefix('ensembl');
-  unless (defined $region_name && defined $coord_system && defined $cs_name && defined $cs_version) {
-    croak ('Cannot print location triple without seq_region_name, coord_system name and version, and a release');
+  unless (defined $region_name && defined $coord_system && defined $cs_name) {
+    croak ('Cannot print location triple without seq_region_name, coord_system name, and a release');
   }
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
@@ -500,7 +500,7 @@ sub print_protein_features {
       print $fh triple($featureIdUri, 'rdfs:seeAlso', $dbname.':'.$pf->{name});    
     } elsif(!defined $warned->{$dbname}) {
       print "No type found for protein feature from $dbname\n";
-      $warned->{dbname} = 1;
+      $warned->{$dbname} = 1;
     }   
   }
 }
