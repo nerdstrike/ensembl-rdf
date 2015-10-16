@@ -45,7 +45,7 @@ sub run {
     my $species = $self->param('species');
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $path = $self->get_dir();
-    $path .= '/'.$species.".rdf";
+    $path .= '/'.$species.".ttl";
     my $dba = $self->get_DBAdaptor; 
     my $compara_dba = Bio::EnsEMBL::Registry->get_DBAdaptor('Multi', 'compara');
     my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'protein_feature');
