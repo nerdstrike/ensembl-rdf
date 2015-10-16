@@ -179,16 +179,20 @@ sub getSOOntologyId {
 # Requires a filehandle for the virtuoso file
 sub create_virtuoso_file {
   my $self = shift;
-  my $fh = shift; # a .graph file, named after the rdf file.
+  my $path = shift; # a .graph file, named after the rdf file.
+  # First add connecting triple to master RDF file.
+  my $fh = $self->filehandle;
   my $version = Bio::EnsEMBL::ApiVersion->software_version;
   my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
 
   my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
   my $graphUri = $versionGraphUri."/".$taxon_id;
-  print $fh $graphUri;
+  print $fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
+
   # make the species graph a subgraph of the version graph, by adding the assertion to the main RDF file.
-  my $rdf_fh = $self->filehandle;
-  print $rdf_fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
+  $self->write_to_file($path);
+  $fh = $self->filehandle;
+  print $fh $graphUri;
 }
 
 # Run once before dumping genes
