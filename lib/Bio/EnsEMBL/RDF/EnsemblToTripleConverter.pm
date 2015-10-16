@@ -497,7 +497,7 @@ sub print_protein_features {
     next unless (defined $pf->{dbname} && defined $pf->{name});
     my $dbname = lc($pf->{dbname});
     if(defined prefix($dbname)) {
-      print $fh triple($featureIdUri, 'rdfs:seeAlso', $dbname.':'.$pf->{name});    
+      print $fh triple(u($featureIdUri), 'rdfs:seeAlso', $dbname.':'.$pf->{name});    
     } elsif(!defined $warned->{$dbname}) {
       print "No type found for protein feature from $dbname\n";
       $warned->{$dbname} = 1;
