@@ -75,6 +75,12 @@ sub run {
             $triple_converter->print_feature($gene,$feature_uri,'gene');           
         }
 
+        # Add a graph file for Virtuoso loading.
+        my $graph_path = $self->get_dir();
+        $graph_path .= '/'.$species.'.graph';
+        work_with_file( $graph_path, 'w', sub {
+            $triple_converter->create_virtuoso_file($graph_path);
+        });
     });
 }
 
