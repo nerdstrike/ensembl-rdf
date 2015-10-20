@@ -57,6 +57,9 @@ sub new {
   my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($xref_mapping_file);
   my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($ontology_adaptor);
   # This connects Ensembl to Identifiers.org amongst other things
+  croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::Utils::SequenceOntologyMapper" unless $biotype_mapper->isa('Bio::EnsEMBL::Utils::SequenceOntologyMapper');
+  croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::DBSQL::MetaContainer" unless $meta_adaptor->isa('Bio::EnsEMBL::DBSQL::MetaContainer');
+
   return bless ( {
     ontoa => $ontology_adaptor,
     meta => $meta_adaptor,

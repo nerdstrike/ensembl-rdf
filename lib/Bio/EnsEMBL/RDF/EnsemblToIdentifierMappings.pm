@@ -36,6 +36,7 @@ sub new {
   my ($class,$xref_mapping_file) = @_;
   local $/;
   my $fh = IO::File->new($xref_mapping_file,'r');
+  unless ($fh) { die "Disaster! No xref config JSON file found $@"}
   my $json = <$fh>;
   my $doc = decode_json($json);
   my %xref_mapping;
