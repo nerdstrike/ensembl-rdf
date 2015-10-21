@@ -176,4 +176,16 @@ SELECT ?xref_label WHERE {
 # note(Dumper @result);
 is_deeply([map {$_->{xref_label}->value} @result],["ZBED1"], "HGNC xrefs are fetchable" );
 
+$sparql = qq[$prefixes
+SELECT ?gene_name WHERE {
+  ?gene dc:identifier ?gene_name .
+  ?gene a obo:SO_0001217 .
+  ?gene ?predicate ?xref .
+  ?xref rdfs:label ?xref_label .
+} VALUES ?xref_label { "ZBED1" }
+];
+@result = query($sparql);
+is($result[0]->{gene_name}->value, 'ENSG00000214717', "Xref vice versa");
+# Can't do much more interesting testing without also loading the ontologies to help with inference.
+
 done_testing;
