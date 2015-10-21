@@ -34,7 +34,7 @@ $converter->print_seq_regions($slices);
 
 my $fetcher = Bio::EnsEMBL::BulkFetcher->new();
 # These are NOT proper Gene objects, they are hash summaries.
-my $genes = $fetcher->export_genes($dbb,undef,'translation');
+my $genes = $fetcher->export_genes($dbb,undef,'translation',1);
 my ($gene) = grep { $_->{id} eq 'ENSG00000214717'} @$genes;
 
 $converter->print_feature($gene, 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}, 'gene');
@@ -54,6 +54,7 @@ PREFIX dc: <http://purl.org/dc/elements/1.1/>
 PREFIX faldo: <http://biohackathon.org/resource/faldo#>
 PREFIX sio: <http://semanticscience.org/resource/>
 PREFIX ensembl: <http://rdf.ebi.ac.uk/resource/ensembl/>
+PREFIX term: <http://rdf.ebi.ac.uk/terms/ensembl/>
 PREFIX ensemblvariation: <http://rdf.ebi.ac.uk/terms/ensemblvariation/>
 PREFIX transcript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>
 PREFIX ensembl_variant: <http://rdf.ebi.ac.uk/resource/ensembl.variant/>
@@ -126,16 +127,16 @@ sub query {
 }
 
 # Testing INSDC accessions. Don't have suitable test data.
-$sparql = qq[$prefixes
-SELECT ?insdc ?feature WHERE {
-  ?feature dc:identifier "ENSG00000214717" .
-  ?feature sio:equivalentTo ?uri .
-  ?uri dc:identifier ?insdc .
-}];
+# $sparql = qq[$prefixes
+# SELECT ?insdc ?feature WHERE {
+#   ?feature dc:identifier "ENSG00000214717" .
+#   ?feature sio:equivalentTo ?uri .
+#   ?uri dc:identifier ?insdc .
+# }];
 
-@result = query($sparql);
+# @result = query($sparql);
 
-cmp_ok($result[0]->{insdc}->value, 'eq', 'altX','INSDC synonym for seq_region mapped correctly');
+# cmp_ok($result[0]->{insdc}, 'eq', 'altX','INSDC synonym for seq_region mapped correctly');
 # Test exons
 $sparql = qq[$prefixes
 SELECT ?exon_id ?rank WHERE {
@@ -160,5 +161,19 @@ SELECT ?exon_id WHERE {
 ];
 @result = query($sparql);
 cmp_ok(@result, '==', 2, 'Two exons also attached to a transcript without order');
+
+# Test some xrefs
+
+$sparql = qq[$prefixes
+SELECT ?xref_label WHERE {
+  ?gene term:ANNOTATED ?xref .
+  ?xref rdfs:label ?xref_label .
+  ?gene dc:identifier "ENSG00000214717" .
+}
+];
+@result = query($sparql);
+# use Data::Dumper;
+# note(Dumper @result);
+is_deeply([map {$_->{xref_label}->value} @result],["ZBED1"], "HGNC xrefs are fetchable" );
 
 done_testing;

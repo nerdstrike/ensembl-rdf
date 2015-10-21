@@ -313,7 +313,7 @@ sub _generate_xref_sql {
     $translation_join = 'JOIN translation tl USING (transcript_id)'
   }
   my $sql = qq/
-      SELECT ${table_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description
+      SELECT ${table_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description, x.info_type, x.info_text
       FROM ${table_name} f
       ${translation_join}
       JOIN object_xref ox         ON (${table_alias}.${table_name}_id = ox.ensembl_id AND ox.ensembl_object_type = '${Table_name}')
@@ -413,12 +413,14 @@ sub get_xrefs {
     -PARAMS   => [ $dba->species_id() ],
     -CALLBACK => sub {
       my ($row) = @_;
-      my ($stable_id, $dbprimary_acc, $display_label, $db_name, $description) = @$row;
+      my ($stable_id, $dbprimary_acc, $display_label, $db_name, $description, $info_type, $info_text) = @$row;
       push @{ $xrefs->{ $stable_id } }, {
         primary_id => $dbprimary_acc,
         display_id => $display_label,
         dbname     => $db_name,
-        description=> $description
+        description=> $description,
+        info_type => $info_type,
+        info_text => $info_text
       };
       return;
     } 

@@ -412,6 +412,7 @@ sub print_xrefs {
   my $relation = shift;
   my $feature_type = shift;
   return if $feature_type eq 'exon';
+  $relation ||= 'ANNOTATED';
   $relation = 'term:'.$relation;
   my $fh = $self->filehandle;
 
@@ -421,13 +422,31 @@ sub print_xrefs {
     my $id = $xref->{primary_id};
     $id = clean_for_uri($id);
     my $desc = $xref->{description};
+    # Replace generic link with more specific one from Xref record. NONE is boring though.
+    if (exists $xref->{info_type} && defined $xref->{info_type} && $xref->{info_type} ne 'NONE') {
+      $relation = 'term:'.$xref->{info_type};
+    }
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
     # See also xref_config.txt/xref_LOD_mapping.json
     my $id_org_uri = $self->identifiers_org_mapping($id,$feature_uri,$db_name);
-    # Next make an "ensembl" style xref. It's a bit of duplication. This might need improving
-    my $xref_uri = prefix('ensembl').$db_name.'/'.$id;
+    # Next make an "ensembl" style xref, either to the identifiers.org URI, or else a generated Ensembl one
+    my $xref_uri;
+    if ($id_org_uri) {
+      $xref_uri = $id_org_uri;
+    } else {
+      # Fall back to a new xref uri without identifiers.org
+      $xref_uri = prefix('ensembl').$db_name.'/'.$id;
+      # Create Ensembl-centric fallback xref source
+      print $fh triple(u($xref_uri), 'a', u(prefix('ensembl').$db_name));
+    }
+    print $fh triple(u($xref_uri), 'a', u(prefix('term').'EnsemblDBEntry'));
+
     print $fh triple(u($feature_uri), $relation, u($xref_uri));
+    if (exists $xref->{info_text} && defined $xref->{info_text} && $xref->{info_text} ne '') {
+      print $fh triple(u($xref_uri),'dc:description','"'.$xref->{info_text}.'"' );
+      warn "THING: ".$xref->{info_type}.":".$xref->{into_text};
+    }
     print $fh triple(u($xref_uri), 'dc:identifier', qq("$id"));
     if(defined $label && $label ne $id) {
       print $fh triple(u($xref_uri), 'rdfs:label', qq("$label"));
@@ -435,6 +454,15 @@ sub print_xrefs {
     if ($desc) {
       print $fh triple(u($xref_uri), 'dc:description', '"'.escape($desc).'"');
     }
+    # linkage types (xrefs by way of ontology_xref)
+    # if (exists $xref->{linkage_type}) {
+    #   my $source = $xref->{linkage_type}->{source};
+    #   $source->{primary_id};
+    #   $source->{display_id};
+    #   $source->{dbname};
+    #   $source->{description};
+    # }
+
     # Add any associated xrefs OPTIONAL. Hardly any in Ensembl main databases, generally from eg.
     # Pombase uses them extensively to qualify "ontology xrefs".
 
@@ -467,6 +495,7 @@ sub identifiers_org_mapping {
       $missing_id_mappings{$db} = 1;
       warn "Failed to resolve $db in identifier.org mappings";
     }
+    return;
   }
 
 }
