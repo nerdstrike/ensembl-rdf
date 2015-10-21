@@ -262,7 +262,7 @@ sub print_feature {
       }
       print $fh triple(u($feature_uri), 'a', 'obo:'.clean_for_uri($so_term)) if $so_term;
     } catch { 
-      if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
+      if (! exists $self->{ontology_cache}->{$biotype}) { warn sprintf "Failed to map biotype %s to SO term\n",$biotype; $self->{ontology_cache}->{$biotype} = undef }
     };
     print $fh triple(u($feature_uri), 'a', 'term:'.clean_for_uri($biotype));
   }
@@ -274,7 +274,7 @@ sub print_feature {
 
   # Identifiers.org mappings
   $self->identifiers_org_mapping($feature->{id},$feature_uri,'ensembl');
-  $self->print_other_accessions($feature,$feature_uri);
+  # $self->print_other_accessions($feature,$feature_uri); # This doesn't mean what is intended at this stage.
   # Describe location in Faldo
   $self->print_faldo_location($feature,$feature_uri) unless $feature_type eq 'translation';
 
@@ -324,7 +324,7 @@ sub print_faldo_location {
   my $schema_version = $self->release();
 
   my $region_name = $feature->{seq_region_name};
-  my $coord_system = $feature->{coord_system};
+  my $coord_system = $feature->{coord_system}; # Note, we rely on this heavily to differentiate species. Taxon isn't included in the URI, perhaps it should be?
   my $cs_name = $coord_system->{name};
   my $cs_version = $coord_system->{version};
   my $prefix = prefix('ensembl');
