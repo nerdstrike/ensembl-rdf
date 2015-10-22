@@ -22,7 +22,8 @@ my $meta_adaptor = $dbb->get_MetaContainer();
 my $fake_file;
 my $fh;
 ok ( open($fh,'>',\$fake_file) );
-my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontoa,$meta_adaptor,'homo_sapiens',$fh,82,'../xref_LOD_mapping.json');
+# TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
+my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontoa,$meta_adaptor,'homo_sapiens',1,82,'../xref_LOD_mapping.json',$fh,undef);
 is ($converter->species,'homo_sapiens',"Constructor assignments");
 is ($converter->release,'82',"Constructor assignments");
 

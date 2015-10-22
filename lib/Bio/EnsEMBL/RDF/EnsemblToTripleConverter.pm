@@ -46,11 +46,11 @@ use Carp;
 use IO::File;
 use Try::Tiny;
 
-# Required args: species, filehandle, , , xref_mapping_file.json
+
 # override release value from API
 sub new {
   my ($caller,@args) = @_;
-  my ($ontology_adaptor, $meta_adaptor, $species, $fh, $release,$xref_mapping_file) = @args;
+  my ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh) = @args;
   unless ($release) {
     $release = Bio::EnsEMBL::ApiVersion->software_version;
   }
@@ -65,6 +65,8 @@ sub new {
     meta => $meta_adaptor,
     species => $species,
     fh => $fh,
+    xref_fh => $xref_fh,
+    dump_xrefs => $dump_xrefs,
     release => $release,
     taxon => undef,
     ontology_cache => {},
@@ -90,6 +92,15 @@ sub filehandle {
     $self->{fh} = $fh;
   }
   return $self->{fh};
+}
+
+sub xref_filehandle {
+  my ($self,$fh) = @_;
+  if ($fh) {
+    if ($self->{xref_fh}) {$self->{xref_fh}->close}
+    $self->{xref_fh} = $fh;
+  }
+  return $self->{xref_fh};
 }
 
 # Ensembl release version
@@ -124,6 +135,11 @@ sub ensembl_mapper {
 sub biotype_mapper {
   my $self = shift;
   return $self->{biotype_mapper};
+}
+
+sub dump_xrefs {
+  my $self = shift;
+  return $self->{dump_xrefs};
 }
 
 
@@ -287,7 +303,9 @@ sub print_feature {
   $provenance = 'INFERRED_FROM_TRANSCRIPT' if $feature_type eq 'transcript';
   $provenance = 'INFERRED_FROM_TRANSLATION' if $feature_type eq 'translation';
 
-  $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance,$feature_type);
+  if ($self->dump_xrefs == 1) {
+    $self->print_xrefs($feature->{xrefs},$feature_uri,$provenance,$feature_type);
+  }
   
   # connect genes to transcripts. Note recursion
   if ($feature_type eq 'gene' && exists $feature->{transcripts}) {
@@ -415,6 +433,9 @@ sub print_xrefs {
   $relation ||= 'ANNOTATED';
   $relation = 'term:'.$relation;
   my $fh = $self->filehandle;
+  if ($self->xref_filehandle) {
+    $fh = $self->xref_filehandle;
+  }
 
   foreach my $xref (@$xref_list) {
     my $label = $xref->{display_id};

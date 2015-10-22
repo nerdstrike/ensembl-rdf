@@ -31,6 +31,7 @@ use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
 use Bio::EnsEMBL::Registry;
 use Bio::EnsEMBL::Utils::IO qw/work_with_file/;
 use Bio::EnsEMBL::BulkFetcher;
+use IO::File;
 
 sub fetch_input {
     my $self = shift;
@@ -45,43 +46,47 @@ sub run {
     my $species = $self->param('species');
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $path = $self->get_dir();
-    $path .= '/'.$species.".ttl";
+    my $target_file = $path.'/'.$species.".ttl";
+    my $main_fh = IO::File->new($target_file,'w') || die "$@";
+    my $xref_file = $path.'/'.$species."_xrefs.ttl";
+    my $xref_fh;
+    $xref_fh = IO::File->new($xref_file, 'w') if $self->param('xref');
     my $dba = $self->get_DBAdaptor; 
     my $compara_dba = Bio::EnsEMBL::Registry->get_DBAdaptor('Multi', 'compara');
     my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'protein_feature');
     my $gene_array = $bulk->export_genes($dba,undef,'protein_feature',$self->param('xref'));
     # $bulk->add_compara($species, $gene_array, $compara_dba); # This bulk query likes to time out
 
-    work_with_file( $path, 'w', sub {
-        
-        my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
-        my $meta_adaptor = $dba->get_MetaContainer;
-        my $release = $self->param('release');
+       
+    my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
+    my $meta_adaptor = $dba->get_MetaContainer;
+    my $release = $self->param('release');
+    # TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
+    my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, $self->param('xref'), $release, $config_file, $main_fh, $xref_fh);
 
-        my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, undef, $release, $config_file);
-        $triple_converter->write_to_file($path);
+    $triple_converter->print_namespaces;
+    $triple_converter->print_species_info;
 
-        $triple_converter->print_namespaces;
-        $triple_converter->print_species_info;
+    my $is_human;
+    $is_human = 1 if $species eq 'homo_sapiens';
+    my $slices = $self->get_Slices(undef,$is_human); # see Production::Pipeline::Base;
+    $triple_converter->print_seq_regions($slices);
 
-        my $is_human;
-        $is_human = 1 if $species eq 'homo_sapiens';
-        my $slices = $self->get_Slices(undef,$is_human); # see Production::Pipeline::Base;
-        $triple_converter->print_seq_regions($slices);
+    # Fetch all the things!
+    while (my $gene = shift @$gene_array) {
+        my $feature_uri = 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}; # prefix() from RDFLib in triple converter
+        $triple_converter->print_feature($gene,$feature_uri,'gene');           
+    }
 
-        # Fetch all the things!
-        while (my $gene = shift @$gene_array) {
-            my $feature_uri = 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}; # prefix() from RDFLib in triple converter
-            $triple_converter->print_feature($gene,$feature_uri,'gene');           
-        }
-
-        # Add a graph file for Virtuoso loading.
-        my $graph_path = $self->get_dir();
-        $graph_path .= '/'.$species.'.graph';
-        work_with_file( $graph_path, 'w', sub {
-            $triple_converter->create_virtuoso_file($graph_path);
-        });
+    # Add a graph file for Virtuoso loading.
+    my $graph_path = $self->get_dir();
+    $graph_path .= '/'.$species.'.graph';
+    work_with_file( $graph_path, 'w', sub {
+        $triple_converter->create_virtuoso_file($graph_path);
     });
+
+    $main_fh->close;
+    $xref_fh->close if defined $xref_fh;
 }
 
 
