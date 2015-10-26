@@ -569,17 +569,21 @@ sub get_seq_region_synonyms {
 sub add_compara {
   my ( $self, $species, $genes, $compara_dba ) = @_;
   my $homologues = {};
+  print "Querying Compara\n";
   $compara_dba->dbc()->sql_helper()->execute_no_return(
   -SQL => q/
-    SELECT hg.stable_id, gm.stable_id, g.name, h.description 
-    FROM (SELECT homology_id,stable_id FROM homology_member 
-          JOIN gene_member USING (gene_member_id) 
-          JOIN genome_db USING (genome_db_id) WHERE name=? AND source_name='ENSEMBLGENE') hg 
-    JOIN homology h ON (h.homology_id = hg.homology_id) 
-    JOIN homology_member hm ON (hm.homology_id = h.homology_id) 
-    JOIN gene_member gm USING (gene_member_id) 
-    JOIN genome_db g USING (genome_db_id) 
-    WHERE gm.stable_id <> hg.stable_id AND source_name = 'ENSEMBLGENE'/,
+SELECT gm1.stable_id, gm2.stable_id, g2.name, h.description
+FROM homology_member hm1
+ INNER JOIN homology_member hm2 ON (hm1.homology_id = hm2.homology_id)
+ INNER JOIN homology h ON (hm1.homology_id = h.homology_id)
+ INNER JOIN gene_member gm1 ON (hm1.gene_member_id = gm1.gene_member_id)
+ INNER JOIN gene_member gm2 ON (hm2.gene_member_id = gm2.gene_member_id)
+ INNER JOIN genome_db g ON (gm1.genome_db_id = g.genome_db_id)
+ INNER JOIN genome_db g2 ON (gm2.genome_db_id = g2.genome_db_id)
+WHERE (hm1.gene_member_id <> hm2.gene_member_id)
+ AND (gm1.stable_id <> gm2.stable_id)
+ AND (g.name = ?)
+ AND (gm1.source_name = 'ENSEMBLGENE')/,
   -CALLBACK => sub {
     my ($row) = @_;
     push @{ $homologues->{ $row->[0] } },
@@ -599,6 +603,7 @@ sub add_compara {
       $gene->{homologues} = $homo;
     }
   }
+  print "Homology integrated into gene hash\n";
   return;
 }
 
