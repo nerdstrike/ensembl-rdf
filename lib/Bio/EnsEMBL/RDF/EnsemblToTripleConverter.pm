@@ -316,8 +316,14 @@ sub print_feature {
       $self->print_exons($transcript,$transcript_uri);
     }
     if (exists $feature->{homologues} ) {
+      # Homologues come in three types
+      # Orthologues - shared ancestor, same gene different species
+      # Paralogues - same species, unexpected copy not repeatmasked by the assembly
+      # Homeologues - same species, different sub-genome in a polyploid species.
       foreach my $alt_gene (@{ $feature->{homologues} }) {
-        print $fh triple(u($feature_uri), 'sio:SIO_000558', 'ensembl:'.$alt_gene->{stable_id});
+        my $predicate;
+        $predicate = ($alt_gene->{description} eq 'within_species_paralog') ? 'sio:SIO:000630': 'sio:SIO_000558';
+        print $fh triple(u($feature_uri), $predicate, 'ensembl:'.$alt_gene->{stable_id});
       }
     }
   }
@@ -466,7 +472,7 @@ sub print_xrefs {
     print $fh triple(u($feature_uri), $relation, u($xref_uri));
     if (exists $xref->{info_text} && defined $xref->{info_text} && $xref->{info_text} ne '') {
       print $fh triple(u($xref_uri),'dc:description','"'.$xref->{info_text}.'"' );
-      warn "THING: ".$xref->{info_type}.":".$xref->{into_text};
+      # warn "THING: ".$xref->{info_type}.":".$xref->{into_text};
     }
     print $fh triple(u($xref_uri), 'dc:identifier', qq("$id"));
     if(defined $label && $label ne $id) {

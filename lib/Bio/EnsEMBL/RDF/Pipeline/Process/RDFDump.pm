@@ -55,7 +55,7 @@ sub run {
     my $compara_dba = Bio::EnsEMBL::Registry->get_DBAdaptor('Multi', 'compara');
     my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'protein_feature');
     my $gene_array = $bulk->export_genes($dba,undef,'protein_feature',$self->param('xref'));
-    # $bulk->add_compara($species, $gene_array, $compara_dba); # This bulk query likes to time out
+    $bulk->add_compara($species, $gene_array, $compara_dba);
 
        
     my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
