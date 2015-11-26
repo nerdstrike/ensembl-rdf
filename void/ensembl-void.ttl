@@ -15,9 +15,9 @@
 
 <http://rdf.ebi.ac.uk/dataset/ensembl/description> a void:DatasetDescription ;
     dcterms:description "The VoID description for the RDF representation of this dataset."@en ;
-    dcterms:issued "2014-09-01T09:58:24.587000+00:00"^^xsd:dateTime ;
+    dcterms:issued "2014-12-03T09:58:24.587000+00:00"^^xsd:dateTime ;
     dcterms:title "VoID Description"@en ;
-    pav:createdOn "2014-09-01T09:58:24.587000+00:00"^^xsd:dateTime ;
+    pav:createdOn "2014-12-03T09:58:24.587000+00:00"^^xsd:dateTime ;
     foaf:primaryTopic <http://rdf.ebi.ac.uk/dataset/ensembl> .
 
 <http://rdf.ebi.ac.uk/dataset/ensembl> a void:Dataset ;
@@ -25,41 +25,89 @@
     dcterms:license <http://www.ebi.ac.uk/Information/termsofuse.html> ;
     dcterms:publisher <http://www.ebi.ac.uk> ;
     dcterms:title "Ensembl RDF"@en ;
-    pav:hasVersion <http://rdf.ebi.ac.uk/dataset/ensembl/76> .
+    pav:hasCurrentVersion <http://rdf.ebi.ac.uk/dataset/ensembl/77> ;
+    pav:hasVersion <http://rdf.ebi.ac.uk/dataset/ensembl/77> .
 
-<http://rdf.ebi.ac.uk/dataset/ensembl/76> a void:Dataset ;
+<http://rdf.ebi.ac.uk/dataset/ensembl/83> a void:Dataset ;
     dcterms:accrualPeriodicity "Irregular" ;
     dcterms:description "Ensembl is a joint project between EMBL - EBI and the Wellcome Trust Sanger Institute to develop a software system which produces and maintains automatic annotation on selected eukaryotic genomes."@en ;
-    dcterms:issued "2014-07-31T23:00:00.587000+00:00"^^xsd:dateTime ;
+    dcterms:issued "2015-12-07T23:00:00.000000+00:00"^^xsd:dateTime ;
     dcterms:license <http://www.ebi.ac.uk/Information/termsofuse.html> ;
     dcterms:publisher <http://www.ebi.ac.uk> ;
-    dcterms:title "Ensembl 76 RDF"@en ;
-    pav:version "76" ;
-    void:dataDump <ftp://ftp.ebi.ac.uk/pub/databases/RDF/ensembl/76> ;
+    dcterms:title "Ensembl 83 RDF"@en ;
+    pav:version "83" ;
+    void:dataDump <ftp://ftp.ebi.ac.uk/pub/databases/RDF/ensembl/83> ;
     void:exampleResource <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000139618> ;
     void:sparqlEndpoint <http://www.ebi.ac.uk/rdf/services/ensembl/sparql> ;
-    void:subset <http://rdf.ebi.ac.uk/dataset/ensembl/76/10090>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/10116>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/109376>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/13616>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/28377>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/29760>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/330879>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/3694>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/3702>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/39947>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/4932>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/6239>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/7227>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/7955>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/8364>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9031>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9544>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9606>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9823>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9913>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/9940>,
-        <http://rdf.ebi.ac.uk/dataset/ensembl/76/99883> ;
+    void:subset <http://rdf.ebi.ac.uk/dataset/ensembl/83/30538>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/48698>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/28377>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9361>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/30611>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7719>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/51511>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/6239>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9685>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7994>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9031>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9598>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/13735>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8049>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7897>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9913>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9615>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9739>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8839>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9785>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9669>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/59894>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7227>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/31033>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/61853>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9595>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/10141>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9365>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9796>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9606>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9813>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/10020>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7757>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9371>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9544>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9483>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8090>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/132908>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/59463>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/10090>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/30608>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9555>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/13616>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/960>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9646>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9823>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9978>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8083>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9258>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9986>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/10116>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/4932>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9940>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/42254>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9358>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7918>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/43179>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/69293>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9478>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9305>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/99883>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8128>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/37347>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9103>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/60711>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/9315>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/8364>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/59729>,
+                <http://rdf.ebi.ac.uk/dataset/ensembl/83/7955> ;
     void:vocabulary <http://purl.bioontology.org/ontology/SO>,
         <http://semanticscience.org/ontology/sio.owl>,
         <http://www.w3.org/2004/02/skos/core> ;
