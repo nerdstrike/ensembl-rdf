@@ -41,7 +41,7 @@ sub default_options {
     config_file => 'xref_LOD_mapping.json',
     pipeline_name => 'rdf_dump',
     registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
-    base_path => '/tmp/'
+    base_path => '/lustre/scratch109/'
   }
 }
 
@@ -75,7 +75,8 @@ sub pipeline_analyses {
       config_file => $self->o('config_file'),
       # species => $self->o('species'),
     },
-    -analysis_capacity => 6
+    -analysis_capacity => 6,
+	-rc_name => 'dump'
   }];
 }
 
@@ -92,5 +93,11 @@ sub beekeeper_extra_cmdline_options {
 #     hive_use_param_stack  => 1,
 #   };
 # }
+sub resource_classes {
+my $self = shift;
+  return {
+    'dump'      => { LSF => '-q long -M4000 -R"select[mem>4000] rusage[mem=4000]"' },
+  }
+}
 
 1;
