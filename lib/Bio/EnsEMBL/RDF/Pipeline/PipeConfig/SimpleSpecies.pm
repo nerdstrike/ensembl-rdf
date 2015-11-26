@@ -75,8 +75,8 @@ sub pipeline_analyses {
       config_file => $self->o('config_file'),
       # species => $self->o('species'),
     },
-    -analysis_capacity => 6,
-	-rc_name => 'dump'
+    -analysis_capacity => 4,
+	  -rc_name => 'dump'
   }];
 }
 
@@ -96,7 +96,7 @@ sub beekeeper_extra_cmdline_options {
 sub resource_classes {
 my $self = shift;
   return {
-    'dump'      => { LSF => '-q long -M4000 -R"select[mem>4000] rusage[mem=4000]"' },
+    'dump'      => { LSF => '-q normal -M8000 -R"select[mem>8000] rusage[mem=8000]"' },
   }
 }
 
