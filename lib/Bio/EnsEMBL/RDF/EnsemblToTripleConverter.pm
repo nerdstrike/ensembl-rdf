@@ -242,6 +242,7 @@ sub print_seq_regions {
     print $fh triple($reference, 'rdfs:subClassOf', $generic);
     if ($cs_name eq 'chromosome') { 
       print $fh triple($generic, 'rdfs:subClassOf', 'obo:SO_0000340');
+      # Find SO term for patches and region in general?
     } else {
       print $fh triple($generic, 'rdfs:subClassOf', 'term:'.$cs_name);
       print $fh triple('term:'.$cs_name, 'rdfs:subClassOf', 'term:EnsemblRegion');
@@ -334,6 +335,7 @@ sub print_feature {
       my $translation_uri = prefix('protein').$translation->{id};
       $self->print_feature($translation,$translation_uri,'translation');
       print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
+      print $fh triple(u(translation_uri), 'a', 'term:protein');
       if (exists $translation->{protein_features} && defined $translation->{protein_features}) {
         $self->print_protein_features($translation_uri,$translation->{protein_features});
       }
@@ -475,7 +477,7 @@ sub print_xrefs {
       # warn "THING: ".$xref->{info_type}.":".$xref->{into_text};
     }
     print $fh triple(u($xref_uri), 'dc:identifier', qq("$id"));
-    if(defined $label && $label ne $id) {
+    if(defined $label) {
       print $fh triple(u($xref_uri), 'rdfs:label', qq("$label"));
     }
     if ($desc) {
