@@ -366,7 +366,8 @@ sub print_faldo_location {
   }  else {
     $version_uri = qq($prefix$schema_version/$cs_name:$region_name);
   }
-  
+  print $fh triple(u($version_uri),'rdfs:label',"$schema_version $cs_name:$region_name");
+
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
