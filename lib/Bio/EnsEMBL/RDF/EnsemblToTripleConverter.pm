@@ -155,6 +155,10 @@ sub print_namespaces {
   my $self = shift;
   my $fh = $self->filehandle;
   print $fh name_spaces()."\n";
+  my $xref_fh = $self->xref_filehandle;
+  if ($xref_fh) { 
+    print $xref_fh name_spaces()."\n";
+  }
 }
 
 sub print_species_info {
