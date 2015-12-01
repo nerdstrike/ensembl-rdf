@@ -339,7 +339,7 @@ sub print_feature {
       my $translation_uri = prefix('protein').$translation->{id};
       $self->print_feature($translation,$translation_uri,'translation');
       print $fh triple(u($feature_uri),'obo:SO_translates_to',u($translation_uri));
-      print $fh triple(u(translation_uri), 'a', 'term:protein');
+      print $fh triple(u($translation_uri), 'a', 'term:protein');
       if (exists $translation->{protein_features} && defined $translation->{protein_features}) {
         $self->print_protein_features($translation_uri,$translation->{protein_features});
       }
