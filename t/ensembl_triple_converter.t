@@ -168,6 +168,7 @@ cmp_ok(@result, '==', 2, 'Two exons also attached to a transcript without order'
 $sparql = qq[$prefixes
 SELECT ?xref_label WHERE {
   ?gene term:ANNOTATED ?xref .
+  ?xref a ensembl:Vega_gene .
   ?xref rdfs:label ?xref_label .
   ?gene dc:identifier "ENSG00000214717" .
 }
