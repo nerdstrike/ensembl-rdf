@@ -61,6 +61,7 @@ PREFIX transcript: <http://rdf.ebi.ac.uk/resource/ensembl.transcript/>
 PREFIX ensembl_variant: <http://rdf.ebi.ac.uk/resource/ensembl.variant/>
 PREFIX protein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>
 PREFIX exon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>
+PREFIX identifiers: <http://identifiers.org/>
 ];
 
 # Test seq region labels
@@ -167,8 +168,8 @@ cmp_ok(@result, '==', 2, 'Two exons also attached to a transcript without order'
 
 $sparql = qq[$prefixes
 SELECT ?xref_label WHERE {
-  ?gene term:ANNOTATED ?xref .
-  ?xref a ensembl:Vega_gene .
+  ?gene term:DIRECT ?xref .
+  ?xref a identifiers:hgnc .
   ?xref rdfs:label ?xref_label .
   ?gene dc:identifier "ENSG00000214717" .
 }
