@@ -260,7 +260,7 @@ sub print_seq_regions {
 }
 
 sub _generate_seq_region_uri {
-  my ($self,$version,$production_name,$cs_version,$region_name) = @_;
+  my ($self,$version,$production_name,$cs_version,$region_name,$start,$end,$strand) = @_;
   # Generate a version specific portion of a URL that includes, species, assembly version and region name
   # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
   # and the unversioned equivalent weould be http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
@@ -271,6 +271,18 @@ sub _generate_seq_region_uri {
   } else {
     $version_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$version,$production_name,$region_name;
     $unversioned_uri = sprintf "%s/%s", prefix('ensembl'),$production_name,$region_name;
+  }
+  if (defined $strand) {
+    if (defined $start && defined $end) {
+      $version_uri .= ":$start-$end:$strand";
+      $unversioned_uri .= ":$start-$end:$strand";
+    } elsif (defined $end) {
+      $version_uri .= ":$end:$strand";
+      $unversioned_uri .= ":$end:$strand";
+    } elsif (defined $start) {
+      $version_uri .= ":$start:$strand";
+      $unversioned_uri .= ":$start:$strand";
+    }
   }
   return ( u($version_uri), u($unversioned_uri));
 }
@@ -379,33 +391,33 @@ sub print_faldo_location {
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
   # The same is true of toplevel contigs in other species.
-  my ($version_uri,$unversioned_uri) = $self->_generate_seq_region_uri($self->release,version,$self->production_name,$cs_version,$region_name);
+  my ($version_uri,$unversioned_uri) = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name);
   
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
   my $begin = ($strand >= 0) ? $start : $end;
   my $stop = ($strand >= 0) ? $end : $start;
-  my $location = sprintf "%s:%s-%s:%s",$version_uri,$start,$end,$strand;
-  my $beginUri = sprintf "%s:%s:%s",$version_uri,$begin,$strand;
-  my $endUri = "$version_uri:$stop:$strand";
-  print $fh triple(u($feature_uri), 'faldo:location', u($location));
-  print $fh triple(u($location), 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
-  print $fh triple(u($location), 'rdf:type', 'faldo:Region');
-  print $fh triple(u($location), 'faldo:begin', u($beginUri));
-  print $fh triple(u($location), 'faldo:end', u($endUri));
-  print $fh triple(u($location), 'faldo:reference', u($version_uri));
-  print $fh triple(u($beginUri), 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple(u($beginUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  my $location = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$start,$end,$strand);
+  my $beginUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$start,undef,$strand);
+  my $endUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,undef,$end,$strand);
+  print $fh triple(u($feature_uri), 'faldo:location', $location);
+  print $fh triple($location, 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
+  print $fh triple($location, 'rdf:type', 'faldo:Region');
+  print $fh triple($location, 'faldo:begin', $beginUri);
+  print $fh triple($location, 'faldo:end', $endUri);
+  print $fh triple($location, 'faldo:reference', $version_uri);
+  print $fh triple($beginUri, 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple($beginUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple(u($beginUri), 'faldo:position', $begin);
-  print $fh triple(u($beginUri), 'faldo:reference', u($version_uri));
+  print $fh triple($beginUri, 'faldo:position', $begin);
+  print $fh triple($beginUri, 'faldo:reference', $version_uri);
 
-  print $fh triple(u($endUri), 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple(u($endUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  print $fh triple($endUri, 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple($endUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple(u($endUri), 'faldo:position', $stop);
-  print $fh triple(u($endUri), 'faldo:reference', u($version_uri));
+  print $fh triple($endUri, 'faldo:position', $stop);
+  print $fh triple($endUri, 'faldo:reference', $version_uri);
   
   return $location;
 }
