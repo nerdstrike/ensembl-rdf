@@ -50,7 +50,7 @@ use Try::Tiny;
 # override release value from API
 sub new {
   my ($caller,@args) = @_;
-  my ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh) = @args;
+  my ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh, $production_name) = @args;
   unless ($release) {
     $release = Bio::EnsEMBL::ApiVersion->software_version;
   }
@@ -72,6 +72,7 @@ sub new {
     ontology_cache => {},
     mapping => $xref_mapping,
     biotype_mapper => $biotype_mapper,
+    production_name => $production_name
   }, $caller);
 }
 
@@ -142,6 +143,11 @@ sub dump_xrefs {
   return $self->{dump_xrefs};
 }
 
+sub production_name {
+  my $self = shift;
+  return $self->{production_name};
+}
+
 
 # Specify path to write to.
 sub write_to_file {
@@ -159,6 +165,21 @@ sub print_namespaces {
   if ($xref_fh) { 
     print $xref_fh name_spaces()."\n";
   }
+}
+
+# Hand URIs out to calling code with correct namespacing etc.
+sub generate_feature_uri {
+  my ($self, $id, $feature_type) = @_;
+  my $prefix;
+  if ($feature_type eq 'gene') { $prefix = 'ensembl' }
+  elsif ($feature_type eq 'transcript') { $prefix = 'transcript'}
+  elsif ($feature_type eq 'exon') {$prefix = 'exon'}
+  elsif ($feature_type eq 'translation') {$prefix = 'protein'}
+  elsif ($feature_type eq 'variation') {$prefix = 'ensemblvariation'}
+  elsif ($feature_type eq 'variant') {$prefix = 'ensembl_variant'}
+  else { confess "Cannot map $feature_type to a prefix in RDFLib"}
+  
+  return $self->prefix($prefix).$id;
 }
 
 sub print_species_info {
@@ -224,6 +245,7 @@ sub print_seq_regions {
   my $slice_list = shift;
   my $fh = $self->filehandle;
   
+  my $production_name = $self->production_name;
   my $version = $self->release;
   my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
   my $scientific_name = $self->meta_adaptor->get_scientific_name;
@@ -233,13 +255,13 @@ sub print_seq_regions {
     my $cs_name = $coord_system->name();
     my $cs_version = $coord_system->version;
 
-    # Generate a version specific portion of a URL that includes the database version, species, assembly version and region name
-    # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/75/GRCh37/1
-    my $version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$version,$region_name); 
+    # Generate a version specific portion of a URL that includes, species, assembly version and region name
+    # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
+    my $version_uri = u( sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$assembly,$region_name); 
     
     # we also create a non versioned URI that is a superclass e.g. 
-    # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/1
-    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$taxon_id,$region_name); 
+    # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
+    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$production_name,$assembly,$region_name);
     
     my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
     my $generic = $non_version_uri;

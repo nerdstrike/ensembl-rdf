@@ -46,6 +46,7 @@ sub run {
     my $species = $self->param('species');
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $release = $self->param('release');
+    my $production_name = $self->production_name;
     my $path = $self->get_dir($release);
     my $target_file = $path.'/'.$species.".ttl";
     my $main_fh = IO::File->new($target_file,'w') || die "$!";
@@ -63,7 +64,7 @@ sub run {
     my $meta_adaptor = $dba->get_MetaContainer;
    
     # TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
-    my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, $self->param('xref'), $release, $config_file, $main_fh, $xref_fh);
+    my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, $self->param('xref'), $release, $config_file, $main_fh, $xref_fh, $production_name);
 
     $triple_converter->print_namespaces;
     $triple_converter->print_species_info;
@@ -75,8 +76,8 @@ sub run {
 
     # Fetch all the things!
     while (my $gene = shift @$gene_array) {
-        my $feature_uri = 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}; # prefix() from RDFLib in triple converter
-        $triple_converter->print_feature($gene,$feature_uri,'gene');           
+        my $feature_uri = $triple_converter->generate_feature_uri($gene->{id},'gene');
+        $triple_converter->print_feature($gene,$feature_uri,'gene');
     }
 
     # Add a graph file for Virtuoso loading.
