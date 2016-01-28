@@ -241,11 +241,11 @@ sub print_seq_regions {
 
     # Generate a version specific portion of a URL that includes, species, assembly version and region name
     # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
-    my $version_uri = u( sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$assembly,$region_name); 
+    my $version_uri = u( sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$cs_version,$region_name); 
     
     # we also create a non versioned URI that is a superclass e.g. 
     # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
-    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$production_name,$assembly,$region_name);
+    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name);
     
     my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
     my $generic = $non_version_uri;
