@@ -47,32 +47,23 @@ use IO::File;
 use Try::Tiny;
 
 
-# override release value from API
+# allow override of release value from API
 sub new {
   my ($caller,@args) = @_;
-  my ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh, $production_name) = @args;
-  unless ($release) {
-    $release = Bio::EnsEMBL::ApiVersion->software_version;
+  my ($config) = @args;
+  unless (exists $config->{release}) {
+    $config->{release} = Bio::EnsEMBL::ApiVersion->software_version;
   }
-  my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($xref_mapping_file);
-  my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($ontology_adaptor);
+  my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($config->{xref_mapping_file});
+  my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($config->{ontology_adaptor});
   # This connects Ensembl to Identifiers.org amongst other things
   croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::Utils::SequenceOntologyMapper" unless $biotype_mapper->isa('Bio::EnsEMBL::Utils::SequenceOntologyMapper');
   croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::DBSQL::MetaContainer" unless $meta_adaptor->isa('Bio::EnsEMBL::DBSQL::MetaContainer');
 
-  return bless ( {
-    ontoa => $ontology_adaptor,
-    meta => $meta_adaptor,
-    species => $species,
-    fh => $fh,
-    xref_fh => $xref_fh,
-    dump_xrefs => $dump_xrefs,
-    release => $release,
-    taxon => undef,
+  return bless ( %$config, {
     ontology_cache => {},
     mapping => $xref_mapping,
     biotype_mapper => $biotype_mapper,
-    production_name => $production_name
   }, $caller);
 }
 
@@ -89,10 +80,10 @@ sub species {
 sub filehandle {
   my ($self,$fh) = @_;
   if ($fh) {
-    if ($self->{fh}) {$self->{fh}->close}
-    $self->{fh} = $fh;
+    if ($self->{main_fh}) {$self->{main_fh}->close}
+    $self->{main_fh} = $fh;
   }
-  return $self->{fh};
+  return $self->{main_fh};
 }
 
 sub xref_filehandle {
@@ -120,12 +111,12 @@ sub ontology_cache {
 
 sub ontology_adaptor {
   my $self = shift;
-  return $self->{ontoa};
+  return $self->{ontology_adaptor};
 }
 
 sub meta_adaptor {
   my $self = shift;
-  return $self->{meta};
+  return $self->{meta_adaptor};
 }
 
 sub ensembl_mapper {
@@ -140,7 +131,7 @@ sub biotype_mapper {
 
 sub dump_xrefs {
   my $self = shift;
-  return $self->{dump_xrefs};
+  return $self->{xref};
 }
 
 sub production_name {

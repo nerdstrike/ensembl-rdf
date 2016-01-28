@@ -55,17 +55,26 @@ sub run {
     $xref_fh = IO::File->new($xref_file, 'w') if $self->param('xref');
     my $dba = $self->get_DBAdaptor; 
     my $compara_dba = Bio::EnsEMBL::Registry->get_DBAdaptor('Multi', 'compara');
+    # Configure bulk extractor
     my $bulk = Bio::EnsEMBL::BulkFetcher->new(-level => 'protein_feature');
     my $gene_array = $bulk->export_genes($dba,undef,'protein_feature',$self->param('xref'));
     $bulk->add_compara($species, $gene_array, $compara_dba);
 
-       
-    my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
-    my $meta_adaptor = $dba->get_MetaContainer;
-   
-    # TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
-    my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, $self->param('xref'), $release, $config_file, $main_fh, $xref_fh, $production_name);
+    # Configure triple converter
+    my $converter_config = { 
+      ontology_adaptor => Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm'),
+      meta_adaptor => $meta_adaptor = $dba->get_MetaContainer,
+      species => $species,
+      xref => $xref,
+      release => $release,
+      config_file => $config_file,
+      main_fh => $main_fh,
+      xref_fh => $xref_fh,
+      production_name => $production_name
+    };
+    my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($converter_config);
 
+    # start writing out
     $triple_converter->print_namespaces;
     $triple_converter->print_species_info;
 
