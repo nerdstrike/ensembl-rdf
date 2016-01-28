@@ -16,15 +16,22 @@ my $test_db = Bio::EnsEMBL::Test::MultiTestDB->new('ontology' );
 my $surplus_db = Bio::EnsEMBL::Test::MultiTestDB->new('homo_sapiens' );
 my $dba = $test_db->get_DBAdaptor('ontology');
 my $dbb = $surplus_db->get_DBAdaptor('core');
-my $ontoa = $dba->get_OntologyTermAdaptor();
-my $meta_adaptor = $dbb->get_MetaContainer();
 
 my $fake_file;
 my $fh;
 ok ( open($fh,'>',\$fake_file) );
-# TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
-my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontoa,$meta_adaptor,'homo_sapiens',1,82,'../xref_LOD_mapping.json',$fh,undef);
-is ($converter->species,'homo_sapiens',"Constructor assignments");
+
+my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new({
+  ontology_adaptor => $dba->get_OntologyTermAdaptor(),
+  meta_adaptor => $dbb->get_MetaContainer(),
+  species => 'homo_sapiens',
+  production_name => 'homo_sapiens',
+  xref => 1,
+  release => 82,
+  xref_mapping_file => '../xref_LOD_mapping.json',
+  main_fh => $fh
+});
+is ($converter->production_name,'homo_sapiens',"Constructor assignments");
 is ($converter->release,'82',"Constructor assignments");
 
 my $slice_adaptor = $dbb->get_SliceAdaptor();
@@ -74,7 +81,7 @@ SELECT ?label WHERE {
 my @result = query($sparql);
 my @strings = map { $_->{label}->as_string } @result; 
 
-is_deeply(\@strings, ['"Homo sapiens chromosome chromosome:GRCh38:6:1:170805979:1"','"Homo sapiens chromosome chromosome:GRCh38:Y:1:57227415:1"','"Homo sapiens chromosome chromosome:GRCh38:X:1:156040895:1"'], 'Seq regions returned with correct labels');
+is_deeply(\@strings, ['"Homo sapiens chromosome chromosome:GRCh38:6:1:170805979:1"','"Homo sapiens chromosome chromosome:GRCh38:X:1:156040895:1"','"Homo sapiens chromosome chromosome:GRCh38:Y:1:57227415:1"'], 'Seq regions returned with correct labels');
 
 # Test gene
 $sparql = qq[

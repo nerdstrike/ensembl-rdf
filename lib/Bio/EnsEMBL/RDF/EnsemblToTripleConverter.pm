@@ -19,8 +19,8 @@ limitations under the License.
     EnsemblToTripleConverter - Module to help convert Ensembl data to RDF turtle
 
 =head1 SYNOPSIS
-
-  my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($species,$file_handle);
+  my $params = { ontology_adaptor => ...,xref_mapping_file => ..., main_fh => ..., production_name=> ... }
+  my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($params);
   $converter->write_to_file('/direct/path/thing.rdf');
   $converter->print_namespaces;
   $converter->print_species_info;
@@ -54,26 +54,20 @@ sub new {
   unless (exists $config->{release}) {
     $config->{release} = Bio::EnsEMBL::ApiVersion->software_version;
   }
+  my @required_args = qw/ontology_adaptor xref_mapping_file main_fh production_name meta_adaptor/;
+  my @missing_args;
+  foreach my $arg (@required_args) {
+    push @missing_args,$arg unless (exists $config->{$arg});
+  }
+  if (@missing_args > 0) { confess "Missing arguments required by Bio::EnsEMBL::RDF::EnsemblToTripleConverter: ".join ',',@missing_args; }
   my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($config->{xref_mapping_file});
   my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($config->{ontology_adaptor});
   # This connects Ensembl to Identifiers.org amongst other things
   croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::Utils::SequenceOntologyMapper" unless $biotype_mapper->isa('Bio::EnsEMBL::Utils::SequenceOntologyMapper');
-  croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::DBSQL::MetaContainer" unless $meta_adaptor->isa('Bio::EnsEMBL::DBSQL::MetaContainer');
-
-  return bless ( %$config, {
-    ontology_cache => {},
-    mapping => $xref_mapping,
-    biotype_mapper => $biotype_mapper,
-  }, $caller);
-}
-
-# getter/setter
-sub species {
-  my ($self,$species) = @_;
-  if ($species) { 
-    $self->{species} = $species;
-  }
-  return $self->{species};
+  $config->{ontology_cache} = {};
+  $config->{mapping} = $xref_mapping;
+  $config->{biotype_mapper} = $biotype_mapper;
+  return bless ( $config, $caller);
 }
 
 #Set a filehandle directly
@@ -138,7 +132,6 @@ sub production_name {
   my $self = shift;
   return $self->{production_name};
 }
-
 
 # Specify path to write to.
 sub write_to_file {
