@@ -45,7 +45,8 @@ sub run {
     my $self = shift;
     my $species = $self->param('species');
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
-    my $path = $self->get_dir();
+    my $release = $self->param('release');
+    my $path = $self->get_dir($release);
     my $target_file = $path.'/'.$species.".ttl";
     my $main_fh = IO::File->new($target_file,'w') || die "$!";
     my $xref_file = $path.'/'.$species."_xrefs.ttl";
@@ -60,7 +61,7 @@ sub run {
        
     my $ontology_adaptor = Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm');
     my $meta_adaptor = $dba->get_MetaContainer;
-    my $release = $self->param('release');
+   
     # TripleConverter args: ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh)
     my $triple_converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($ontology_adaptor, $meta_adaptor, $species, $self->param('xref'), $release, $config_file, $main_fh, $xref_fh);
 
@@ -79,7 +80,7 @@ sub run {
     }
 
     # Add a graph file for Virtuoso loading.
-    my $graph_path = $self->get_dir();
+    my $graph_path = $self->get_dir($release);
     $graph_path .= '/'.$species.'.graph';
     work_with_file( $graph_path, 'w', sub {
         $triple_converter->create_virtuoso_file($graph_path);
