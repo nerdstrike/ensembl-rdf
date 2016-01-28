@@ -239,31 +239,40 @@ sub print_seq_regions {
     my $cs_name = $coord_system->name();
     my $cs_version = $coord_system->version;
 
-    # Generate a version specific portion of a URL that includes, species, assembly version and region name
-    # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
-    my $version_uri = u( sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$cs_version,$region_name); 
-    
+    my ($version_uri,$non_version_uri) = $self->_generate_seq_region_uri($version,$production_name,$cs_version,$region_name);
+
     # we also create a non versioned URI that is a superclass e.g. 
-    # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
-    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name);
-    
-    my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
-    my $generic = $non_version_uri;
-    print $fh triple($reference, 'rdfs:subClassOf', $generic);
+    print $fh triple($version_uri, 'rdfs:subClassOf', $non_version_uri);
     if ($cs_name eq 'chromosome') { 
-      print $fh triple($generic, 'rdfs:subClassOf', 'obo:SO_0000340');
+      print $fh triple($non_version_uri, 'rdfs:subClassOf', 'obo:SO_0000340');
       # Find SO term for patches and region in general?
     } else {
-      print $fh triple($generic, 'rdfs:subClassOf', 'term:'.$cs_name);
+      print $fh triple($non_version_uri, 'rdfs:subClassOf', 'term:'.$cs_name);
       print $fh triple('term:'.$cs_name, 'rdfs:subClassOf', 'term:EnsemblRegion');
     }
-    print $fh triple($generic, 'rdfs:label', qq("$scientific_name $cs_name $region_name")); 
-    print $fh triple($reference, 'rdfs:label', qq("$scientific_name $cs_name $region_name ($cs_version)"));  
-    print $fh triple($reference, 'dc:identifier', qq("$region_name")); 
-    print $fh triple($reference, 'term:inEnsemblSchemaNumber', qq("$version"));  
-    print $fh triple($reference, 'term:inEnsemblAssembly', qq("$cs_version")); 
+    print $fh triple($non_version_uri, 'rdfs:label', qq("$scientific_name $cs_name $region_name")); 
+    print $fh triple($version_uri, 'rdfs:label', qq("$scientific_name $cs_name $region_name ($cs_version)"));  
+    print $fh triple($version_uri, 'dc:identifier', qq("$region_name")); 
+    print $fh triple($version_uri, 'term:inEnsemblSchemaNumber', qq("$version"));  
+    print $fh triple($version_uri, 'term:inEnsemblAssembly', qq("$cs_version")); 
   }
   
+}
+
+sub _generate_seq_region_uri {
+  my ($self,$version,$production_name,$cs_version,$region_name) = @_;
+  # Generate a version specific portion of a URL that includes, species, assembly version and region name
+  # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
+  # and the unversioned equivalent weould be http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
+  my ($version_uri,$unversioned_uri);
+  if (defined $cs_version) {
+    $version_uri = sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$cs_version,$region_name;
+    $unversioned_uri = sprintf "%s%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name;
+  } else {
+    $version_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$version,$production_name,$region_name;
+    $unversioned_uri = sprintf "%s/%s", prefix('ensembl'),$production_name,$region_name;
+  }
+  return ( u($version_uri), u($unversioned_uri));
 }
 
 # This method calls recursively down the gene->transcript->translation chain and prints them all
@@ -370,14 +379,8 @@ sub print_faldo_location {
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
   # The same is true of toplevel contigs in other species.
-  my $version_uri;
-  if ( defined $cs_version) {
-    $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
-  }  else {
-    $version_uri = qq($prefix$schema_version/$cs_name:$region_name);
-  }
-  print $fh triple(u($version_uri),'rdfs:label',qq("$schema_version $cs_name:$region_name"));
-
+  my ($version_uri,$unversioned_uri) = $self->_generate_seq_region_uri($self->release,version,$self->production_name,$cs_version,$region_name);
+  
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
