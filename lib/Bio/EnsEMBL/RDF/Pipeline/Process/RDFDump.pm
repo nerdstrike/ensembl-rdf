@@ -68,7 +68,7 @@ sub run {
       species => $species,
       xref => $self->param('xref'),
       release => $release,
-      config_file => $config_file,
+      xref_mapping_file => $config_file,
       main_fh => $main_fh,
       xref_fh => $xref_fh,
       production_name => $production_name
