@@ -63,9 +63,9 @@ sub run {
     # Configure triple converter
     my $converter_config = { 
       ontology_adaptor => Bio::EnsEMBL::Registry->get_adaptor('multi','ontology','OntologyTerm'),
-      meta_adaptor => $meta_adaptor = $dba->get_MetaContainer,
+      meta_adaptor => $dba->get_MetaContainer,
       species => $species,
-      xref => $xref,
+      xref => $self->param('xref'),
       release => $release,
       config_file => $config_file,
       main_fh => $main_fh,
