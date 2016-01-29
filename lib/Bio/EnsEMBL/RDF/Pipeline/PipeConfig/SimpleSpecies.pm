@@ -41,7 +41,7 @@ sub default_options {
     config_file => 'xref_LOD_mapping.json',
     pipeline_name => 'rdf_dump',
     registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
-    base_path => '/lustre/scratch109/'
+    base_path => '/lustre/scratch109/ensembl/kt7/rdf/'
   }
 }
 

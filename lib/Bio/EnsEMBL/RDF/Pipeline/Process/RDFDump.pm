@@ -47,7 +47,8 @@ sub run {
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $release = $self->param('release');
     my $production_name = $self->production_name;
-    my $path = $self->get_dir($release);
+    my $path = $self->o('base_path');
+    unless (defined $path) { $path = $self->get_dir($release) };
     my $target_file = $path.'/'.$species.".ttl";
     my $main_fh = IO::File->new($target_file,'w') || die "$!";
     my $xref_file = $path.'/'.$species."_xrefs.ttl";
@@ -90,7 +91,8 @@ sub run {
     }
 
     # Add a graph file for Virtuoso loading.
-    my $graph_path = $self->get_dir($release);
+    my $graph_path = $self->o('base_path');
+    unless ($graph_path) { $graph_path = $self->get_dir($release) };
     $graph_path .= '/'.$species.'.graph';
     work_with_file( $graph_path, 'w', sub {
         $triple_converter->create_virtuoso_file($graph_path);
