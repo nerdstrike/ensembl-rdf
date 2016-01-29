@@ -58,7 +58,7 @@ sub pipeline_analyses {
   return [ {
     -logic_name => 'ScheduleSpecies',
     -module     => 'Bio::EnsEMBL::Production::Pipeline::SpeciesFactory',
-    -input_id => [{}], # required for automatic seeding
+    -input_ids => [{}], # required for automatic seeding
     -parameters => {
 
     },
