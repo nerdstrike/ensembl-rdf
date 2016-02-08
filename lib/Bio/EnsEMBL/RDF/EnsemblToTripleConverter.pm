@@ -214,7 +214,7 @@ sub create_virtuoso_file {
   my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
 
   my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
-  my $graphUri = $versionGraphUri."/".$taxon_id;
+  my $graphUri = $versionGraphUri."/".$self->production_name;
   print $fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
 
   # make the species graph a subgraph of the version graph, by adding the assertion to the main RDF file.
