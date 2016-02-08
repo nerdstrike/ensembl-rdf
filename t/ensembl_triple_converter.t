@@ -45,7 +45,7 @@ my $fetcher = Bio::EnsEMBL::BulkFetcher->new();
 my $genes = $fetcher->export_genes($dbb,undef,'translation',1);
 my ($gene) = grep { $_->{id} eq 'ENSG00000214717'} @$genes;
 
-$converter->print_feature($gene, 'http://rdf.ebi.ac.uk/resource/ensembl/'.$gene->{id}, 'gene');
+$converter->print_feature($gene, $converter->generate_feature_uri($gene->{id},'gene'), 'gene');
 
 close $fh;
 print $fake_file."\n\n";
