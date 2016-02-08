@@ -154,6 +154,7 @@ sub print_namespaces {
 # Hand URIs out to calling code with correct namespacing etc.
 sub generate_feature_uri {
   my ($self, $id, $feature_type) = @_;
+  unless ($id && $feature_type) {confess "Cannot generate URIs without both a feature ID and its type"}
   my $prefix;
   if ($feature_type eq 'gene') { $prefix = 'ensembl' }
   elsif ($feature_type eq 'transcript') { $prefix = 'transcript'}
@@ -162,8 +163,8 @@ sub generate_feature_uri {
   elsif ($feature_type eq 'variation') {$prefix = 'ensemblvariation'}
   elsif ($feature_type eq 'variant') {$prefix = 'ensembl_variant'}
   else { confess "Cannot map $feature_type to a prefix in RDFLib"}
-  
-  return $self->prefix($prefix).$id;
+  my $namespace = prefix($prefix);
+  return $namespace.$id;
 }
 
 sub print_species_info {

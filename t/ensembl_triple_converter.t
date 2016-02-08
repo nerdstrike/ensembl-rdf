@@ -34,6 +34,9 @@ my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new({
 is ($converter->production_name,'homo_sapiens',"Constructor assignments");
 is ($converter->release,'82',"Constructor assignments");
 
+my $uri = $converter->generate_feature_uri('ENSG00000214717','gene');
+is ($uri,'http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000214717');
+
 my $slice_adaptor = $dbb->get_SliceAdaptor();
 my $slices = $slice_adaptor->fetch_all('chromosome');
 $converter->print_namespaces();
@@ -48,7 +51,7 @@ my ($gene) = grep { $_->{id} eq 'ENSG00000214717'} @$genes;
 $converter->print_feature($gene, $converter->generate_feature_uri($gene->{id},'gene'), 'gene');
 
 close $fh;
-print $fake_file."\n\n";
+# print $fake_file."\n\n";
 # Compare output against "proper" RDF library.
 my $store = RDF::Trine::Store::Memory->new();
 my $model = RDF::Trine::Model->new($store);
