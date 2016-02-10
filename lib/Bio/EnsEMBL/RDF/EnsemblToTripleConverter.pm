@@ -125,7 +125,7 @@ sub biotype_mapper {
 
 sub dump_xrefs {
   my $self = shift;
-  return $self->{xref};
+  return 1 if exists $self->{xref};
 }
 
 sub production_name {
