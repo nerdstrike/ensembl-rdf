@@ -346,7 +346,7 @@ sub print_feature {
       my $transcript_uri = prefix('transcript').$transcript->{id};
       $self->print_feature($transcript,$transcript_uri,'transcript');
       print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
-      $self->print_exons($transcript,$transcript_uri);
+      $self->print_exons($transcript);
     }
     if (exists $feature->{homologues} ) {
       # Homologues come in three types
@@ -424,7 +424,7 @@ sub print_faldo_location {
 }
 
 sub print_exons {
-  my ($self,$transcript,$transcript_uri) = @_;
+  my ($self,$transcript) = @_;
   my $fh = $self->filehandle;
 
   return unless exists $transcript->{exons};
@@ -445,19 +445,6 @@ sub print_exons {
     }
 }
 
-# Should be unnecessary once Xref RDF is produced separately from the release database
-# Also put associated xrefs through this:
-#     my $axN = 0;
-# for my $axref (@{$xref->{associated_xrefs}}) {
-#   # create a holding triple for each set of annotations
-#   my $ax_uri = $idorguri.'_ax_'.(++$axN);
-#   print $fh triple(u($idorguri), 'term:annotated', u($ax_uri)); 
-#   while(my ($k,$v) = each %$axref) {
-#       $k =~ tr/\t /_/;
-#       # use the condition directly here
-#       # u($ax_uri);
-#   }
-# }
 sub print_xrefs {
   my $self = shift;
   my $xref_list = shift;
