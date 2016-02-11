@@ -48,9 +48,9 @@ sub run {
     my $release = $self->param('release');
     my $production_name = $self->production_name;
     my $path = $self->param('base_path');
-    unless (defined $path) { $path = $self->get_dir($release) };
+    unless (defined $path && $path ne '') { $path = $self->get_dir($release) };
     my $target_file = $path.'/'.$species.".ttl";
-    my $main_fh = IO::File->new($target_file,'w') || die "$!";
+    my $main_fh = IO::File->new($target_file,'w') || die "$! $target_file";
     my $xref_file = $path.'/'.$species."_xrefs.ttl";
     my $xref_fh;
     $xref_fh = IO::File->new($xref_file, 'w') if $self->param('xref');
