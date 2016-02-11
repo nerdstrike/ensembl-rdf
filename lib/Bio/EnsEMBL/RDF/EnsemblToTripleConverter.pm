@@ -268,10 +268,10 @@ sub _generate_seq_region_uri {
   my ($version_uri,$unversioned_uri);
   if (defined $cs_version) {
     $version_uri = sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$cs_version,$region_name;
-    $unversioned_uri = sprintf "%s%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name;
+    $unversioned_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name;
   } else {
     $version_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$version,$production_name,$region_name;
-    $unversioned_uri = sprintf "%s/%s", prefix('ensembl'),$production_name,$region_name;
+    $unversioned_uri = sprintf "%s%s/%s", prefix('ensembl'),$production_name,$region_name;
   }
   if (defined $strand) {
     if (defined $start && defined $end) {
