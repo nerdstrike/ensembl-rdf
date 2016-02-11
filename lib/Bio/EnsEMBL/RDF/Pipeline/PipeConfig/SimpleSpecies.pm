@@ -37,11 +37,10 @@ sub default_options {
   return {
     %{ $self->SUPER::default_options() },
     xref => 1,
-    dump_location => '', # base path for all RDF output
     config_file => 'xref_LOD_mapping.json',
     pipeline_name => 'rdf_dump',
     registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
-    base_path => '/lustre/scratch109/ensembl/kt7/rdf/'
+    base_path => ''
   }
 }
 
@@ -70,11 +69,9 @@ sub pipeline_analyses {
     -logic_name => 'DumpRDF',
     -module => 'Bio::EnsEMBL::RDF::Pipeline::Process::RDFDump',
     -parameters => {
-      dump_location => $self->o('dump_location'),
       xref => $self->o('xref'),
       release => $self->o('ensembl_release'),
       config_file => $self->o('config_file'),
-      # species => $self->o('species'),
     },
     -analysis_capacity => 4,
 	  -rc_name => 'dump'
