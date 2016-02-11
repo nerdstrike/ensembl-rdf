@@ -47,7 +47,7 @@ sub run {
     my $config_file = $self->param('config_file'); # config required for mapping Ensembl things to RDF (xref_LOD_mapping.json)
     my $release = $self->param('release');
     my $production_name = $self->production_name;
-    my $path = $self->o('base_path');
+    my $path = $self->param('base_path');
     unless (defined $path) { $path = $self->get_dir($release) };
     my $target_file = $path.'/'.$species.".ttl";
     my $main_fh = IO::File->new($target_file,'w') || die "$!";
