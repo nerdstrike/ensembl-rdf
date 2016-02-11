@@ -400,8 +400,8 @@ sub print_faldo_location {
   my $begin = ($strand >= 0) ? $start : $end;
   my $stop = ($strand >= 0) ? $end : $start;
   my $location = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$start,$end,$strand);
-  my $beginUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$start,undef,$strand);
-  my $endUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,undef,$end,$strand);
+  my $beginUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$begin,undef,$strand);
+  my $endUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,undef,$stop,$strand);
   print $fh triple(u($feature_uri), 'faldo:location', $location);
   print $fh triple($location, 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
   print $fh triple($location, 'rdf:type', 'faldo:Region');

@@ -1,6 +1,7 @@
 use Modern::Perl;
 use Test::More;
 use Test::Differences;
+use Test::Deep;
 use List::Compare;
 
 use Bio::EnsEMBL::RDF::EnsemblToTripleConverter;
@@ -35,8 +36,12 @@ is ($converter->production_name,'homo_sapiens',"Constructor assignments");
 is ($converter->release,'82',"Constructor assignments");
 
 my $uri = $converter->generate_feature_uri('ENSG00000214717','gene');
-is ($uri,'http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000214717');
-
+is ($uri,'http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000214717', 'Test feature URI generator');
+my $unversioned_uri;
+($uri,$unversioned_uri) = $converter->_generate_seq_region_uri($converter->release, $converter->production_name(), 'GRCh38', '6', 1, 2, 1);
+is($uri, '<http://rdf.ebi.ac.uk/resource/ensembl/82/homo_sapiens/GRCh38/6:1-2:1>', 'Test versioned location URI');
+is($unversioned_uri, '<http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh38/6:1-2:1>', 'Test UNversioned location URI');
+#### Onto the real testing
 my $slice_adaptor = $dbb->get_SliceAdaptor();
 my $slices = $slice_adaptor->fetch_all('chromosome');
 $converter->print_namespaces();
@@ -73,7 +78,7 @@ PREFIX protein: <http://rdf.ebi.ac.uk/resource/ensembl.protein/>
 PREFIX exon: <http://rdf.ebi.ac.uk/resource/ensembl.exon/>
 PREFIX identifiers: <http://identifiers.org/>
 ];
-
+# print $fake_file."\n\n";
 # Test seq region labels
 my $sparql = "
 $prefixes
@@ -84,21 +89,25 @@ SELECT ?label WHERE {
 my @result = query($sparql);
 my @strings = map { $_->{label}->as_string } @result; 
 
-is_deeply(\@strings, ['"Homo sapiens chromosome chromosome:GRCh38:6:1:170805979:1"','"Homo sapiens chromosome chromosome:GRCh38:X:1:156040895:1"','"Homo sapiens chromosome chromosome:GRCh38:Y:1:57227415:1"'], 'Seq regions returned with correct labels');
+cmp_deeply(\@strings, bag('"Homo sapiens chromosome chromosome:GRCh38:6:1:170805979:1"','"Homo sapiens chromosome chromosome:GRCh38:X:1:156040895:1"','"Homo sapiens chromosome chromosome:GRCh38:Y:1:57227415:1"'), 'Seq regions returned with correct labels');
 
 # Test gene
 $sparql = qq[
 $prefixes
-SELECT ?start ?end WHERE {
+SELECT ?feature ?start ?end ?faldo WHERE {
   ?feature dc:identifier "ENSG00000214717" .
+  ?feature a term:protein_coding .
   ?feature faldo:location ?faldo .
   ?faldo faldo:begin ?begin .
   ?begin faldo:position ?start .
   ?faldo faldo:end ?otherend .
   ?otherend faldo:position ?end .
 } ];
-
 @result = query($sparql);
+# print "Hits: ".scalar @result."\n";
+# foreach my $hit (@result) {
+#   printf "%s %s-%s, %s\n",$hit->{feature},$hit->{start}->numeric_value,$hit->{end}->numeric_value,$hit->{faldo};
+# }
 cmp_ok( $result[0]->{start}->numeric_value, '==', 2500967 ,'Gene start correct');
 cmp_ok( $result[0]->{end}->numeric_value, '==', 2486414, 'Gene end correct');
 
