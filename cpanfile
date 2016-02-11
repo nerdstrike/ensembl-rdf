@@ -16,4 +16,5 @@ requires 'Test::Exports';
 # For testing
 requires 'RDF::Trine';
 requires 'RDF::Query';
+requires 'Test::Deep';
 # Also requires a working Ensembl installation for most operations.
