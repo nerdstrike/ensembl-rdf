@@ -93,13 +93,9 @@ sub run {
     # Add a graph file for Virtuoso loading.
     my $graph_path = $self->param('base_path');
     unless ($graph_path) { $graph_path = $self->get_dir($release) };
-    work_with_file( sprintf("%s/%s.graph",$graph_path,$production_name), 'w', sub {
-        $triple_converter->create_virtuoso_file($graph_path);
-    });
-    work_with_file( sprintf("%s/%s_xrefs.graph",$graph_path,$production_name), 'w', sub {
-        $triple_converter->create_virtuoso_file($graph_path);
-    });
-
+    
+    $triple_converter->create_virtuoso_file(sprintf("%s/%s.graph",$graph_path,$production_name));
+    $triple_converter->create_virtuoso_file(sprintf("%s/%s_xrefs.graph",$graph_path,$production_name));
     $main_fh->close;
     $xref_fh->close if defined $xref_fh;
 }
