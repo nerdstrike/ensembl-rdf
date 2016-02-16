@@ -218,7 +218,6 @@ sub create_virtuoso_file {
   my $graphUri = $versionGraphUri."/".$self->production_name;
   print $fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
 
-  # make the species graph a subgraph of the version graph, by adding the assertion to the main RDF file.
   $self->write_to_file($path);
   $fh = $self->filehandle;
   print $fh $graphUri;
@@ -252,10 +251,10 @@ sub print_seq_regions {
       print $fh triple('term:'.$cs_name, 'rdfs:subClassOf', 'term:EnsemblRegion');
     }
     print $fh triple($non_version_uri, 'rdfs:label', qq("$scientific_name $cs_name $region_name")); 
-    print $fh triple($version_uri, 'rdfs:label', qq("$scientific_name $cs_name $region_name ($cs_version)"));  
-    print $fh triple($version_uri, 'dc:identifier', qq("$region_name")); 
-    print $fh triple($version_uri, 'term:inEnsemblSchemaNumber', qq("$version"));  
-    print $fh triple($version_uri, 'term:inEnsemblAssembly', qq("$cs_version")); 
+    print $fh triple($version_uri, 'rdfs:label', qq("$scientific_name $region_name ($cs_version)"));  
+    print $fh triple($version_uri, 'dc:identifier', qq("$region_name"));
+    print $fh triple($version_uri, 'term:inEnsemblSchemaNumber', qq("$version"));
+    print $fh triple($version_uri, 'term:inEnsemblAssembly', qq("$cs_version"));
   }
   
 }
