@@ -126,7 +126,7 @@ sub taxon_triple {
 # prefix('faldo') etc.
 sub prefix {
   my $key = shift;
-  return $prefix{$key};
+  return $prefix{lc($key)};
 }
 
 # These namespaces are useful for turtle 1.0 serialisation, but not SPARQL. For SPARQL, use compatible_name_spaces()
