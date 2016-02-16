@@ -1,7 +1,7 @@
 
 
 /*
- * Copyright (c) 2013 EMBL - European Bioinformatics Institute
+ * Copyright (c) 2016 EMBL - European Bioinformatics Institute
  * Licensed under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,144 +16,171 @@ var exampleQueries = [
 
     {
         shortname : "Query 1",
-        description: "Show all transcripts for human BRCA2 gene including location",
-        query:
-            "SELECT DISTINCT ?transcript ?id ?typeLabel ?referenceLabel ?begin ?end ?location {\n\n" +
-            " # query human data only\n" +
-            " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/9606> {\n" +
-            "   ?transcript obo:SO_transcribed_from ensembl:ENSG00000139618 ;\n" +
-            "               a ?type;\n" +
-            "               dcterms:identifier ?id .\n" +
-            " OPTIONAL {\n" +
-            "  ?transcript faldo:location ?location .\n" +
-            "  ?location faldo:begin [faldo:position ?begin] .\n" +
-            "  ?location faldo:end [faldo:position ?end ] .\n" +
-            "  ?location faldo:reference ?reference .\n" +
-            "  ?reference rdfs:label ?referenceLabel\n" +
-            "  } \n" +
-            " }\n" +
-            "OPTIONAL {?type rdfs:label ?typeLabel}\n" +
-            "}"
+        description: "Show all transcripts of human BRCA2 gene and their coordinates",
+        query: "SELECT DISTINCT ?transcript ?id ?typeLabel ?reference ?begin ?end ?location { \n" +
+               "  ?transcript obo:SO_transcribed_from <ENSG00000139618> ;\n" +
+               "              a ?type;\n"+
+               "              dc:identifier ?id .\n" +
+               "  OPTIONAL {\n" +
+               "    ?transcript faldo:location ?location .\n" +
+               "    ?location faldo:begin [faldo:position ?begin] .\n" +
+               "    ?location faldo:end [faldo:position ?end ] .\n" +
+               "    ?location faldo:reference ?reference .\n"+
+               "  }\n"+ 
+               "  OPTIONAL {?type rdfs:label ?typeLabel}\n"+
+               "}"
     },
     {
         shortname : "Query 2",
         description: "Show ordered exons with their length for transcript ENST00000380152",
-        query:
-            "\n" +
-            "SELECT DISTINCT ?exon ?id ?referenceLabel ?begin ?end ?strand {\n\n" +
-            " # query human data only\n" +
-            " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/9606> {\n" +
-            "   ensembltranscript:ENST00000380152 obo:SO_has_part ?exon;\n" +
-            "                           sio:SIO_000974 ?orderedPart .\n" +
-            "   ?exon dcterms:identifier ?id .\n" +
-            "   # we include an explicit exon order\n" +
-            "   # so that we can order correctly in both + and - strand \n" +
-            "   ?orderedPart sio:SIO_000628 ?exon .\n" +
-            "   ?orderedPart sio:SIO_000300 ?order .\n\n" +
-            "   OPTIONAL {\n" +
-            "     ?exon faldo:location ?location .\n" +
-            "     ?location faldo:begin\n" +
-            "        [a ?strand ;\n" +
-            "           faldo:position ?begin] .\n" +
-            "     ?location faldo:end\n" +
-            "        [a ?strand ;\n" +
-            "           faldo:position ?end] .\n" +
-            "     ?location faldo:reference ?reference .\n" +
-            "     ?reference rdfs:label ?referenceLabel\n" +
-            "   }\n" +
-            " }\n" +
-            "FILTER (?strand != faldo:ExactPosition)\n" +
-            "}\n" +
-            "ORDER BY ASC(?order)"
-     },
+        query: "SELECT DISTINCT ?id ?order ?reference ?begin ?end ?strand {\n" +
+               "  ensembltranscript:ENST00000380152 obo:SO_has_part ?exon;\n" +
+               "                                    sio:SIO_000974 ?orderedPart .\n" +
+               "  ?exon dc:identifier ?id .\n" +
+               "  # we include an explicit exon order\n" +
+               "  # so that we can order correctly in both + and - strand \n" +
+               "  ?orderedPart sio:SIO_000628 ?exon .\n" +
+               "  ?orderedPart sio:SIO_000300 ?order .\n\n" +
+               "  OPTIONAL {\n" +
+               "    ?exon faldo:location ?location .\n" +
+               "    ?location faldo:begin\n" +
+               "      [a ?strand ;\n" +
+               "       faldo:position ?begin] .\n" +
+               "    ?location faldo:end\n" +
+               "      [a ?strand ;\n" +
+               "       faldo:position ?end] .\n" +
+               "  ?location faldo:reference ?reference .\n" +
+               "  }\n" +
+               "FILTER (?strand != faldo:ExactPosition)\n" +
+               "}\n" +
+               "ORDER BY ASC(?order)"
+    },
     {
         shortname : "Query 3",
-        description: "Show proteins translated from ENST00000380152 that map to reviewed (SwissProt) and unreviewed (TrEMBL) UniProt entries",
-        query:   "PREFIX core: <http://purl.uniprot.org/core/>\n" +
-                 "SELECT DISTINCT ?peptide ?xrefRelationType ?xrefLabel ?xrefUri ?xrefType  {\n" +
-                 " # query human data only\n" +
-                 " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/9606> {\n" +
-                 "  ensembltranscript:ENST00000380152 obo:SO_translates_to ?peptide .\n" +
-                 "  ?peptide  dcterms:identifier ?id .\n" +
-                 "  ?peptide a ensemblterms:protein ;\n" +
-                 "           ?xrefRelationType ?xrefUri .\n" +
-                 "  ?xrefUri a ?xrefType ;\n" +
-                 "           rdfs:label ?xrefLabel .\n" +
-                 "  VALUES ?xrefType {core:Reviewed_Protein core:Protein}\n" +
-                 " }\n" +
-                 "}\n"
+        description: "Get all mouse genes on chromosome 11 between location 101,100,523 and 101,190,725 forward strand",
+        query:  "SELECT DISTINCT ?gene ?id ?label ?typelabel ?desc ?begin ?end {\n" +
+                "  ?location faldo:begin\n" +
+                "       [a faldo:ForwardStrandPosition ;\n" +
+                "        faldo:position ?begin] .\n" +
+                "  ?location faldo:end\n" +
+                "       [a faldo:ForwardStrandPosition ;\n" +
+                "        faldo:position ?end] .\n" +
+                "  ?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/83/mus_musculus/GRCm38/11> .  \n" +
+                "  ?gene a ?type ;\n" +
+                "        rdfs:label ?label ;\n" +
+                "        dc:description ?desc ;\n" +
+                "        dc:identifier ?id ;\n" +
+                "        faldo:location ?location .\n" +
+                " FILTER (?begin >= 101100523 && ?end <= 101190725 )\n" +
+                " OPTIONAL {?type rdfs:label ?typelabel}\n" +
+                "}\n"
     },
     {
         shortname : "Query 4",
-        description: "Show all external database cross references for gene ENSG00000139618",
-
-        query:           "PREFIX skos: <http://www.w3.org/2004/02/skos/core#>\n" +
-                         "SELECT DISTINCT ?subject ?xrefRelationType ?xrefLabel ?xrefUri ?xrefType ?xrefLabel {\n" +
-                         " # query human data only\n" +
-                         " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/9606> {\n" +
-                         "  {\n" +
-                         "    {?subject obo:SO_transcribed_from ensembl:ENSG00000139618}" +
-                         "      UNION\n" +
-                         "    {?transcript obo:SO_transcribed_from ensembl:ENSG00000139618 .\n" +
-                         "     ?transcript obo:SO_translates_to  ?subject .}\n" +
-                         "  }\n" +
-                         "  ?subject a ?type ;\n" +
-                         "           ?xrefRelationType ?xrefUri .\n" +
-                         "  ?xrefUri a ?xrefType ;\n" +
-                         "           rdfs:label ?xrefLabel .\n" +
-                         "  ?xrefRelationType rdfs:subPropertyOf skos:related .\n" +
-                         " }\n" +
-                         "}\n"
-    },
-    {
-        shortname : "Query 5",
-        description: "Get all mouse genes on chromosome 11 between location 101,100,523 and 101,190,725 forward strand",
-        query:
-            "SELECT DISTINCT ?gene ?id ?label ?typelabel ?desc ?reference ?begin ?end {\n" +
-            " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/10090> {\n" +
-            "  ?gene a ?type ;\n" +
-            "        rdfs:label ?label ;\n" +
-            "        dcterms:description ?desc ;\n" +
-           	"        dcterms:identifier ?id ;\n" +
-            "        faldo:location ?location .\n" +
-            "  ?location faldo:begin\n" +
-            "       [a faldo:ForwardStrandPosition ;\n" +
-            "        faldo:position ?begin] .\n" +
-            "  ?location faldo:end\n" +
-            "       [a faldo:ForwardStrandPosition ;\n" +
-            "        faldo:position ?end] .\n" +
-            "  ?location faldo:reference ?reference .\n" +
-            "\n" +
-            " # ensembl mouse chromosome 2 stable URI\n" +
-            " ?reference rdfs:subClassOf <http://rdf.ebi.ac.uk/resource/ensembl/10090/chromosome:11>\n" +
-            " FILTER (?begin >= 101100523 && ?end <= 101190725 )\n" +
-            " }\n" +
-            " OPTIONAL {?type rdfs:label ?typelabel}\n" +
-            "}"
-    },
-    {
-        shortname : "Query 6",
         description: "Get orthologs for human gene ENSG00000139618",
-        query:
-            "SELECT DISTINCT ?ortholog ?orthologLabel ?orthologSpecies {\n" +
-            " ?gene sio:SIO_000558 ?ortholog .\n" +
-            " ?gene obo:RO_0002162 [rdfs:label ?species] .\n" +
-            " ?gene rdfs:label ?geneLabel .\n" +
-            " ?ortholog rdfs:label ?orthologLabel .\n" +
-            " ?ortholog obo:RO_0002162 [rdfs:label ?orthologSpecies] .\n" +
-            " VALUES ?gene {ensembl:ENSG00000139618} \n" +
-            " FILTER (?species != ?orthologSpecies) \n" +
-            "}"
+        query:  "SELECT DISTINCT ?gene ?ortholog ?orthologLabel ?name {\n" +
+                " ?gene sio:SIO_000558 ?ortholog .\n" +
+                " ?gene obo:RO_0002162 ?taxon .\n" +
+                " ?gene rdfs:label ?geneLabel .\n" +
+                " ?ortholog rdfs:label ?orthologLabel .\n" +
+                " ?ortholog obo:RO_0002162 ?ortholog_taxon .\n" +
+                " ?ortholog_taxon skos:altLabel ?name\n" +
+                " VALUES ?gene {ensembl:ENSG00000139618} \n" +
+                " FILTER (?taxon != ?ortholog_taxon) \n" +
+                "}\n"
     },
     {
         shortname : "Query 7",
+        description: "Show all species graphs loaded",
+        query:  "# all species data are loaded into different named graphs\n" +
+                "# ontologies are also placed in their own graph\n" +
+                "# this query shows all the graphs available\n\n" +
+                "select ?graph where {\n" +
+                "  ?graph <http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf> <http://rdf.ebi.ac.uk/dataset/ensembl/83>\n" +
+                "}"
+    },
+    {
+        shortname : "Do it like Biomart Query 1",
+        description: "Get all exons for a given list of transcripts",
+        query: "SELECT ?transcript ?exon ?id ?order ?begin ?end ?strand{\n" +
+               "  ?transcript obo:SO_has_part ?exon;\n" +
+               "              sio:SIO_000974 ?orderedPart .\n" +
+               "  ?exon dc:identifier ?id .\n" +
+               "  ?orderedPart sio:SIO_000628 ?exon .\n" +
+               "  ?orderedPart sio:SIO_000300 ?order .\n" +
+               "  OPTIONAL {\n" +
+               "   ?exon faldo:location ?location .\n" +
+               "   ?location faldo:begin ?startthing .\n" +
+               "   ?startthing faldo:position ?begin .\n" +
+               "   ?startthing a ?strand .\n" +
+               "   ?location faldo:end ?endthing .\n" +
+               "   ?endthing faldo:position ?end .\n" +
+               " }\n" +
+               " VALUES ?transcript { ensembltranscript:ENST00000380152 ensembltranscript:ENST00000408937 ensembltranscript:ENST00000403559 ensembltranscript:ENST00000393494 ensembltranscript:ENST00000350908} \n" +
+               "}\n" +
+               "ORDER BY ?id ?order"
+    },
+    {
+        shortname : "Do it like Biomart Query 2",
+        description: "Find all non-Ensembl references for features that have EMBL references",
+        query: "SELECT ?feature ?dbentry ?other_dbentry ?property WHERE { \n" +
+               "  ?feature ?property ?dbentry .\n" +
+               "  ?dbentry rdf:type <http://rdf.ebi.ac.uk/terms/ensembl/EMBL> .\n" +
+               "  ?property rdfs:subPropertyOf* skos:related .\n" +
+               "\n" +
+               "  ?feature ?property2 ?other_dbentry .\n" +
+               "  ?property2 rdfs:subPropertyOf* skos:related .\n" +
+               "  FILTER ( ?dbentry != ?other_dbentry )\n" +
+               "}\n" 
+    },
+    {
+        shortname : "Do it like Biomart Query 3",
+        description : "Retrieve a list of external references from accessions you know, e.g. Uniprot IDs to all related accessions",
+        query: "SELECT DISTINCT ?feature ?dbentry ?property ?dbentry2 WHERE { \n" +
+               "  ?feature ?property ?dbentry .\n" +
+               "  ?property rdfs:subPropertyOf* skos:related .\n" +
+               "  ?feature ?property2 ?dbentry2 .\n" +
+               "  VALUES ?dbentry { <http://purl.uniprot.org/O15409> }\n" +
+               "  FILTER ( ?dbentry != ?dbentry2 ) \n" +
+               "}"
+    },
+    {
+        shortname : "Do it like Biomart Query 4",
+        description : "Get all features on a chromosome (NOTE: currently only genes, transcripts, exons and translations)",
+        query: "SELECT ?feature ?region ?start ?end ?strand WHERE {\n" +
+                   "?feature faldo:location ?region .\n" +
+                   "?region faldo:begin ?start .\n" +
+                   "?start faldo:position ?start_value .\n" +
+                   "?start rdf:type ?strand .\n" +
+                   "?region faldo:end ?end .\n" +
+                   "?end faldo:position ?end_value .\n" +
+                   "?region faldo:reference ?seqregion .\n" +
+                   "VALUES ?seqregion { <http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh38/20> }\n" +
+                   "FILTER ( ?strand = faldo:ForwardStrandPosition OR ?strand = faldo:ReverseStrandPosition )\n" +
+                "}\n" +
+                "LIMIT 200"
+    },
+    {
+        shortname : "Do it like Biomart Query 5",
+        description : "Get all protein-coding genes on a chromosome",
+        query:  "SELECT ?feature ?name ?region ?place WHERE {\n" +
+                "   ?feature rdf:type ?type .\n" +
+                "   ?feature faldo:location ?region .\n" +
+                "   ?region faldo:reference ?place .\n" +
+                "   ?feature ?property ?dbref .\n" +
+                "   ?property rdfs:subPropertyOf* skos:related .\n" +
+                "   ?dbref rdfs:label ?name .\n" +
+                "   FILTER ( ?type = enst:protein_coding )\n" +
+                "   VALUES ?place { <http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh38/20> }\n" +
+                "}"
+    },
+    {
+        shortname : "Federated query 1",
         description: "Get natural variant annotations and citation from UniProt for proteins encoded by ENSG00000139618 using a federated query",
         query:
-                 "PREFIX core: <http://purl.uniprot.org/core/>\n" +
-                 "PREFIX taxon:<http://purl.uniprot.org/taxonomy/>\n" +
                  "SELECT DISTINCT ?peptide ?xrefUri ?xrefLabel ?substitution ?text ?citation {\n" +
                  " # query human data only\n" +
-                 " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/77/9606> {\n" +
+                 " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/83/homo_sapiens> {\n" +
                  "  ?transcript obo:SO_transcribed_from ensembl:ENSG00000172936 .\n" +
                  "  ?transcript obo:SO_translates_to ?peptide .\n" +
                  "  ?peptide a ensemblterms:protein ;\n" +
@@ -161,29 +188,32 @@ var exampleQueries = [
                  "  ?xrefUri a core:Reviewed_Protein ;\n" +
                  "           rdfs:label ?xrefLabel .\n" +
                  "  }\n" +
-                 "  SERVICE <http://beta.sparql.uniprot.org/sparql> {\n" +
-                 "  	?xrefUri core:annotation ?annotation .\n" +
-                 "  	?annotation a core:Natural_Variant_Annotation .\n" +
-                 "  	?annotation rdfs:comment ?text .\n" +
-                 "  	?annotation core:substitution ?substitution .\n" +
-                 "  	?annotation core:range [faldo:begin [faldo:position ?location]] .\n" +
-                 "  	?statement rdf:object ?annotation .\n" +
-                 "  	?statement core:attribution ?ref .\n" +
-                 "  	?ref core:source ?citation .\n" +
+                 "  SERVICE <http://sparql.uniprot.org/sparql> {\n" +
+                 "      ?xrefUri core:annotation ?annotation .\n" +
+                 "      ?annotation a core:Natural_Variant_Annotation .\n" +
+                 "      ?annotation rdfs:comment ?text .\n" +
+                 "      ?annotation core:substitution ?substitution .\n" +
+                 "      ?annotation core:range [faldo:begin [faldo:position ?location]] .\n" +
+                 "      ?statement rdf:object ?annotation .\n" +
+                 "      ?statement core:attribution ?ref .\n" +
+                 "      ?ref core:source ?citation .\n" +
                  "  }\n" +
                  "}\n"
     },
     {
-        shortname : "Query 8",
-        description: "Show all species graphs loaded",
-        query: "# all species data are loaded into different named graphs\n" +
-               "# ontologies are also place in their own graph\n" +
-               "# this query shows all the graphs available\n\n" +
-               "SELECT ?g ?title WHERE {\n" +
-               "?g <http://rdfs.org/ns/void#subset> <http://rdf.ebi.ac.uk/dataset/ensembl/77> . \n" +
-               "?g dcterms:title ?title . \n" +
-               "}"
+        shortname : "Federated query 2",
+        description : "Use DisGeNet to acquire text-mined disease associations for Ensembl genes and associated external names",
+        query : "SELECT DISTINCT ?ensemblg ?disease ?diseasename WHERE {\n" +
+                "  GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/83/homo_sapiens> {\n" +
+                "  ?ensemblg ensemblterms:DEPENDENT ?gene ;\n" +
+                "            obo:RO_0002162 <http://identifiers.org/taxonomy/9606> .\n" +
+                "  FILTER regex(str(?ensemblg), 'ensg', 'i')\n" +
+                "  FILTER (?gene = <http://identifiers.org/ncbigene/675>)\n" +
+                "  \n" +
+                "  SERVICE <http://rdf.disgenet.org/sparql/> {\n" +
+                "    ?gda sio:SIO_000628 ?gene, ?disease .\n" +
+                "    ?disease a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C7057> ;\n" +
+                "               dcterms:title ?diseasename .\n" +
+                "  }\n  }\n}"
     }
-
-
 ]
