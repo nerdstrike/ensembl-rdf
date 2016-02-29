@@ -151,7 +151,7 @@ sub get_transcripts {
   $sql = $self->_append_biotype_sql($sql,$biotypes,'t');
   my $xrefs = {};
   if ( $load_xrefs == 1 ) {
-    $self->get_xrefs( $dba, 'transcript', $biotypes );
+    $xrefs = $self->get_xrefs( $dba, 'transcript', $biotypes );
   }
 
   my $translations = {};
