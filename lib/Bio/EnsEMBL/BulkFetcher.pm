@@ -305,6 +305,7 @@ sub get_protein_features {
 sub _generate_xref_sql {
   my ($self,$table_name)= @_;
   my $Table_name = ucfirst($table_name);
+  my $other_table_name = $table_name; # for translation joins on object_xref, otherwise invisible
   my $table_alias = 'f';
   my $translation_join = '';
   if ($table_name eq 'translation') {
@@ -316,7 +317,7 @@ sub _generate_xref_sql {
       SELECT ${table_alias}.stable_id AS id, x.dbprimary_acc, x.display_label, e.db_name, x.description, x.info_type, x.info_text
       FROM ${table_name} f
       ${translation_join}
-      JOIN object_xref ox         ON (${table_alias}.${table_name}_id = ox.ensembl_id AND ox.ensembl_object_type = '${Table_name}')
+      JOIN object_xref ox         ON (${table_alias}.${other_table_name}_id = ox.ensembl_id AND ox.ensembl_object_type = '${Table_name}')
       JOIN xref x                 USING (xref_id)
       JOIN external_db e          USING (external_db_id)
       JOIN seq_region s           USING (seq_region_id)
@@ -329,6 +330,7 @@ sub _generate_xref_sql {
 
 sub _generate_object_xref_sql {
   my ($self,$table_name)= @_;
+  my $other_table_name = $table_name; # for translation case
   my $Table_name = ucfirst($table_name);
   my $table_alias = 'f';
   my $select_alias = $table_alias;
@@ -343,7 +345,7 @@ sub _generate_object_xref_sql {
            oox.linkage_type, sx.dbprimary_acc, sx.display_label, sx.description, se.db_name
       FROM ${table_name} ${table_alias}
       ${translation_join}
-      JOIN object_xref ox      ON (f.${table_name}_id=ox.ensembl_id AND ox.ensembl_object_type='${Table_name}')
+      JOIN object_xref ox      ON (${select_alias}.${other_table_name}_id=ox.ensembl_id AND ox.ensembl_object_type='${Table_name}')
       JOIN xref x              USING (xref_id)
       JOIN external_db e       USING (external_db_id)
       JOIN seq_region s        USING (seq_region_id)
