@@ -40,7 +40,8 @@ sub default_options {
     config_file => 'xref_LOD_mapping.json',
     pipeline_name => 'rdf_dump',
     registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
-    base_path => ''
+    base_path => '',
+    species => [],
   }
 }
 
@@ -94,7 +95,8 @@ sub beekeeper_extra_cmdline_options {
 sub resource_classes {
 my $self = shift;
   return {
-    'dump'      => { LSF => '-q normal -M8000 -R"select[mem>8000] rusage[mem=8000]"' },
+    'dump'      => { LSF => '-q normal -M10000 -R"select[mem>10000] rusage[mem=10000]"' },
+    'verify'    => { LSF => '-q small -M1000 -R"select[mem>1000] rusage[mem=1000]"' }
   }
 }
 
