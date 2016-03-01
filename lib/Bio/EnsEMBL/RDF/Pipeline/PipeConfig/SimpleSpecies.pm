@@ -60,7 +60,7 @@ sub pipeline_analyses {
     -module     => 'Bio::EnsEMBL::Production::Pipeline::SpeciesFactory',
     -input_ids => [{}], # required for automatic seeding
     -parameters => {
-
+      species => $self->o('species'),
     },
     -flow_into => {
       2 => ['DumpRDF']
