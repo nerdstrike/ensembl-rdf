@@ -137,6 +137,8 @@ sub production_name {
 sub write_to_file {
   my ($self,$path) = @_;
   my $fh = IO::File->new($path, 'w');
+  my $old_filehandle = $self->filehandle;
+  if ($old_filehandle) { $old_filehandle->close }
   $self->filehandle($fh);
 }
 
@@ -216,11 +218,11 @@ sub create_virtuoso_file {
 
   my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
   my $graphUri = $versionGraphUri."/".$self->production_name;
-  print $fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
+  print $fh triple(u($graphUri), '<http://rdfs.org/ns/void#subset>', u($versionGraphUri)); 
 
-  $self->write_to_file($path);
-  $fh = $self->filehandle;
-  print $fh $graphUri;
+  my $graph_fh = IO::File->new($path,'w');
+  print $graph_fh $graphUri."\n";
+  $graph_fh->close;
 }
 
 # Run once before dumping genes
