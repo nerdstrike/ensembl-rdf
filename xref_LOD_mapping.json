@@ -594,11 +594,15 @@
       "URI_type": "http://purl.uniprot.org/core/Reviewed_Protein"
     },
     {
-      "db_name": "Uniprot_gn"
+      "db_name": "Uniprot_gn",
+      "canonical_LOD": "http://purl.uniprot.org/uniprot/",
+      "id_namespace" : "uniprot"
     },
     {
       "db_name": "Uniprot_gn_trans_name",
-      "ignore": true
+      "ignore": true,
+      "canonical_LOD": "http://purl.uniprot.org/uniprot/",
+      "id_namespace" : "uniprot"
     },
     {
       "db_name": "Vega_gene",
