@@ -145,7 +145,7 @@ var exampleQueries = [
                    "?region faldo:end ?end .\n" +
                    "?end faldo:position ?end_value .\n" +
                    "?region faldo:reference ?seqregion .\n" +
-                   "VALUES ?seqregion { <http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh38/20> }\n" +
+                   "VALUES ?seqregion { <http://rdf.ebi.ac.uk/resource/ensembl/84/homo_sapiens/GRCh38/20> }\n" +
                    "FILTER ( ?strand = faldo:ForwardStrandPosition OR ?strand = faldo:ReverseStrandPosition )\n" +
                 "}\n" +
                 "LIMIT 200"
@@ -160,8 +160,8 @@ var exampleQueries = [
                 "   ?feature ?property ?dbref .\n" +
                 "   ?property rdfs:subPropertyOf* skos:related .\n" +
                 "   ?dbref rdfs:label ?name .\n" +
-                "   FILTER ( ?type = enst:protein_coding )\n" +
-                "   VALUES ?place { <http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh38/20> }\n" +
+                "   FILTER ( ?type = ensemblterms:protein_coding )\n" +
+                "   VALUES ?place { <http://rdf.ebi.ac.uk/resource/ensembl/84/homo_sapiens/GRCh38/20> }\n" +
                 "}"
     },
     {
@@ -169,12 +169,12 @@ var exampleQueries = [
         description: "Get protein information from Uniprot that Ensembl has associated with ENSG00000139618 via a federated query",
         query:
                 "SELECT ?xref ?uniprot_id ?uniprot_uri ?isoform ?seq {\n" +
-                "  <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000128573> ensemblterms:DEPENDENT ?xref .\n" +
-                   "?xref dc:identifier ?uniprot_id .\n" +
-                   "BIND ( IRI(CONCAT('http://purl.uniprot.org/uniprot/',str(?uniprot_id) ) ) AS ?uniprot_uri )\n" +
-                   "SERVICE <http://sparql.uniprot.org/sparql> {\n" +
-                     "?uniprot_uri core:sequence ?isoform .\n" +
-                     "?isoform rdf:value ?seq .\n" +
+                "  ensembl:ENSG00000128573 ensemblterms:DEPENDENT ?xref .\n" +
+                "  ?xref dc:identifier ?uniprot_id .\n" +
+                "   BIND ( IRI(CONCAT('http://purl.uniprot.org/uniprot/',str(?uniprot_id) ) ) AS ?uniprot_uri )\n" +
+                "   SERVICE <http://sparql.uniprot.org/sparql> {\n" +
+                "     ?uniprot_uri core:sequence ?isoform .\n" +
+                "     ?isoform rdf:value ?seq .\n" +
                 "   }\n" +
                 " }\n"
     },
@@ -182,16 +182,15 @@ var exampleQueries = [
         shortname : "Federated query 2",
         description : "Use DisGeNet to acquire text-mined disease associations for Ensembl genes and associated external names",
         query : "SELECT DISTINCT ?ensemblg ?disease ?diseasename WHERE {\n" +
-                "  GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/84/homo_sapiens> {\n" +
-                "  ?ensemblg ensemblterms:DEPENDENT ?gene ;\n" +
+                "  ?ensemblg ensemblterms:DEPENDENT ?xref ;\n" +
                 "            obo:RO_0002162 <http://identifiers.org/taxonomy/9606> .\n" +
                 "  FILTER regex(str(?ensemblg), 'ensg', 'i')\n" +
-                "  FILTER (?gene = <http://identifiers.org/ncbigene/675>)\n" +
+                "  FILTER (?xref = <http://identifiers.org/ncbigene/675>)\n" +
                 "  \n" +
                 "  SERVICE <http://rdf.disgenet.org/sparql/> {\n" +
-                "    ?gda sio:SIO_000628 ?gene, ?disease .\n" +
+                "    ?gda sio:SIO_000628 ?xref, ?disease .\n" +
                 "    ?disease a <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C7057> ;\n" +
                 "               dcterms:title ?diseasename .\n" +
-                "  }\n  }\n}"
+                "  }\n}"
     }
 ]
