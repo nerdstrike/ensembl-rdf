@@ -473,10 +473,13 @@ sub print_xrefs {
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
     # See also xref_config.txt/xref_LOD_mapping.json
+    my $lod = $self->ensembl_mapping->LOD_uri($db_name); # linked open data uris.
     my $id_org_uri = $self->identifiers_org_mapping($id,$feature_uri,$db_name);
-    # Next make an "ensembl" style xref, either to the identifiers.org URI, or else a generated Ensembl one
+    # Next make an "ensembl" style xref, either to a known LOD namespace, the identifiers.org URI, or else a generated Ensembl one
     my $xref_uri;
-    if ($id_org_uri) {
+    if ($lod) { 
+      $xref_uri = $lod.$id 
+    } elsif ($id_org_uri) {
       $xref_uri = $id_org_uri;
     } else {
       # Fall back to a new xref uri without identifiers.org
@@ -509,8 +512,6 @@ sub print_xrefs {
 
     # Add any associated xrefs OPTIONAL. Hardly any in Ensembl main databases, generally from eg.
     # Pombase uses them extensively to qualify "ontology xrefs".
-
-
   }
 }
 # For features and xrefs, the identifiers.org way of describing the resource

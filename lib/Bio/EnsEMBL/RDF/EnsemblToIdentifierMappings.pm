@@ -97,7 +97,7 @@ sub LOD_uri {
   if (exists $mappings->{$e_name}->{canonical_LOD}) {
     $lod = $mappings->{$e_name}->{canonical_LOD};
   } else {
-    $lod = 'terms:'.$e_name.'/';
+    return;
   }
   return $lod;
 }
