@@ -146,7 +146,7 @@ var exampleQueries = [
                    "?end faldo:position ?end_value .\n" +
                    "?region faldo:reference ?seqregion .\n" +
                    "VALUES ?seqregion { <http://rdf.ebi.ac.uk/resource/ensembl/84/homo_sapiens/GRCh38/20> }\n" +
-                   "FILTER ( ?strand = faldo:ForwardStrandPosition OR ?strand = faldo:ReverseStrandPosition )\n" +
+                   "FILTER ( ?strand = faldo:ForwardStrandPosition || ?strand = faldo:ReverseStrandPosition )\n" +
                 "}\n" +
                 "LIMIT 200"
     },
