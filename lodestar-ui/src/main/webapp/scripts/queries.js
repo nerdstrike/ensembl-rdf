@@ -18,7 +18,7 @@ var exampleQueries = [
         shortname : "Query 1",
         description: "Show all transcripts of human BRCA2 gene and their coordinates",
         query: "SELECT DISTINCT ?transcript ?id ?typeLabel ?reference ?begin ?end ?location { \n" +
-               "  ?transcript obo:SO_transcribed_from <ENSG00000139618> ;\n" +
+               "  ?transcript obo:SO_transcribed_from ensembl:ENSG00000139618 ;\n" +
                "              a ?type;\n"+
                "              dc:identifier ?id .\n" +
                "  OPTIONAL {\n" +
@@ -65,7 +65,7 @@ var exampleQueries = [
                 "  ?location faldo:end\n" +
                 "       [a faldo:ForwardStrandPosition ;\n" +
                 "        faldo:position ?end] .\n" +
-                "  ?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/83/mus_musculus/GRCm38/11> .  \n" +
+                "  ?location faldo:reference <http://rdf.ebi.ac.uk/resource/ensembl/84/mus_musculus/GRCm38/11> .  \n" +
                 "  ?gene a ?type ;\n" +
                 "        rdfs:label ?label ;\n" +
                 "        dc:description ?desc ;\n" +
@@ -88,16 +88,6 @@ var exampleQueries = [
                 " VALUES ?gene {ensembl:ENSG00000139618} \n" +
                 " FILTER (?taxon != ?ortholog_taxon) \n" +
                 "}\n"
-    },
-    {
-        shortname : "Query 7",
-        description: "Show all species graphs loaded",
-        query:  "# all species data are loaded into different named graphs\n" +
-                "# ontologies are also placed in their own graph\n" +
-                "# this query shows all the graphs available\n\n" +
-                "select ?graph where {\n" +
-                "  ?graph <http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf> <http://rdf.ebi.ac.uk/dataset/ensembl/83>\n" +
-                "}"
     },
     {
         shortname : "Do it like Biomart Query 1",
@@ -176,35 +166,23 @@ var exampleQueries = [
     },
     {
         shortname : "Federated query 1",
-        description: "Get natural variant annotations and citation from UniProt for proteins encoded by ENSG00000139618 using a federated query",
+        description: "Get protein information from Uniprot that Ensembl has associated with ENSG00000139618 via a federated query",
         query:
-                 "SELECT DISTINCT ?peptide ?xrefUri ?xrefLabel ?substitution ?text ?citation {\n" +
-                 " # query human data only\n" +
-                 " GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/83/homo_sapiens> {\n" +
-                 "  ?transcript obo:SO_transcribed_from ensembl:ENSG00000172936 .\n" +
-                 "  ?transcript obo:SO_translates_to ?peptide .\n" +
-                 "  ?peptide a ensemblterms:protein ;\n" +
-                 "           ?xrefRelationType ?xrefUri .\n" +
-                 "  ?xrefUri a core:Reviewed_Protein ;\n" +
-                 "           rdfs:label ?xrefLabel .\n" +
-                 "  }\n" +
-                 "  SERVICE <http://sparql.uniprot.org/sparql> {\n" +
-                 "      ?xrefUri core:annotation ?annotation .\n" +
-                 "      ?annotation a core:Natural_Variant_Annotation .\n" +
-                 "      ?annotation rdfs:comment ?text .\n" +
-                 "      ?annotation core:substitution ?substitution .\n" +
-                 "      ?annotation core:range [faldo:begin [faldo:position ?location]] .\n" +
-                 "      ?statement rdf:object ?annotation .\n" +
-                 "      ?statement core:attribution ?ref .\n" +
-                 "      ?ref core:source ?citation .\n" +
-                 "  }\n" +
-                 "}\n"
+                "SELECT ?xref ?uniprot_id ?uniprot_uri ?isoform ?seq {\n" +
+                "  <http://rdf.ebi.ac.uk/resource/ensembl/ENSG00000128573> ensemblterms:DEPENDENT ?xref .\n" +
+                   "?xref dc:identifier ?uniprot_id .\n" +
+                   "BIND ( IRI(CONCAT('http://purl.uniprot.org/uniprot/',str(?uniprot_id) ) ) AS ?uniprot_uri )\n" +
+                   "SERVICE <http://sparql.uniprot.org/sparql> {\n" +
+                     "?uniprot_uri core:sequence ?isoform .\n" +
+                     "?isoform rdf:value ?seq .\n" +
+                "   }\n" +
+                " }\n"
     },
     {
         shortname : "Federated query 2",
         description : "Use DisGeNet to acquire text-mined disease associations for Ensembl genes and associated external names",
         query : "SELECT DISTINCT ?ensemblg ?disease ?diseasename WHERE {\n" +
-                "  GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/83/homo_sapiens> {\n" +
+                "  GRAPH <http://rdf.ebi.ac.uk/dataset/ensembl/84/homo_sapiens> {\n" +
                 "  ?ensemblg ensemblterms:DEPENDENT ?gene ;\n" +
                 "            obo:RO_0002162 <http://identifiers.org/taxonomy/9606> .\n" +
                 "  FILTER regex(str(?ensemblg), 'ensg', 'i')\n" +
