@@ -114,7 +114,7 @@
     <!-- http://rdf.ebi.ac.uk/terms/ensembl/DEPENDENT -->
 
     <owl:ObjectProperty rdf:about="&ensembl;DEPENDENT">
-        <rdfs:label xml:lang="en">dependant mapping</rdfs:label>
+        <rdfs:label xml:lang="en">dependent mapping</rdfs:label>
         <terms:description>Mapping dependent upon another mapping in Ensembl.</terms:description>
         <rdfs:subPropertyOf rdf:resource="&skos;related"/>
     </owl:ObjectProperty>

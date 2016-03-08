@@ -37,11 +37,11 @@ sub default_options {
   return {
     %{ $self->SUPER::default_options() },
     xref => 1,
-    dump_location => '', # base path for all RDF output
     config_file => 'xref_LOD_mapping.json',
     pipeline_name => 'rdf_dump',
     registry => 'Reg', #/Users/ktaylor/ensembl/ensembl-rdf/lib/
-    base_path => '/lustre/scratch109/'
+    base_path => '',
+    species => [],
   }
 }
 
@@ -58,9 +58,9 @@ sub pipeline_analyses {
   return [ {
     -logic_name => 'ScheduleSpecies',
     -module     => 'Bio::EnsEMBL::Production::Pipeline::SpeciesFactory',
-    -input_id => [{}], # required for automatic seeding
+    -input_ids => [{}], # required for automatic seeding
     -parameters => {
-
+      species => $self->o('species'),
     },
     -flow_into => {
       2 => ['DumpRDF']
@@ -70,11 +70,9 @@ sub pipeline_analyses {
     -logic_name => 'DumpRDF',
     -module => 'Bio::EnsEMBL::RDF::Pipeline::Process::RDFDump',
     -parameters => {
-      dump_location => $self->o('dump_location'),
       xref => $self->o('xref'),
       release => $self->o('ensembl_release'),
       config_file => $self->o('config_file'),
-      # species => $self->o('species'),
     },
     -analysis_capacity => 4,
 	  -rc_name => 'dump'
@@ -97,7 +95,8 @@ sub beekeeper_extra_cmdline_options {
 sub resource_classes {
 my $self = shift;
   return {
-    'dump'      => { LSF => '-q normal -M8000 -R"select[mem>8000] rusage[mem=8000]"' },
+    'dump'      => { LSF => '-q normal -M10000 -R"select[mem>10000] rusage[mem=10000]"' },
+    'verify'    => { LSF => '-q small -M1000 -R"select[mem>1000] rusage[mem=1000]"' }
   }
 }
 

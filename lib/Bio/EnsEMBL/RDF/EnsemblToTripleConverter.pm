@@ -19,8 +19,8 @@ limitations under the License.
     EnsemblToTripleConverter - Module to help convert Ensembl data to RDF turtle
 
 =head1 SYNOPSIS
-
-  my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($species,$file_handle);
+  my $params = { ontology_adaptor => ...,xref_mapping_file => ..., main_fh => ..., production_name=> ... }
+  my $converter = Bio::EnsEMBL::RDF::EnsemblToTripleConverter->new($params);
   $converter->write_to_file('/direct/path/thing.rdf');
   $converter->print_namespaces;
   $converter->print_species_info;
@@ -47,51 +47,37 @@ use IO::File;
 use Try::Tiny;
 
 
-# override release value from API
+# allow override of release value from API
 sub new {
   my ($caller,@args) = @_;
-  my ($ontology_adaptor, $meta_adaptor, $species, $dump_xrefs, $release, $xref_mapping_file, $fh, $xref_fh) = @args;
-  unless ($release) {
-    $release = Bio::EnsEMBL::ApiVersion->software_version;
+  my ($config) = @args;
+  unless (exists $config->{release}) {
+    $config->{release} = Bio::EnsEMBL::ApiVersion->software_version;
   }
-  my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($xref_mapping_file);
-  my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($ontology_adaptor);
+  my @required_args = qw/ontology_adaptor xref_mapping_file main_fh production_name meta_adaptor/;
+  my @missing_args;
+  foreach my $arg (@required_args) {
+    push @missing_args,$arg unless (exists $config->{$arg});
+  }
+  if (@missing_args > 0) { confess "Missing arguments required by Bio::EnsEMBL::RDF::EnsemblToTripleConverter: ".join ',',@missing_args; }
+  my $xref_mapping = Bio::EnsEMBL::RDF::EnsemblToIdentifierMappings->new($config->{xref_mapping_file});
+  my $biotype_mapper = Bio::EnsEMBL::Utils::SequenceOntologyMapper->new($config->{ontology_adaptor});
   # This connects Ensembl to Identifiers.org amongst other things
   croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::Utils::SequenceOntologyMapper" unless $biotype_mapper->isa('Bio::EnsEMBL::Utils::SequenceOntologyMapper');
-  croak "EnsemblToTripleConverter requires a Bio::EnsEMBL::DBSQL::MetaContainer" unless $meta_adaptor->isa('Bio::EnsEMBL::DBSQL::MetaContainer');
-
-  return bless ( {
-    ontoa => $ontology_adaptor,
-    meta => $meta_adaptor,
-    species => $species,
-    fh => $fh,
-    xref_fh => $xref_fh,
-    dump_xrefs => $dump_xrefs,
-    release => $release,
-    taxon => undef,
-    ontology_cache => {},
-    mapping => $xref_mapping,
-    biotype_mapper => $biotype_mapper,
-  }, $caller);
-}
-
-# getter/setter
-sub species {
-  my ($self,$species) = @_;
-  if ($species) { 
-    $self->{species} = $species;
-  }
-  return $self->{species};
+  $config->{ontology_cache} = {};
+  $config->{mapping} = $xref_mapping;
+  $config->{biotype_mapper} = $biotype_mapper;
+  return bless ( $config, $caller);
 }
 
 #Set a filehandle directly
 sub filehandle {
   my ($self,$fh) = @_;
   if ($fh) {
-    if ($self->{fh}) {$self->{fh}->close}
-    $self->{fh} = $fh;
+    if ($self->{main_fh}) {$self->{main_fh}->close}
+    $self->{main_fh} = $fh;
   }
-  return $self->{fh};
+  return $self->{main_fh};
 }
 
 sub xref_filehandle {
@@ -119,12 +105,12 @@ sub ontology_cache {
 
 sub ontology_adaptor {
   my $self = shift;
-  return $self->{ontoa};
+  return $self->{ontology_adaptor};
 }
 
 sub meta_adaptor {
   my $self = shift;
-  return $self->{meta};
+  return $self->{meta_adaptor};
 }
 
 sub ensembl_mapper {
@@ -139,14 +125,20 @@ sub biotype_mapper {
 
 sub dump_xrefs {
   my $self = shift;
-  return $self->{dump_xrefs};
+  return 1 if exists $self->{xref};
 }
 
+sub production_name {
+  my $self = shift;
+  return $self->{production_name};
+}
 
 # Specify path to write to.
 sub write_to_file {
   my ($self,$path) = @_;
   my $fh = IO::File->new($path, 'w');
+  my $old_filehandle = $self->filehandle;
+  if ($old_filehandle) { $old_filehandle->close }
   $self->filehandle($fh);
 }
 
@@ -159,6 +151,22 @@ sub print_namespaces {
   if ($xref_fh) { 
     print $xref_fh name_spaces()."\n";
   }
+}
+
+# Hand URIs out to calling code with correct namespacing etc.
+sub generate_feature_uri {
+  my ($self, $id, $feature_type) = @_;
+  unless ($id && $feature_type) {confess "Cannot generate URIs without both a feature ID and its type"}
+  my $prefix;
+  if ($feature_type eq 'gene') { $prefix = 'ensembl' }
+  elsif ($feature_type eq 'transcript') { $prefix = 'transcript'}
+  elsif ($feature_type eq 'exon') {$prefix = 'exon'}
+  elsif ($feature_type eq 'translation') {$prefix = 'protein'}
+  elsif ($feature_type eq 'variation') {$prefix = 'ensemblvariation'}
+  elsif ($feature_type eq 'variant') {$prefix = 'ensembl_variant'}
+  else { confess "Cannot map $feature_type to a prefix in RDFLib"}
+  my $namespace = prefix($prefix);
+  return $namespace.$id;
 }
 
 sub print_species_info {
@@ -209,13 +217,12 @@ sub create_virtuoso_file {
   my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
 
   my $versionGraphUri = "http://rdf.ebi.ac.uk/dataset/ensembl/".$version;
-  my $graphUri = $versionGraphUri."/".$taxon_id;
-  print $fh triple(u($graphUri), '<http://www.w3.org/2004/03/trix/rdfg-1/subGraphOf>', u($versionGraphUri)); 
+  my $graphUri = $versionGraphUri."/".$self->production_name;
+  print $fh triple(u($graphUri), '<http://rdfs.org/ns/void#subset>', u($versionGraphUri)); 
 
-  # make the species graph a subgraph of the version graph, by adding the assertion to the main RDF file.
-  $self->write_to_file($path);
-  $fh = $self->filehandle;
-  print $fh $graphUri;
+  my $graph_fh = IO::File->new($path,'w');
+  print $graph_fh $graphUri."\n";
+  $graph_fh->close;
 }
 
 # Run once before dumping genes
@@ -224,6 +231,7 @@ sub print_seq_regions {
   my $slice_list = shift;
   my $fh = $self->filehandle;
   
+  my $production_name = $self->production_name;
   my $version = $self->release;
   my $taxon_id = $self->meta_adaptor->get_taxonomy_id;
   my $scientific_name = $self->meta_adaptor->get_scientific_name;
@@ -233,31 +241,52 @@ sub print_seq_regions {
     my $cs_name = $coord_system->name();
     my $cs_version = $coord_system->version;
 
-    # Generate a version specific portion of a URL that includes the database version, species, assembly version and region name
-    # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/75/GRCh37/1
-    my $version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$version,$region_name); 
-    
+    my ($version_uri,$non_version_uri) = $self->_generate_seq_region_uri($version,$production_name,$cs_version,$region_name);
+
     # we also create a non versioned URI that is a superclass e.g. 
-    # http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/1
-    my $non_version_uri = u( sprintf "%s%s/%s", prefix('ensembl'),$taxon_id,$region_name); 
-    
-    my $reference = $version_uri; # don't need a u($version_uri) because these are keyed off abbreviations
-    my $generic = $non_version_uri;
-    print $fh triple($reference, 'rdfs:subClassOf', $generic);
+    print $fh triple($version_uri, 'rdfs:subClassOf', $non_version_uri);
     if ($cs_name eq 'chromosome') { 
-      print $fh triple($generic, 'rdfs:subClassOf', 'obo:SO_0000340');
+      print $fh triple($non_version_uri, 'rdfs:subClassOf', 'obo:SO_0000340');
       # Find SO term for patches and region in general?
     } else {
-      print $fh triple($generic, 'rdfs:subClassOf', 'term:'.$cs_name);
+      print $fh triple($non_version_uri, 'rdfs:subClassOf', 'term:'.$cs_name);
       print $fh triple('term:'.$cs_name, 'rdfs:subClassOf', 'term:EnsemblRegion');
     }
-    print $fh triple($generic, 'rdfs:label', qq("$scientific_name $cs_name $region_name")); 
-    print $fh triple($reference, 'rdfs:label', qq("$scientific_name $cs_name $region_name ($cs_version)"));  
-    print $fh triple($reference, 'dc:identifier', qq("$region_name")); 
-    print $fh triple($reference, 'term:inEnsemblSchemaNumber', qq("$version"));  
-    print $fh triple($reference, 'term:inEnsemblAssembly', qq("$cs_version")); 
+    print $fh triple($non_version_uri, 'rdfs:label', qq("$scientific_name $cs_name $region_name")); 
+    print $fh triple($version_uri, 'rdfs:label', qq("$scientific_name $region_name ($cs_version)"));  
+    print $fh triple($version_uri, 'dc:identifier', qq("$region_name"));
+    print $fh triple($version_uri, 'term:inEnsemblSchemaNumber', qq("$version"));
+    print $fh triple($version_uri, 'term:inEnsemblAssembly', qq("$cs_version"));
   }
   
+}
+
+sub _generate_seq_region_uri {
+  my ($self,$version,$production_name,$cs_version,$region_name,$start,$end,$strand) = @_;
+  # Generate a version specific portion of a URL that includes, species, assembly version and region name
+  # e.g. The URI for human chromosome 1 in assembly GRCh37 would be http://rdf.ebi.ac.uk/resource/ensembl/83/homo_sapiens/GRCh37/1
+  # and the unversioned equivalent weould be http://rdf.ebi.ac.uk/resource/ensembl/homo_sapiens/GRCh37/1
+  my ($version_uri,$unversioned_uri);
+  if (defined $cs_version) {
+    $version_uri = sprintf "%s%s/%s/%s/%s", prefix('ensembl'),$version,$production_name,$cs_version,$region_name;
+    $unversioned_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$production_name,$cs_version,$region_name;
+  } else {
+    $version_uri = sprintf "%s%s/%s/%s", prefix('ensembl'),$version,$production_name,$region_name;
+    $unversioned_uri = sprintf "%s%s/%s", prefix('ensembl'),$production_name,$region_name;
+  }
+  if (defined $strand) {
+    if (defined $start && defined $end) {
+      $version_uri .= ":$start-$end:$strand";
+      $unversioned_uri .= ":$start-$end:$strand";
+    } elsif (defined $end) {
+      $version_uri .= ":$end:$strand";
+      $unversioned_uri .= ":$end:$strand";
+    } elsif (defined $start) {
+      $version_uri .= ":$start:$strand";
+      $unversioned_uri .= ":$start:$strand";
+    }
+  }
+  return ( u($version_uri), u($unversioned_uri));
 }
 
 # This method calls recursively down the gene->transcript->translation chain and prints them all
@@ -318,7 +347,7 @@ sub print_feature {
       my $transcript_uri = prefix('transcript').$transcript->{id};
       $self->print_feature($transcript,$transcript_uri,'transcript');
       print $fh triple(u($transcript_uri),'obo:SO_transcribed_from',u($feature_uri));
-      $self->print_exons($transcript,$transcript_uri);
+      $self->print_exons($transcript);
     }
     if (exists $feature->{homologues} ) {
       # Homologues come in three types
@@ -364,45 +393,39 @@ sub print_faldo_location {
   # LRGs have their own special seq regions... they may not make a lot of sense
   # in the RDF context.
   # The same is true of toplevel contigs in other species.
-  my $version_uri;
-  if ( defined $cs_version) {
-    $version_uri = qq($prefix$schema_version/$cs_name:$cs_version:$region_name);
-  }  else {
-    $version_uri = qq($prefix$schema_version/$cs_name:$region_name);
-  }
-  print $fh triple(u($version_uri),'rdfs:label',qq("$schema_version $cs_name:$region_name"));
-
+  my ($version_uri,$unversioned_uri) = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name);
+  
   my $start = $feature->{start};
   my $end = $feature->{end};
   my $strand = $feature->{strand};
   my $begin = ($strand >= 0) ? $start : $end;
   my $stop = ($strand >= 0) ? $end : $start;
-  my $location = sprintf "%s:%s-%s:%s",$version_uri,$start,$end,$strand;
-  my $beginUri = sprintf "%s:%s:%s",$version_uri,$begin,$strand;
-  my $endUri = "$version_uri:$stop:$strand";
-  print $fh triple(u($feature_uri), 'faldo:location', u($location));
-  print $fh triple(u($location), 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
-  print $fh triple(u($location), 'rdf:type', 'faldo:Region');
-  print $fh triple(u($location), 'faldo:begin', u($beginUri));
-  print $fh triple(u($location), 'faldo:end', u($endUri));
-  print $fh triple(u($location), 'faldo:reference', u($version_uri));
-  print $fh triple(u($beginUri), 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple(u($beginUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  my $location = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$start,$end,$strand);
+  my $beginUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,$begin,undef,$strand);
+  my $endUri = $self->_generate_seq_region_uri($self->release,$self->production_name,$cs_version,$region_name,undef,$stop,$strand);
+  print $fh triple(u($feature_uri), 'faldo:location', $location);
+  print $fh triple($location, 'rdfs:label', qq("$cs_name $region_name:$start-$end:$strand"));
+  print $fh triple($location, 'rdf:type', 'faldo:Region');
+  print $fh triple($location, 'faldo:begin', $beginUri);
+  print $fh triple($location, 'faldo:end', $endUri);
+  print $fh triple($location, 'faldo:reference', $version_uri);
+  print $fh triple($beginUri, 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple($beginUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple(u($beginUri), 'faldo:position', $begin);
-  print $fh triple(u($beginUri), 'faldo:reference', u($version_uri));
+  print $fh triple($beginUri, 'faldo:position', $begin);
+  print $fh triple($beginUri, 'faldo:reference', $version_uri);
 
-  print $fh triple(u($endUri), 'rdf:type', 'faldo:ExactPosition');
-  print $fh triple(u($endUri), 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
+  print $fh triple($endUri, 'rdf:type', 'faldo:ExactPosition');
+  print $fh triple($endUri, 'rdf:type', ($strand >= 0)? 'faldo:ForwardStrandPosition':'faldo:ReverseStrandPosition');
 
-  print $fh triple(u($endUri), 'faldo:position', $stop);
-  print $fh triple(u($endUri), 'faldo:reference', u($version_uri));
+  print $fh triple($endUri, 'faldo:position', $stop);
+  print $fh triple($endUri, 'faldo:reference', $version_uri);
   
   return $location;
 }
 
 sub print_exons {
-  my ($self,$transcript,$transcript_uri) = @_;
+  my ($self,$transcript) = @_;
   my $fh = $self->filehandle;
 
   return unless exists $transcript->{exons};
@@ -423,19 +446,6 @@ sub print_exons {
     }
 }
 
-# Should be unnecessary once Xref RDF is produced separately from the release database
-# Also put associated xrefs through this:
-#     my $axN = 0;
-# for my $axref (@{$xref->{associated_xrefs}}) {
-#   # create a holding triple for each set of annotations
-#   my $ax_uri = $idorguri.'_ax_'.(++$axN);
-#   print $fh triple(u($idorguri), 'term:annotated', u($ax_uri)); 
-#   while(my ($k,$v) = each %$axref) {
-#       $k =~ tr/\t /_/;
-#       # use the condition directly here
-#       # u($ax_uri);
-#   }
-# }
 sub print_xrefs {
   my $self = shift;
   my $xref_list = shift;
@@ -463,10 +473,13 @@ sub print_xrefs {
     
     # implement the SIO identifier type description see https://github.com/dbcls/bh14/wiki/Identifiers.org-working-document
     # See also xref_config.txt/xref_LOD_mapping.json
+    my $lod = $self->ensembl_mapping->LOD_uri($db_name); # linked open data uris.
     my $id_org_uri = $self->identifiers_org_mapping($id,$feature_uri,$db_name);
-    # Next make an "ensembl" style xref, either to the identifiers.org URI, or else a generated Ensembl one
+    # Next make an "ensembl" style xref, either to a known LOD namespace, the identifiers.org URI, or else a generated Ensembl one
     my $xref_uri;
-    if ($id_org_uri) {
+    if ($lod) { 
+      $xref_uri = $lod.$id 
+    } elsif ($id_org_uri) {
       $xref_uri = $id_org_uri;
     } else {
       # Fall back to a new xref uri without identifiers.org
@@ -499,8 +512,6 @@ sub print_xrefs {
 
     # Add any associated xrefs OPTIONAL. Hardly any in Ensembl main databases, generally from eg.
     # Pombase uses them extensively to qualify "ontology xrefs".
-
-
   }
 }
 # For features and xrefs, the identifiers.org way of describing the resource

@@ -13,6 +13,6 @@ my $mapping = $converter->get_mapping('Uniprot/SWISSPROT');
 is($mapping->{canonical_LOD},"http://purl.uniprot.org/uniprot/","Test full mapping fetch");
 
 is($converter->LOD_uri('Uniprot/SWISSPROT'),"http://purl.uniprot.org/uniprot/","Check LOD_uri() functions");
-is($converter->LOD_uri('durpadurp'),"terms:durpadurp/",'Check results of a missing LOD mapping');
+is($converter->LOD_uri('durpadurp'),undef,'Check results of a missing LOD mapping');
 
 done_testing;
